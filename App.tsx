@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
 import SplashScreen from './src/screen/SplashScreen';
-import HomePage from './src/screen/HomePage';
+import AppNavigator from './src/routes/AppNavigator';
 
 const App = () => {
   const [isloading, setIsLoading] = useState<boolean>(true);
@@ -19,7 +19,9 @@ const App = () => {
       <SplashScreen setIsLoading={setIsLoading} />
     </>
   ) : (
-    <HomePage />
+    <>
+      <AppNavigator />
+    </>
   );
 };
 
