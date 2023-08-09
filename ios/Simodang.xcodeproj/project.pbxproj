@@ -14,6 +14,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-Simodang-SimodangTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Simodang-SimodangTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		7D47DD8B1F9A4AFFB8965611 /* SFPRODISPLAYBOLD.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */; };
+		99AD765E6F324293BF9A527A /* SFPRODISPLAYMEDIUM.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */; };
+		7CEFD705062B4585B0CC956D /* SFPRODISPLAYREGULAR.OTF in Resources */ = {isa = PBXBuildFile; fileRef = F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Simodang/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Simodang-SimodangTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simodang-SimodangTests.release.xcconfig"; path = "Target Support Files/Pods-Simodang-SimodangTests/Pods-Simodang-SimodangTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYBOLD.OTF"; path = "../src/assets/fonts/SFPRODISPLAYBOLD.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYMEDIUM.OTF"; path = "../src/assets/fonts/SFPRODISPLAYMEDIUM.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYREGULAR.OTF"; path = "../src/assets/fonts/SFPRODISPLAYREGULAR.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +128,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				3A274EC71BB9456287B11871 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +154,17 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		3A274EC71BB9456287B11871 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */,
+				1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */,
+				F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +262,9 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				7D47DD8B1F9A4AFFB8965611 /* SFPRODISPLAYBOLD.OTF in Resources */,
+				99AD765E6F324293BF9A527A /* SFPRODISPLAYMEDIUM.OTF in Resources */,
+				7CEFD705062B4585B0CC956D /* SFPRODISPLAYREGULAR.OTF in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
