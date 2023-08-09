@@ -14,9 +14,12 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-Simodang-SimodangTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Simodang-SimodangTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		7D47DD8B1F9A4AFFB8965611 /* SFPRODISPLAYBOLD.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */; };
-		99AD765E6F324293BF9A527A /* SFPRODISPLAYMEDIUM.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */; };
-		7CEFD705062B4585B0CC956D /* SFPRODISPLAYREGULAR.OTF in Resources */ = {isa = PBXBuildFile; fileRef = F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */; };
+		A7F3BD713F8043E69D5829F9 /* SF-PRO-DISPLAY-BOLD.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 24EC0356E1D24E9F8A7A8B4F /* SF-PRO-DISPLAY-BOLD.OTF */; };
+		74148AC4F18843E284638A88 /* SF-PRO-DISPLAY-MEDIUM.OTF in Resources */ = {isa = PBXBuildFile; fileRef = F2759DA613FB4415A2D4024A /* SF-PRO-DISPLAY-MEDIUM.OTF */; };
+		4EC18996B021481DBC4CC137 /* SF-PRO-DISPLAY-REGULAR.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 061E064C11F544FA8A78BF0E /* SF-PRO-DISPLAY-REGULAR.OTF */; };
+		E3C3B0BBC07D45519D140FA1 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 57C49CC8BF2241BCA6D81676 /* Roboto-Bold.ttf */; };
+		D0ACEE26E87C40E1A3CE935B /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD9FCF784E1D48E2895855BA /* Roboto-Medium.ttf */; };
+		CFF9AEA7F9BB48BCA920A18F /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 79C21A8BD78148748493A2F0 /* Roboto-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,9 +50,12 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Simodang/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Simodang-SimodangTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simodang-SimodangTests.release.xcconfig"; path = "Target Support Files/Pods-Simodang-SimodangTests/Pods-Simodang-SimodangTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYBOLD.OTF"; path = "../src/assets/fonts/SFPRODISPLAYBOLD.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYMEDIUM.OTF"; path = "../src/assets/fonts/SFPRODISPLAYMEDIUM.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */ = {isa = PBXFileReference; name = "SFPRODISPLAYREGULAR.OTF"; path = "../src/assets/fonts/SFPRODISPLAYREGULAR.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		24EC0356E1D24E9F8A7A8B4F /* SF-PRO-DISPLAY-BOLD.OTF */ = {isa = PBXFileReference; name = "SF-PRO-DISPLAY-BOLD.OTF"; path = "../src/assets/fonts/SF-PRO-DISPLAY-BOLD.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F2759DA613FB4415A2D4024A /* SF-PRO-DISPLAY-MEDIUM.OTF */ = {isa = PBXFileReference; name = "SF-PRO-DISPLAY-MEDIUM.OTF"; path = "../src/assets/fonts/SF-PRO-DISPLAY-MEDIUM.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		061E064C11F544FA8A78BF0E /* SF-PRO-DISPLAY-REGULAR.OTF */ = {isa = PBXFileReference; name = "SF-PRO-DISPLAY-REGULAR.OTF"; path = "../src/assets/fonts/SF-PRO-DISPLAY-REGULAR.OTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		57C49CC8BF2241BCA6D81676 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FD9FCF784E1D48E2895855BA /* Roboto-Medium.ttf */ = {isa = PBXFileReference; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		79C21A8BD78148748493A2F0 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,9 +164,12 @@
 		3A274EC71BB9456287B11871 /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				879945F879C748E0B228A11F /* SFPRODISPLAYBOLD.OTF */,
-				1AB00F7FD71E46D3ADC24FC9 /* SFPRODISPLAYMEDIUM.OTF */,
-				F0DD5E821B4949D8986AA7D1 /* SFPRODISPLAYREGULAR.OTF */,
+				24EC0356E1D24E9F8A7A8B4F /* SF-PRO-DISPLAY-BOLD.OTF */,
+				F2759DA613FB4415A2D4024A /* SF-PRO-DISPLAY-MEDIUM.OTF */,
+				061E064C11F544FA8A78BF0E /* SF-PRO-DISPLAY-REGULAR.OTF */,
+				57C49CC8BF2241BCA6D81676 /* Roboto-Bold.ttf */,
+				FD9FCF784E1D48E2895855BA /* Roboto-Medium.ttf */,
+				79C21A8BD78148748493A2F0 /* Roboto-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -262,9 +271,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				7D47DD8B1F9A4AFFB8965611 /* SFPRODISPLAYBOLD.OTF in Resources */,
-				99AD765E6F324293BF9A527A /* SFPRODISPLAYMEDIUM.OTF in Resources */,
-				7CEFD705062B4585B0CC956D /* SFPRODISPLAYREGULAR.OTF in Resources */,
+				A7F3BD713F8043E69D5829F9 /* SF-PRO-DISPLAY-BOLD.OTF in Resources */,
+				74148AC4F18843E284638A88 /* SF-PRO-DISPLAY-MEDIUM.OTF in Resources */,
+				4EC18996B021481DBC4CC137 /* SF-PRO-DISPLAY-REGULAR.OTF in Resources */,
+				E3C3B0BBC07D45519D140FA1 /* Roboto-Bold.ttf in Resources */,
+				D0ACEE26E87C40E1A3CE935B /* Roboto-Medium.ttf in Resources */,
+				CFF9AEA7F9BB48BCA920A18F /* Roboto-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
