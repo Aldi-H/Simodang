@@ -3,16 +3,10 @@ import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  HomeIcon as HomeSolid,
-  ChartBarIcon as ChartBarSolid,
-  UserIcon as UserSolid,
-} from 'react-native-heroicons/solid';
-import {
-  HomeIcon as HomeOutline,
-  ChartBarIcon as ChartBarOutline,
-  UserIcon as UserOutline,
-} from 'react-native-heroicons/outline';
+
+import HomeIconSvg from '../assets/icons/HomeIcon.svg';
+import ChartIconSvg from '../assets/icons/ChartIcon.svg';
+import UserIconSvg from '../assets/icons/UserIcon.svg';
 
 import HomePage from '../screen/HomePage';
 import ProfilePage from '../screen/ProfilePage';
@@ -22,10 +16,11 @@ import WebView from '../screen/WebView';
 import RegisterPage from '../screen/RegisterPage';
 import LoginPage from '../screen/LoginPage';
 import { RootStackParamList } from './NavigationTypes';
+import { CONSTANT } from '../themes';
 
-interface MenuIconsProps {
+interface MenuProps {
   route: { name: keyof RootStackParamList };
-  focused: Boolean;
+  focused: boolean;
 }
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -37,8 +32,21 @@ const HomeNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused }) => menuIcons({ route, focused }),
+        tabBarStyle: {
+          paddingBottom: 24,
+          paddingTop: 16,
+          height: 84,
+          alignItems: 'center',
+          borderTopStartRadius: 30,
+          borderTopEndRadius: 30,
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Roboto-Medium',
+          fontSize: 12,
+        },
+        tabBarActiveTintColor: CONSTANT.themeColors.primary,
       })}>
-      <Tab.Screen name="Homes" component={HomePage} />
+      <Tab.Screen name="Beranda" component={HomePage} />
       <Tab.Screen name="Monitor" component={MonitorPage} />
       <Tab.Screen name="Profile" component={ProfilePage} />
     </Tab.Navigator>
@@ -59,30 +67,36 @@ const AppNavigator = () => {
   );
 };
 
-const menuIcons = ({ route, focused }: MenuIconsProps) => {
+const menuIcons = ({ route, focused }: MenuProps) => {
   let icon;
 
-  if (route.name === 'Homes') {
+  if (route.name === 'Beranda') {
     icon = focused ? (
-      <HomeSolid height="24" width="24" color="#204E7C" />
+      <HomeIconSvg height="24" width="24" fill={CONSTANT.themeColors.primary} />
     ) : (
-      <HomeOutline size="24" color="#6F6F6F" />
+      <HomeIconSvg height="24" width="24" fill={CONSTANT.themeColors.disable} />
     );
   } else if (route.name === 'Monitor') {
     icon = focused ? (
-      <ChartBarSolid size="24" color="#204E7C" />
+      <ChartIconSvg
+        height="24"
+        width="24"
+        fill={CONSTANT.themeColors.primary}
+      />
     ) : (
-      <ChartBarOutline size="24" color="#6F6F6F" />
+      <ChartIconSvg
+        height="24"
+        width="24"
+        fill={CONSTANT.themeColors.disable}
+      />
     );
   } else if (route.name === 'Profile') {
     icon = focused ? (
-      <UserSolid size="24" color="#204E7C" />
+      <UserIconSvg height="24" width="24" fill={CONSTANT.themeColors.primary} />
     ) : (
-      <UserOutline size="24" color="#6F6F6F" />
+      <UserIconSvg height="24" width="24" fill={CONSTANT.themeColors.disable} />
     );
   }
-
-  // const buttonClass = focused ? 'bg-white' : '';
 
   return <View>{icon}</View>;
 };
