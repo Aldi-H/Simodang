@@ -1,9 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
-  Homes: undefined;
-  Monitor: { deviceId: String };
-  Profile: { userId: String };
+  Beranda: undefined;
+  Monitor: { deviceId: string };
+  Profile: { userId: string };
 };
 
 export type MonitorScreen = NativeStackScreenProps<
