@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import HomeIconSvg from '../assets/icons/HomeIcon.svg';
 import ChartIconSvg from '../assets/icons/ChartIcon.svg';
@@ -33,9 +34,9 @@ const HomeNavigator = () => {
         headerShown: false,
         tabBarIcon: ({ focused }) => menuIcons({ route, focused }),
         tabBarStyle: {
-          paddingBottom: 24,
-          paddingTop: 16,
-          height: 84,
+          paddingBottom: 16,
+          paddingTop: 12,
+          height: hp('10%'),
           alignItems: 'center',
           borderTopStartRadius: 30,
           borderTopEndRadius: 30,
@@ -72,29 +73,21 @@ const menuIcons = ({ route, focused }: MenuProps) => {
 
   if (route.name === 'Beranda') {
     icon = focused ? (
-      <HomeIconSvg height="24" width="24" fill={CONSTANT.themeColors.primary} />
+      <HomeIconSvg height={hp('3%')} fill={CONSTANT.themeColors.primary} />
     ) : (
-      <HomeIconSvg height="24" width="24" fill={CONSTANT.themeColors.disable} />
+      <HomeIconSvg height={hp('3%')} fill={CONSTANT.themeColors.disable} />
     );
   } else if (route.name === 'Monitor') {
     icon = focused ? (
-      <ChartIconSvg
-        height="24"
-        width="24"
-        fill={CONSTANT.themeColors.primary}
-      />
+      <ChartIconSvg height={hp('3%')} fill={CONSTANT.themeColors.primary} />
     ) : (
-      <ChartIconSvg
-        height="24"
-        width="24"
-        fill={CONSTANT.themeColors.disable}
-      />
+      <ChartIconSvg height={hp('3%')} fill={CONSTANT.themeColors.disable} />
     );
   } else if (route.name === 'Profile') {
     icon = focused ? (
-      <UserIconSvg height="24" width="24" fill={CONSTANT.themeColors.primary} />
+      <UserIconSvg height={hp('3%')} fill={CONSTANT.themeColors.primary} />
     ) : (
-      <UserIconSvg height="24" width="24" fill={CONSTANT.themeColors.disable} />
+      <UserIconSvg height={hp('3%')} fill={CONSTANT.themeColors.disable} />
     );
   }
 
