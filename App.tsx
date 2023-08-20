@@ -6,31 +6,34 @@
  */
 
 import React, { useState } from 'react';
-import { StatusBar } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import SplashScreen from './src/screen/SplashScreen';
 import AppNavigator from './src/routes/AppNavigator';
 
 const App = () => {
   const [isloading, setIsLoading] = useState<boolean>(true);
 
-  return isloading ? (
-    <>
-      <StatusBar hidden={true} />
-      <SplashScreen setIsLoading={setIsLoading} />
-    </>
-  ) : (
-    <>
-      <AppNavigator />
-    </>
+  return (
+    <GestureHandlerRootView style={styles.gestureHandlerContainer}>
+      {isloading ? (
+        <>
+          <SplashScreen setIsLoading={setIsLoading} />
+        </>
+      ) : (
+        <>
+          <AppNavigator />
+        </>
+      )}
+    </GestureHandlerRootView>
   );
 };
 
-/* isloading ? (
-  <>
-    <StatusBar hidden={true} />
-    <SplashScreen />
-  </>
-) : (
-  <HomePage />
-); */
+const styles = StyleSheet.create({
+  gestureHandlerContainer: {
+    flex: 1,
+  },
+});
+
 export default App;
