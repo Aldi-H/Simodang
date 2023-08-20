@@ -1,17 +1,28 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+// import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import type { StackScreenProps } from '@react-navigation/stack';
 
 export type RootStackParamList = {
   Beranda: undefined;
-  Monitor: { deviceId: string };
+  Monitor: undefined;
   Profile: { userId: string };
 };
 
-export type MonitorScreen = NativeStackScreenProps<
-  RootStackParamList,
-  'Monitor'
->;
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  StackScreenProps<RootStackParamList, T>;
 
-export type ProfileScreen = NativeStackScreenProps<
-  RootStackParamList,
-  'Profile'
->;
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
+
+// export type MonitorScreen = NativeStackScreenProps<
+//   RootStackParamList,
+//   'Monitor'
+// >;
+
+// export type ProfileScreen = NativeStackScreenProps<
+//   RootStackParamList,
+//   'Profile'
+// >;
