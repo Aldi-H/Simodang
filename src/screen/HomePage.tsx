@@ -36,7 +36,7 @@ const HomePage = () => {
           </View>
           <View
             style={styles.cardInformationContainer}
-            className="rounded-xl my-2 justify-center items-center">
+            className="rounded-xl my-5 justify-center items-center">
             <InformationCardComponent />
           </View>
         </View>
