@@ -67,8 +67,11 @@ const InformationCardComponent = () => {
         return (
           <View key={index} className="items-center">
             <View>{item.icon}</View>
-            <Text style={styles.quantityStyle}>{item.quantity}</Text>
-            <Text style={styles.nameStyle} className="">
+            {/* Chnage this item quantity later */}
+            <Text style={styles.quantityStyle} className="-mt-1.5">
+              {item.quantity}
+            </Text>
+            <Text style={styles.nameStyle} className="-mt-0.5">
               {item.name}
             </Text>
           </View>
