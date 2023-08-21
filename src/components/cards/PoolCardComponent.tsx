@@ -16,11 +16,11 @@ const PoolCardComponent = ({ poolName }: PoolCardInterface) => {
     <View className="mr-4 ml-1">
       <TouchableOpacity
         style={styles.cardContainer}
-        className="my-2 p-3 rounded-lg shadow-md drop-shadow-sm shadow-gray-600 h-fit"
+        className="my-2 p-3 rounded-lg shadow-md drop-shadow-sm shadow-gray-600 h-fit w-fit"
         onPress={() => {
           console.log('Pressed');
         }}>
-        <View className="justify-center">
+        <View className="justify-center items-center">
           <View>
             {/* Change this image later */}
             <Image
@@ -53,7 +53,7 @@ const PoolCardComponent = ({ poolName }: PoolCardInterface) => {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: CONSTANT.themeColors.base,
-    width: wp('45%'),
+    // width: wp('45%'),
     // height: hp('26%'),
   },
   imageStyle: {
