@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 interface SplashProps {
@@ -8,14 +8,17 @@ interface SplashProps {
 
 const SplashScreen = ({ setIsLoading }: SplashProps) => {
   return (
-    <LottieView
-      style={styles.lottieContainer}
-      source={require('../assets/splashScreen/SimodangSpalshScreen.json')}
-      autoPlay
-      loop={false}
-      resizeMode="cover"
-      onAnimationFinish={() => setIsLoading(false)}
-    />
+    <>
+      <StatusBar hidden={true} />
+      <LottieView
+        style={styles.lottieContainer}
+        source={require('../assets/splashScreen/SimodangSpalshScreen.json')}
+        autoPlay
+        loop={false}
+        resizeMode="cover"
+        onAnimationFinish={() => setIsLoading(false)}
+      />
+    </>
   );
 };
 
