@@ -6,22 +6,28 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import InformationCardComponent from '../components/cards/InformationCardComponent';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
+import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIcon.svg';
 
 const HomePage = () => {
+  const navigation = useNavigation();
+
   return (
-    <View className="flex-1 relative">
+    <ScrollView style={styles.homePage} className="flex-1 relative">
       <StatusBar />
       <View
         style={styles.headerContainer}
         className="w-full absolute rounded-b-3xl "
       />
-      <SafeAreaView>
-        <View className="mx-8 justify-self-center">
-          <View className="flex-row mt-8 mx-0 gap-x-4 ">
+      <SafeAreaView className="mx-8">
+        <View className="justify-self-center">
+          <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
-              <Text style={styles.heading}>Hai, Name</Text>
+              <Text style={styles.heading}>Hai, Name!</Text>
               <Text style={styles.caption} className="my-1">
                 Bagaimana kondisi rata-rata kolam anda?
               </Text>
@@ -40,12 +46,44 @@ const HomePage = () => {
             <InformationCardComponent />
           </View>
         </View>
+
+        {/* Pool List Section */}
+        <View className="mt-7">
+          <View className="flex flex-row justify-between items-center">
+            <Text style={styles.myPool}>Kolam Saya</Text>
+            <TouchableOpacity
+              className="flex-row items-center"
+              onPress={() => {
+                navigation.navigate('Monitor');
+              }}>
+              <Text style={styles.showAll}>Lihat Semua</Text>
+              <ChevronRightIcon
+                size={CONSTANT.fontSizes.body}
+                color={CONSTANT.themeColors.font}
+                fill="black"
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="my-1">
+            <View className="flex flex-row mr-4">
+              <PoolCardComponent poolName={'Kolam Udang Petak 1'} />
+              <PoolCardComponent poolName={'Kolam Udang Bersama'} />
+              <PoolCardComponent poolName={'Kolam Udang 1'} />
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  homePage: {
+    backgroundColor: CONSTANT.themeColors.base,
+  },
   container: {
     backgroundColor: CONSTANT.themeColors.primary,
   },
@@ -59,13 +97,23 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: CONSTANT.customFonts.heading1,
-    color: CONSTANT.themeColors.base,
     fontSize: CONSTANT.fontSizes.heading1,
+    color: CONSTANT.themeColors.base,
   },
   caption: {
     fontFamily: CONSTANT.customFonts.caption,
-    color: CONSTANT.themeColors.base,
     fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.base,
+  },
+  myPool: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    fontSize: CONSTANT.fontSizes.heading2,
+    color: CONSTANT.themeColors.font,
+  },
+  showAll: {
+    fontFamily: CONSTANT.customFonts.caption,
+    fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
   },
 });
 
