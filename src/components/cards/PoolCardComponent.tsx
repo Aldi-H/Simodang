@@ -37,7 +37,7 @@ const PoolCardComponent = ({ poolName }: PoolCardInterface) => {
             <Text style={styles.cardLocation}>Location</Text>
           </View>
         </View>
-        <View className="items-end">
+        <View className="items-end mt-2">
           <View
             style={styles.indicatorContainer}
             className="flex flex-row justify-center gap-x-1 items-center rounded-full">
