@@ -12,18 +12,22 @@ import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIcon.svg';
+import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 
 const HomePage = () => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView style={styles.homePage} className="flex-1 relative">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.homePage}
+      className="flex-1 relative">
       <StatusBar />
       <View
         style={styles.headerContainer}
         className="w-full absolute rounded-b-3xl "
       />
-      <SafeAreaView className="mx-8">
+      <SafeAreaView className="mx-8 mb-4">
         <View className="justify-self-center">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
@@ -67,13 +71,23 @@ const HomePage = () => {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            className="my-1">
+            className="mt-2">
             <View className="flex flex-row mr-4">
               <PoolCardComponent poolName={'Kolam Udang Petak 1'} />
               <PoolCardComponent poolName={'Kolam Udang Bersama'} />
               <PoolCardComponent poolName={'Kolam Udang 1'} />
             </View>
           </ScrollView>
+        </View>
+
+        {/* News Section */}
+        <View className="mt-4">
+          <View>
+            <Text style={styles.informationForYou}>Informasi untuk Anda</Text>
+          </View>
+          <View className="mt-2">
+            <WebViewCardComponent />
+          </View>
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -113,6 +127,11 @@ const styles = StyleSheet.create({
   showAll: {
     fontFamily: CONSTANT.customFonts.caption,
     fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  informationForYou: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    fontSize: CONSTANT.fontSizes.heading2,
     color: CONSTANT.themeColors.font,
   },
 });
