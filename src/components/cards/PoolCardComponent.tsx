@@ -7,10 +7,10 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { CONSTANT } from '../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-interface PoolCardInterface {
+type PoolCardInterface = {
   poolName: string;
   poolLocation: string;
-}
+};
 
 const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
   return (
@@ -64,11 +64,11 @@ const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: CONSTANT.themeColors.base,
-    width: wp('45%'),
+    width: wp('40%'),
     height: hp('28%'),
   },
   image: {
-    width: wp('40%'),
+    width: wp('35%'),
     height: hp('13.5%'),
   },
   cardName: {
