@@ -5,11 +5,11 @@ import {
   // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import InformationCardComponent from '../components/cards/InformationCardComponent';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
+import InformationCardComponent from '../components/cards/InformationCardComponent';
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIcon.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
@@ -28,6 +28,7 @@ const HomePage = () => {
         className="w-full absolute rounded-b-3xl "
       />
       <SafeAreaView className="mx-8 mb-4">
+        {/* Header Section */}
         <View className="justify-self-center">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
@@ -72,7 +73,7 @@ const HomePage = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             className="mt-2">
-            <View className="flex flex-row mr-4">
+            <View className="flex flex-row">
               <PoolCardComponent
                 poolName="Kolam Udang 1"
                 poolLocation="Plososari, Mojokerto"
@@ -106,9 +107,6 @@ const HomePage = () => {
 const styles = StyleSheet.create({
   homePage: {
     backgroundColor: CONSTANT.themeColors.base,
-  },
-  container: {
-    backgroundColor: CONSTANT.themeColors.primary,
   },
   headerContainer: {
     backgroundColor: CONSTANT.themeColors.primary,
