@@ -73,9 +73,18 @@ const HomePage = () => {
             showsHorizontalScrollIndicator={false}
             className="mt-2">
             <View className="flex flex-row mr-4">
-              <PoolCardComponent poolName={'Kolam Udang Petak 1'} />
-              <PoolCardComponent poolName={'Kolam Udang Bersama'} />
-              <PoolCardComponent poolName={'Kolam Udang 1'} />
+              <PoolCardComponent
+                poolName="Kolam Udang 1"
+                poolLocation="Plososari, Mojokerto"
+              />
+              <PoolCardComponent
+                poolName="Kolam Udang Petak 1"
+                poolLocation="Blimbing, Malang"
+              />
+              <PoolCardComponent
+                poolName="Kolam Udang Bersama"
+                poolLocation="Lemah Kembar, Probolinggo"
+              />
             </View>
           </ScrollView>
         </View>
