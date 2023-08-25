@@ -6,6 +6,7 @@ import {
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { CONSTANT } from '../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 type PoolCardInterface = {
   poolName: string;
@@ -13,13 +14,20 @@ type PoolCardInterface = {
 };
 
 const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
+  const navigation = useNavigation();
+
+  const handleItemPress = (poolId: string) => {
+    console.log(`Detail of ${poolId}`);
+    navigation.navigate('PoolDetail', { poolId });
+  };
+
   return (
-    <View className="mr-2 ml-1">
+    <View className="items-center px-1">
       <TouchableOpacity
         style={styles.cardContainer}
         className="my-2 p-2 px-3 rounded-lg shadow-md drop-shadow-sm shadow-gray-600"
         onPress={() => {
-          console.log('Pressed');
+          handleItemPress(poolName);
         }}>
         <View>
           <View className="items-center">
@@ -64,11 +72,11 @@ const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: CONSTANT.themeColors.base,
-    width: wp('40%'),
+    width: wp('39%'),
     height: hp('28%'),
   },
   image: {
-    width: wp('35%'),
+    width: wp('34.5%'),
     height: hp('13.5%'),
   },
   cardName: {
