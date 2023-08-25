@@ -27,7 +27,7 @@ const HomePage = () => {
         style={styles.headerContainer}
         className="w-full absolute rounded-b-3xl "
       />
-      <SafeAreaView className="mx-8 mb-4">
+      <SafeAreaView className="mx-4 px-3 mb-4">
         {/* Header Section */}
         <View className="justify-self-center">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
@@ -73,7 +73,7 @@ const HomePage = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             className="mt-2">
-            <View className="flex flex-row">
+            <View className="flex-row">
               <PoolCardComponent
                 poolName="Kolam Udang 1"
                 poolLocation="Plososari, Mojokerto"
