@@ -23,13 +23,10 @@ const HomePage = () => {
       style={styles.homePage}
       className="flex-1 relative">
       <StatusBar />
-      <View
-        style={styles.headerContainer}
-        className="w-full absolute rounded-b-3xl "
-      />
-      <SafeAreaView className="mx-4 px-3 mb-4">
-        {/* Header Section */}
-        <View className="justify-self-center">
+
+      {/* Header Section */}
+      <View style={styles.headerContainer} className="w-full rounded-b-3xl">
+        <View className="justify-self-center mx-4 px-3">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
               <Text style={styles.heading}>Hai, Name!</Text>
@@ -40,7 +37,6 @@ const HomePage = () => {
             <View className="align-middle">
               <NotifIconSvg
                 height={hp('4%')}
-                width={hp('4%')}
                 fill={CONSTANT.themeColors.base}
               />
             </View>
@@ -51,7 +47,9 @@ const HomePage = () => {
             <InformationCardComponent />
           </View>
         </View>
+      </View>
 
+      <SafeAreaView className="mx-4 px-3 mb-4">
         {/* Pool List Section */}
         <View className="mt-7">
           <View className="flex flex-row justify-between items-center">
@@ -75,16 +73,16 @@ const HomePage = () => {
             className="mt-2">
             <View className="flex-row">
               <PoolCardComponent
-                poolName="Kolam Udang 1"
-                poolLocation="Plososari, Mojokerto"
+                poolNameProps="Kolam Udang 1"
+                poolLocationProps="Plososari, Mojokerto"
               />
               <PoolCardComponent
-                poolName="Kolam Udang Petak 1"
-                poolLocation="Blimbing, Malang"
+                poolNameProps="Kolam Udang Petak 1"
+                poolLocationProps="Blimbing, Malang"
               />
               <PoolCardComponent
-                poolName="Kolam Udang Bersama"
-                poolLocation="Lemah Kembar, Probolinggo"
+                poolNameProps="Kolam Udang Bersama"
+                poolLocationProps="Lemah Kembar, Probolinggo"
               />
             </View>
           </ScrollView>

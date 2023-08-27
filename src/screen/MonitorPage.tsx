@@ -59,19 +59,21 @@ const MonitorPage = () => {
   return (
     <ScrollView
       nestedScrollEnabled={true}
+      showsVerticalScrollIndicator={false}
       style={styles.homePage}
       className="flex-1 relative">
       <StatusBar />
+
+      {/* Header Section */}
       <View
         style={styles.headerContainer}
-        className="w-full absolute rounded-b-3xl "
-      />
-      <SafeAreaView className="mx-4 px-3 mb-4 items-center">
-        {/* Header Section */}
-        <View className="my-10">
+        className="w-full rounded-b-3xl fixed">
+        <View className="my-10 mx-4 px-3">
           <SearchComponent />
         </View>
+      </View>
 
+      <SafeAreaView className="m-4 px-3 items-center">
         {/* Pool List Section */}
         <View>
           <View className="flex flex-row justify-between items-center">
@@ -91,8 +93,8 @@ const MonitorPage = () => {
               data={Data}
               renderItem={({ item }) => (
                 <PoolCardComponent
-                  poolName={item.name}
-                  poolLocation={item.location}
+                  poolNameProps={item.name}
+                  poolLocationProps={item.location}
                 />
               )}
               numColumns={2}
