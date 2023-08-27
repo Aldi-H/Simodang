@@ -8,7 +8,7 @@ import {
 import { CONSTANT } from '../../themes';
 import WaterIcon from '../../assets/icons/WaterIcon.svg';
 import ShrimpSeedIcon from '../../assets/icons/ShrimpSeedIcon.svg';
-import PHIcon from '../../assets//icons/pHIcon.svg';
+import PHIconSolid from '../../assets//icons/pHIconSolid.svg';
 import AlerIcon from '../../assets/icons/AlertIcon.svg';
 
 const InformationCardComponent = () => {
@@ -37,7 +37,7 @@ const InformationCardComponent = () => {
     },
     {
       icon: (
-        <PHIcon
+        <PHIconSolid
           fill={CONSTANT.themeColors.font}
           height={hp('6.5%')}
           width={wp('6.5%')}
