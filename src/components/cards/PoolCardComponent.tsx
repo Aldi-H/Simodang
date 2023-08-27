@@ -9,11 +9,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 type PoolCardInterface = {
-  poolName: string;
-  poolLocation: string;
+  poolNameProps: string;
+  poolLocationProps: string;
 };
 
-const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
+const PoolCardComponent = ({
+  poolNameProps,
+  poolLocationProps,
+}: PoolCardInterface) => {
   const navigation = useNavigation();
 
   const handleItemPress = (poolId: string) => {
@@ -27,7 +30,7 @@ const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
         style={styles.cardContainer}
         className="my-2 p-2 px-3 rounded-lg shadow-md drop-shadow-sm shadow-gray-600"
         onPress={() => {
-          handleItemPress(poolName);
+          handleItemPress(poolNameProps);
         }}>
         <View>
           <View className="items-center">
@@ -43,16 +46,16 @@ const PoolCardComponent = ({ poolName, poolLocation }: PoolCardInterface) => {
           <View className="pt-3 items-start">
             {/* Change this text later */}
             <Text
-              style={styles.cardName}
+              style={styles.poolName}
               numberOfLines={1}
               className="text-ellipsis">
-              {poolName}
+              {poolNameProps}
             </Text>
             <Text
-              style={styles.cardLocation}
+              style={styles.poolLocation}
               numberOfLines={1}
               className="text-ellipsis">
-              {poolLocation}
+              {poolLocationProps}
             </Text>
           </View>
         </View>
@@ -79,12 +82,12 @@ const styles = StyleSheet.create({
     width: wp('34.5%'),
     height: hp('13.5%'),
   },
-  cardName: {
+  poolName: {
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.body,
     color: CONSTANT.themeColors.font,
   },
-  cardLocation: {
+  poolLocation: {
     fontFamily: CONSTANT.customFonts.caption,
     fontSize: CONSTANT.fontSizes.caption,
     color: CONSTANT.themeColors.font,
