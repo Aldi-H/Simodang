@@ -9,6 +9,7 @@ import {
 import { CONSTANT } from '../../themes';
 import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
 import BackIcon from '../../assets/icons/BackIcon.svg';
+import StackedLineChartComponent from '../../components/chart/StackedLineChartComponent';
 
 const PoolHistoryPage = () => {
   return (
@@ -49,6 +50,11 @@ const PoolHistoryPage = () => {
         <View>
           <Text style={styles.indicatorText}>1 Sept - 7 Sept</Text>
         </View>
+      </View>
+
+      {/* Chart Section */}
+      <View>
+        <StackedLineChartComponent />
       </View>
     </ScrollView>
   );
