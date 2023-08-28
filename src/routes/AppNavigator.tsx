@@ -18,7 +18,10 @@ import RegisterPage from '../screen/RegisterPage';
 import LoginPage from '../screen/LoginPage';
 import { RootStackParamList } from './NavigationTypes';
 import { CONSTANT } from '../themes';
-import ConditionPoolPage from '../screen/DetailPoolScreen/ConditionPoolPage';
+import PoolConditionPage from '../screen/DetailPoolScreen/PoolConditionPage';
+import PoolHistoryPage from '../screen/DetailPoolScreen/PoolHistoryPage';
+import PoolSettingPage from '../screen/DetailPoolScreen/PoolSettingPage';
+import PoolDetailPage from '../screen/DetailPoolScreen/PoolDetailPage';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -68,7 +71,10 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="WebView" component={WebView} />
         <Stack.Screen name="Notification" component={NotificationPage} />
-        <Stack.Screen name="PoolDetail" component={ConditionPoolPage} />
+        <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
+        <Stack.Screen name="PoolConditionPage" component={PoolConditionPage} />
+        <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
+        <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
