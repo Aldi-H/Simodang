@@ -1,11 +1,17 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
+// import { ScrollView } from 'react-native-gesture-handler';
 import * as shape from 'd3-shape';
 import { LineChart } from 'react-native-svg-charts';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { CONSTANT } from '../../themes';
 
 // import { CONSTANT } from '../../themes';
+
+const apx = (size: number = 0) => {
+  let width = Dimensions.get('window').width;
+  return (width / 750) * size;
+};
 
 const StackedLineChartComponent = () => {
   const suhu = [24, 29, 22, 28, 27, 26, 25, 21, 23, 30, 20, 24, 28, 22, 26];
@@ -47,76 +53,115 @@ const StackedLineChartComponent = () => {
     },
   ]; */
 
-  return (
-    <View>
-      <Text>Stacked Line Chart</Text>
-      <View className="flex-1">
-        <View className="flex-1">
-          <LineChart
-            data={suhu}
-            curve={shape.curveMonotoneX}
-            svg={{
-              stroke: CONSTANT.themeColors.tempIndicator,
-              strokeWidth: 2,
-            }}
-            style={{ height: hp('25%') }}
-          />
-        </View>
-        <View className="flex-1 -mt-44">
-          <LineChart
-            data={pH}
-            curve={shape.curveMonotoneX}
-            svg={{
-              stroke: CONSTANT.themeColors.phIndicator,
-              strokeWidth: 2,
-            }}
-            style={{ height: hp('25%') }}
-          />
-        </View>
-        <View className="flex-1 -mt-44">
-          <LineChart
-            data={TDO}
-            curve={shape.curveMonotoneX}
-            svg={{
-              stroke: CONSTANT.themeColors.TDOIndicator,
-              strokeWidth: 2,
-            }}
-            style={{ height: hp('25%') }}
-          />
-        </View>
-        <View className="flex-1 -mt-44">
-          <LineChart
-            data={TDS}
-            curve={shape.curveMonotoneX}
-            svg={{
-              stroke: CONSTANT.themeColors.TDSIndicator,
-              strokeWidth: 2,
-            }}
-            style={{ height: hp('25%') }}
-          />
-        </View>
-        <View className="flex-1 -mt-44">
-          <LineChart
-            data={turbiditas}
-            curve={shape.curveMonotoneX}
-            svg={{
-              stroke: CONSTANT.themeColors.tubidityIndicator,
-              strokeWidth: 2,
-            }}
-            style={{ height: hp('25%') }}
-          />
-        </View>
-      </View>
+  const verticalContentInset = { top: apx(40), bottom: apx(40) };
 
-      {/* <View className="mt-2">
-        <LineChart
-          data={sensorData}
-          curve={shape.curveMonotoneX}
-          style={{ height: hp('25%') }}
-        />
-      </View> */}
+  return (
+    <View style={styles.chartContainer}>
+      <LineChart
+        style={styles.areaChart}
+        data={TDS}
+        curve={shape.curveMonotoneX}
+        contentInset={verticalContentInset}
+        svg={{ stroke: CONSTANT.themeColors.tubidityIndicator }}
+      />
     </View>
   );
 };
+/* <View className="flex-1">
+  <LineChart
+    data={suhu}
+    curve={shape.curveMonotoneX}
+    svg={{
+      stroke: CONSTANT.themeColors.tempIndicator,
+      strokeWidth: 2,
+    }}
+    style={{ height: hp('25%') }}
+    contentInset={{ top: 20, bottom: 20 }}
+  />
+</View>
+<View className="flex-1">
+  <LineChart
+    data={pH}
+    curve={shape.curveMonotoneX}
+    svg={{
+      stroke: CONSTANT.themeColors.phIndicator,
+      strokeWidth: 2,
+    }}
+    style={{ height: hp('25%') }}
+    contentInset={{ top: 20, bottom: 20 }}
+  />
+</View>
+<View className="flex-1">
+  <LineChart
+    data={TDO}
+    curve={shape.curveMonotoneX}
+    svg={{
+      stroke: CONSTANT.themeColors.TDOIndicator,
+      strokeWidth: 2,
+    }}
+    style={{ height: hp('25%') }}
+    contentInset={{ top: 20, bottom: 20 }}
+  />
+</View>
+<View className="flex-1">
+  <LineChart
+    data={TDS}
+    curve={shape.curveMonotoneX}
+    svg={{
+      stroke: CONSTANT.themeColors.TDSIndicator,
+      strokeWidth: 2,
+    }}
+    style={{ height: hp('25%') }}
+    contentInset={{ top: 20, bottom: 20 }}
+  />
+</View>
+<View className="flex-1">
+  <LineChart
+    data={turbiditas}
+    curve={shape.curveMonotoneX}
+    svg={{
+      stroke: CONSTANT.themeColors.tubidityIndicator,
+      strokeWidth: 2,
+    }}
+    style={{ height: hp('25%') }}
+    contentInset={{ top: 20, bottom: 20 }}
+  />
+</View> */
+
+/* <View className="mt-2">
+    <LineChart
+      data={sensorData}
+      curve={shape.curveMonotoneX}
+      style={{ height: hp('25%') }}
+    />
+  </View> */
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    alignItems: 'stretch',
+  },
+  flexContainer: {
+    // flexDirection: 'row',
+    flex: 1,
+    // width: apx(750),
+    // height: apx(570),
+    height: hp('25%'),
+    alignSelf: 'stretch',
+    paddingHorizontal: apx(8),
+  },
+  chartContainer: {
+    flex: 1,
+    height: hp('25%'), // Adjust the height as needed
+  },
+  areaChart: {
+    flex: 1,
+  },
+  xAxisContainer: {
+    alignSelf: 'stretch',
+    width: apx(800),
+    height: apx(60),
+  },
+});
 
 export default StackedLineChartComponent;
