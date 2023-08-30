@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -13,7 +13,7 @@ import StackedLineChartComponent from '../../components/chart/StackedLineChartCo
 
 const PoolHistoryPage = () => {
   return (
-    <ScrollView showsVerticalScrollIndicator={false} className="my-1">
+    <View className="my-1">
       {/* Page Title Section */}
       <View>
         <Text style={styles.poolHistoryTitle}>Grafik Kondisi Kolam</Text>
@@ -56,7 +56,25 @@ const PoolHistoryPage = () => {
       <View>
         <StackedLineChartComponent />
       </View>
-    </ScrollView>
+
+      <View className="mb-5">
+        <Text>Test Text 1</Text>
+        <Text>Test Text 2</Text>
+        <Text>Test Text 3</Text>
+        <Text>Test Text 4</Text>
+        <Text>Test Text 5</Text>
+        <Text>Test Text 6</Text>
+        <Text>Test Text 7</Text>
+        <Text>Test Text 8</Text>
+        <Text>Test Text 9</Text>
+        <Text>Test Text 10</Text>
+        <Text>Test Text 11</Text>
+        <Text>Test Text 12</Text>
+        <Text>Test Text 13</Text>
+        <Text>Test Text 14</Text>
+        <Text>Test Text 15</Text>
+      </View>
+    </View>
   );
 };
 
