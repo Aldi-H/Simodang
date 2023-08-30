@@ -49,7 +49,7 @@ const PoolDetailPage = () => {
   // nestedScrollEnabled={true} showsVerticalScrollIndicator={false}
 
   return (
-    <View>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar />
 
       {/* Header Section */}
@@ -156,14 +156,14 @@ const PoolDetailPage = () => {
           </View>
 
           {/* Page Render */}
-          <ScrollView>
+          <View>
             {activeNav === 1 && <PoolConditionPage />}
             {activeNav === 2 && <PoolHistoryPage />}
             {activeNav === 3 && <PoolSettingPage />}
-          </ScrollView>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: CONSTANT.themeColors.base,
-    height: hp('90%'),
+    // height: hp('100%'),
   },
   poolName: {
     fontFamily: CONSTANT.customFonts.heading1,
