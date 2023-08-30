@@ -31,6 +31,11 @@ interface MenuProps {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator();
 
+//* Change this later
+const getIsSignedIn = () => {
+  return false;
+};
+
 const HomeNavigator = () => {
   return (
     <Tab.Navigator
@@ -59,23 +64,37 @@ const HomeNavigator = () => {
 };
 
 const AppNavigator = () => {
+  const isSignedIn = getIsSignedIn();
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: CONSTANT.themeColors.base },
-        }}>
-        <Stack.Screen name="Home" component={HomeNavigator} />
-        <Stack.Screen name="Register" component={RegisterPage} />
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="WebView" component={WebView} />
-        <Stack.Screen name="Notification" component={NotificationPage} />
-        <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
-        <Stack.Screen name="PoolConditionPage" component={PoolConditionPage} />
-        <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
-        <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
-      </Stack.Navigator>
+      {isSignedIn ? (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: CONSTANT.themeColors.base },
+          }}>
+          <Stack.Screen name="Home" component={HomeNavigator} />
+          <Stack.Screen name="WebView" component={WebView} />
+          <Stack.Screen name="Notification" component={NotificationPage} />
+          <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
+          <Stack.Screen
+            name="PoolConditionPage"
+            component={PoolConditionPage}
+          />
+          <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
+          <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: CONSTANT.themeColors.base },
+          }}>
+          <Stack.Screen name="Register" component={RegisterPage} />
+          <Stack.Screen name="Login" component={LoginPage} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
