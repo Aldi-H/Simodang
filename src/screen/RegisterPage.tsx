@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -6,6 +6,10 @@ import {
 } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 import { CONSTANT } from '../themes';
 import BackgroundImage from '../assets/images/BackgroundCircleStyle.svg';
@@ -15,10 +19,55 @@ import PasswordIcon from '../assets/icons/PasswordIcon.svg';
 import InputCheckBoxComponent from '../components/checkbox/InputCheckBoxComponent';
 import ButtonComponent from '../components/button/ButtonComponent';
 import GoogleIcon from '../assets/icons/GoogleIcon.svg';
+import axios from 'axios';
+import { WEBCLIENT_ID } from '@env';
 
 const RegisterPage = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: WEBCLIENT_ID,
+      offlineAccess: true,
+      forceCodeForRefreshToken: true,
+    });
+  });
+
+  const SignUp = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const sendUserInfo = await axios.post(
+        'https://webhook.site/e0220a2f-a88d-4396-9b0e-128d227c0a8a',
+        userInfo.user,
+      );
+
+      console.log(sendUserInfo);
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('User cancelled the login flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Signing in');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('Play services not available');
+      } else {
+        console.log('Some other error happened');
+        console.log(error.message);
+        console.log(error.code);
+      }
+    }
+  };
+
+  // const logOut = async () => {
+  //   try {
+  //     // const logOutUser = await axios.post('url');
+
+  //     console.log('logOutUser');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <View style={styles.registerPage} className="flex-1 justify-center">
@@ -74,8 +123,7 @@ const RegisterPage = () => {
 
             {/* Other Register Method */}
             <View className="mt-5">
-              <TouchableOpacity
-                onPress={() => console.log('Icon Google Pressed')}>
+              <TouchableOpacity onPress={SignUp}>
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
               </TouchableOpacity>
             </View>
@@ -100,6 +148,13 @@ const RegisterPage = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Temporary Logout */}
+        {/* <View>
+          <TouchableOpacity onPress={logOut}>
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
     </View>
   );
