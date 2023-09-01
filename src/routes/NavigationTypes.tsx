@@ -7,6 +7,8 @@ export type RootStackParamList = {
   Monitor: undefined;
   Profile: { userId: string };
   PoolDetail: { poolId: string };
+  LoginPage: undefined;
+  RegisterPage: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

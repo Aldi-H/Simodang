@@ -91,8 +91,8 @@ const AppNavigator = () => {
             headerShown: false,
             contentStyle: { backgroundColor: CONSTANT.themeColors.base },
           }}>
-          <Stack.Screen name="Register" component={RegisterPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="RegisterPage" component={RegisterPage} />
+          <Stack.Screen name="LoginPage" component={LoginPage} />
         </Stack.Navigator>
       )}
     </NavigationContainer>
