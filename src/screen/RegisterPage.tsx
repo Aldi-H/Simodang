@@ -5,6 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../themes';
 import BackgroundImage from '../assets/images/BackgroundCircleStyle.svg';
@@ -17,6 +18,7 @@ import GoogleIcon from '../assets/icons/GoogleIcon.svg';
 
 const RegisterPage = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <View style={styles.registerPage} className="flex-1 justify-center">
@@ -70,8 +72,8 @@ const RegisterPage = () => {
               <View style={styles.separator} className="flex-1" />
             </View>
 
-            {/* Other Login Method */}
-            <View className="mt-6">
+            {/* Other Register Method */}
+            <View className="mt-5">
               <TouchableOpacity
                 onPress={() => console.log('Icon Google Pressed')}>
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
@@ -79,7 +81,7 @@ const RegisterPage = () => {
             </View>
 
             {/* Button */}
-            <View className="mt-6 mb-4">
+            <View className="mt-5">
               <ButtonComponent
                 buttonText="Buat Akun"
                 style={styles.registerButton}
@@ -87,6 +89,16 @@ const RegisterPage = () => {
               />
             </View>
           </View>
+        </View>
+
+        {/* Redirect to Login Page */}
+        <View className="mt-6 justify-center items-center flex-row space-x-1">
+          <Text style={styles.redirectText}>Sudah memiliki akun?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
+            <Text style={styles.redirectToLogin} className="justify-center">
+              Masuk disini
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -125,6 +137,15 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANT.customFonts.caption,
     fontSize: CONSTANT.fontSizes.body,
     color: CONSTANT.themeColors.base,
+  },
+  redirectText: {
+    fontFamily: CONSTANT.customFonts.caption,
+    fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  redirectToLogin: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    color: CONSTANT.themeColors.primary,
   },
 });
 
