@@ -11,7 +11,7 @@ import {
   // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 // import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../themes';
@@ -73,7 +73,7 @@ const MonitorPage = () => {
         </View>
       </View>
 
-      <SafeAreaView className="m-4 px-3 items-center">
+      <SafeAreaView className="m-4 my-5 px-3 items-center">
         {/* Pool List Section */}
         <View>
           <View className="flex flex-row justify-between items-center">
@@ -83,12 +83,9 @@ const MonitorPage = () => {
               {/* Change this later */}
               <Text style={styles.count}>Count</Text>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.changePool}>Ubah</Text>
-            </TouchableOpacity>
           </View>
 
-          <View className="mt-2">
+          <View className="mt-3">
             <FlatList
               data={Data}
               renderItem={({ item }) => (
