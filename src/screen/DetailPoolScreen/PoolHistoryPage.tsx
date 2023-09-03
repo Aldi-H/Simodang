@@ -10,13 +10,19 @@ import { CONSTANT } from '../../themes';
 import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
 import BackIcon from '../../assets/icons/BackIcon.svg';
 import StackedLineChartComponent from '../../components/chart/StackedLineChartComponent';
+import DropdownComponent from '../../components/dropdown/DropdownComponent';
 
 const PoolHistoryPage = () => {
   return (
     <View className="my-1">
       {/* Page Title Section */}
-      <View>
+      <View className="flex flex-row justify-between items-center">
         <Text style={styles.poolHistoryTitle}>Grafik Kondisi Kolam</Text>
+        <View className="items-end">
+          <View className="my-3">
+            <DropdownComponent />
+          </View>
+        </View>
       </View>
 
       {/* Indicator Filter Section */}
