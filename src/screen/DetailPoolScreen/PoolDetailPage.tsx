@@ -6,6 +6,8 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -49,125 +51,132 @@ const PoolDetailPage = () => {
   // nestedScrollEnabled={true} showsVerticalScrollIndicator={false}
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <StatusBar />
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <StatusBar />
 
-      {/* Header Section */}
-      <View>
-        {/* Change this image later */}
+        {/* Header Section */}
         <View>
-          <Image
-            source={{
-              uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIIAAABfCAYAAAAkox8MAAAAAXNSR0IArs4c6QAABH5JREFUeF7tmElP8zAQhs0mChKLBAXEcgBO/P+/wZ0T5cIiVrFICBDLp4nkfK5JUtNppXT85NbWnWTe9/F4JlPHx8c/jit7BaYAIXsGCgEAAQ4AAQb+K0BFgAYqAgxQEWAgUoCjASQ4GmCAowEGOBpgoEoBegS4oEeAAXoEGKBHgAF6BBioVYBmEThoFmGAZhEGaBZhgGYRBmgWYaBZAaYGCGFqgAGmBhhgaoABpgYYYGqAAaYGGEhQgPExQaQclgBCDi4n5AgICSLlsAQQcnA5IUdASBAphyWAkIPLCTkCQoJIOSwBhBxcTsgREBJEymEJIOTgckKOgJAgUg5LWgvC4uKiOzg4cI+Pj+78/LzPi93dXbe5uVl+J2tOT08b11xfX/+KMwqDDw8P3erqahHq+/vbXVxcuJubmzL0xsaG29nZcdPT0323G9fzDJtTa0E4OjpyAkMsmBf29va2MNZ/fn5+LmEQULrdbmlK/HlYseL/CQTLy8vlfeRZtre33eXlZQmD3Ht9fd2dnZ25p6enUd165HFaB8LKyorb3993MzMzRbIxCAKI/Nbr9dzr62uxRgxZWFgovpNLKsnX15c7OTkpBZP/yRV+p1HTP+fLy0tfNQqfRZ4v/qy55zj/2yoQvLifn5/u/v7ebW1tOb/zm0QI4ZibmytAuru76zsKmnZmeF8PmD+aZmdnK3dz1e6XZ4zvI8/28fHx6+gap6nDxG4VCGEC8RFQl1zVURGXZ29QeFzE8eI4cdmvWj/oPu/v733VzcdoW38gzzWxIIRHiAjud3LTTm0CwR8xS0tLRTWRtWHfEYPQdDT4vkH+I43i29tbeST5RrdtMEwsCKExsnvFQGnI5ufnfzVsKRVB1tTBVVeNpOx3Op2+ZlGMlyueHsIYVX3OMOV8lP8xAUK4O6V5G1Syw/EuFtOPg6k71k83Ekcqk1SRtbW1RhBCcNsySZgDQcr6X5tFD0M488vUMczIl2JyyppR7vaUWBMFgu/k49EwbPQeHh6GGh99bBHt6urK7e3tFTu8btys6hHi56t7fzHqUTbF6EFrJgoEf9bLW0VfukMDfcMYN2QpL5SqXkKF96kSUgyVnsRXjnjSqHq2QdPIIMPG9fvEgRDC4EWRFzfxzo1fQzed+b6ihN29xI6bwToYxHC5qo4TD4MAI1fVa+hxmfuXuK0F4S9JsFavACDoNTQRARBM2KhPAhD0GpqIAAgmbNQnAQh6DU1EAAQTNuqTAAS9hiYiAIIJG/VJAIJeQxMRAMGEjfokAEGvoYkIgGDCRn0SgKDX0EQEQDBhoz4JQNBraCICIJiwUZ8EIOg1NBEBEEzYqE8CEPQamogACCZs1CcBCHoNTUQABBM26pMABL2GJiIAggkb9UkAgl5DExEAwYSN+iQAQa+hiQiAYMJGfRKAoNfQRARAMGGjPglA0GtoIgIgmLBRnwQg6DU0EQEQTNioTwIQ9BqaiAAIJmzUJwEIeg1NRAAEEzbqkwAEvYYmIgCCCRv1SQCCXkMTEQDBhI36JP4BMtagSg3G4XkAAAAASUVORK5CYII=',
-            }}
-            style={styles.imageHeader}
-            className="w-full"
-          />
-        </View>
-        <View className="mx-4 mt-6 px-3 absolute">
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <BackIcon height={hp('4%')} fill={CONSTANT.themeColors.font} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.container} className="w-full -mt-10 rounded-t-3xl ">
-        <View className="mx-4 mt-6 px-3">
-          {/* Header Title Section */}
-          <View className="mt-1 space-y-2">
-            <View className="flex flex-row space-x-2 items-center ">
-              <Text
-                style={styles.poolName}
-                numberOfLines={1}
-                className="text-ellipsis">
-                Kolam Udang Petak Bersama
-              </Text>
-              <View style={styles.separator} className="rounded-full" />
-            </View>
-            <View>
-              <Text
-                style={styles.poolLocation}
-                numberOfLines={2}
-                className="text-ellipsis">
-                Jl. Veteran, Ketawanggede, Lowokwaru, Malang, Jawa Timur
-              </Text>
-            </View>
-          </View>
-
-          {/* Navbar Section */}
-          <View className="justify-center items-center my-4">
-            <View className="border-t border-gray-300 w-full opacity-20" />
-            <FlatList
-              data={NavList}
-              horizontal
-              scrollEnabled={false}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => {
-                let isActive = item.id === activeNav;
-                let activeTextClass = isActive ? 'font-bold ' : '';
-
-                return (
-                  <View>
-                    <TouchableOpacity
-                      className="px-2"
-                      onPress={() => setActiveNav(item.id)}>
-                      {item.Icon === GearIconOutline ? (
-                        <View className="flex-row justify-center items-center space-x-2">
-                          <item.Icon
-                            width={wp('6%')}
-                            height={hp('5%')}
-                            stroke={CONSTANT.themeColors.primary}
-                          />
-                          <Text
-                            style={styles.navTextInactive}
-                            className={activeTextClass}>
-                            {item.name}
-                          </Text>
-                        </View>
-                      ) : (
-                        <View className="flex-row justify-center items-center space-x-2">
-                          <item.Icon
-                            width={wp('5%')}
-                            height={hp('5%')}
-                            fill={CONSTANT.themeColors.primary}
-                          />
-                          <Text
-                            style={styles.navTextInactive}
-                            className={activeTextClass}>
-                            {item.name}
-                          </Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                    {isActive && (
-                      <View
-                        style={styles.activeIndocator}
-                        className="h-0.5 w-full rounded-full "
-                      />
-                    )}
-                    <View className="border-b border-gray-300 w-full opacity-20" />
-                  </View>
-                );
+          {/* Change this image later */}
+          <View>
+            <Image
+              source={{
+                uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIIAAABfCAYAAAAkox8MAAAAAXNSR0IArs4c6QAABH5JREFUeF7tmElP8zAQhs0mChKLBAXEcgBO/P+/wZ0T5cIiVrFICBDLp4nkfK5JUtNppXT85NbWnWTe9/F4JlPHx8c/jit7BaYAIXsGCgEAAQ4AAQb+K0BFgAYqAgxQEWAgUoCjASQ4GmCAowEGOBpgoEoBegS4oEeAAXoEGKBHgAF6BBioVYBmEThoFmGAZhEGaBZhgGYRBmgWYaBZAaYGCGFqgAGmBhhgaoABpgYYYGqAAaYGGEhQgPExQaQclgBCDi4n5AgICSLlsAQQcnA5IUdASBAphyWAkIPLCTkCQoJIOSwBhBxcTsgREBJEymEJIOTgckKOgJAgUg5LWgvC4uKiOzg4cI+Pj+78/LzPi93dXbe5uVl+J2tOT08b11xfX/+KMwqDDw8P3erqahHq+/vbXVxcuJubmzL0xsaG29nZcdPT0323G9fzDJtTa0E4OjpyAkMsmBf29va2MNZ/fn5+LmEQULrdbmlK/HlYseL/CQTLy8vlfeRZtre33eXlZQmD3Ht9fd2dnZ25p6enUd165HFaB8LKyorb3993MzMzRbIxCAKI/Nbr9dzr62uxRgxZWFgovpNLKsnX15c7OTkpBZP/yRV+p1HTP+fLy0tfNQqfRZ4v/qy55zj/2yoQvLifn5/u/v7ebW1tOb/zm0QI4ZibmytAuru76zsKmnZmeF8PmD+aZmdnK3dz1e6XZ4zvI8/28fHx6+gap6nDxG4VCGEC8RFQl1zVURGXZ29QeFzE8eI4cdmvWj/oPu/v733VzcdoW38gzzWxIIRHiAjud3LTTm0CwR8xS0tLRTWRtWHfEYPQdDT4vkH+I43i29tbeST5RrdtMEwsCKExsnvFQGnI5ufnfzVsKRVB1tTBVVeNpOx3Op2+ZlGMlyueHsIYVX3OMOV8lP8xAUK4O6V5G1Syw/EuFtOPg6k71k83Ekcqk1SRtbW1RhBCcNsySZgDQcr6X5tFD0M488vUMczIl2JyyppR7vaUWBMFgu/k49EwbPQeHh6GGh99bBHt6urK7e3tFTu8btys6hHi56t7fzHqUTbF6EFrJgoEf9bLW0VfukMDfcMYN2QpL5SqXkKF96kSUgyVnsRXjnjSqHq2QdPIIMPG9fvEgRDC4EWRFzfxzo1fQzed+b6ihN29xI6bwToYxHC5qo4TD4MAI1fVa+hxmfuXuK0F4S9JsFavACDoNTQRARBM2KhPAhD0GpqIAAgmbNQnAQh6DU1EAAQTNuqTAAS9hiYiAIIJG/VJAIJeQxMRAMGEjfokAEGvoYkIgGDCRn0SgKDX0EQEQDBhoz4JQNBraCICIJiwUZ8EIOg1NBEBEEzYqE8CEPQamogACCZs1CcBCHoNTUQABBM26pMABL2GJiIAggkb9UkAgl5DExEAwYSN+iQAQa+hiQiAYMJGfRKAoNfQRARAMGGjPglA0GtoIgIgmLBRnwQg6DU0EQEQTNioTwIQ9BqaiAAIJmzUJwEIeg1NRAAEEzbqkwAEvYYmIgCCCRv1SQCCXkMTEQDBhI36JP4BMtagSg3G4XkAAAAASUVORK5CYII=',
               }}
+              style={styles.imageHeader}
+              className="w-full"
             />
           </View>
-
-          {/* Page Render */}
-          <View>
-            {activeNav === 1 && <PoolConditionPage />}
-            {activeNav === 2 && <PoolHistoryPage />}
-            {activeNav === 3 && <PoolSettingPage />}
+          <View className="mx-4 mt-6 px-3 absolute">
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <BackIcon height={hp('4%')} fill={CONSTANT.themeColors.font} />
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </ScrollView>
+
+        <View style={styles.container} className="w-full -mt-10 rounded-t-3xl ">
+          <View className="mx-4 mt-6 px-3">
+            {/* Header Title Section */}
+            <View className="mt-1 space-y-2">
+              <View className="flex flex-row space-x-2 items-center ">
+                <Text
+                  style={styles.poolName}
+                  numberOfLines={1}
+                  className="text-ellipsis">
+                  Kolam Udang Petak Bersama
+                </Text>
+                <View style={styles.separator} className="rounded-full" />
+              </View>
+              <View>
+                <Text
+                  style={styles.poolLocation}
+                  numberOfLines={2}
+                  className="text-ellipsis">
+                  Jl. Veteran, Ketawanggede, Lowokwaru, Malang, Jawa Timur
+                </Text>
+              </View>
+            </View>
+
+            {/* Navbar Section */}
+            <View className="justify-center items-center my-4">
+              <View className="border-t border-gray-300 w-full opacity-20" />
+              <FlatList
+                data={NavList}
+                horizontal
+                scrollEnabled={false}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => {
+                  let isActive = item.id === activeNav;
+                  let activeTextClass = isActive ? 'font-bold ' : '';
+
+                  return (
+                    <View>
+                      <TouchableOpacity
+                        className="px-2"
+                        onPress={() => setActiveNav(item.id)}>
+                        {item.Icon === GearIconOutline ? (
+                          <View className="flex-row justify-center items-center space-x-2">
+                            <item.Icon
+                              width={wp('6%')}
+                              height={hp('5%')}
+                              stroke={CONSTANT.themeColors.primary}
+                            />
+                            <Text
+                              style={styles.navTextInactive}
+                              className={activeTextClass}>
+                              {item.name}
+                            </Text>
+                          </View>
+                        ) : (
+                          <View className="flex-row justify-center items-center space-x-2">
+                            <item.Icon
+                              width={wp('5%')}
+                              height={hp('5%')}
+                              fill={CONSTANT.themeColors.primary}
+                            />
+                            <Text
+                              style={styles.navTextInactive}
+                              className={activeTextClass}>
+                              {item.name}
+                            </Text>
+                          </View>
+                        )}
+                      </TouchableOpacity>
+                      {isActive && (
+                        <View
+                          style={styles.activeIndocator}
+                          className="h-0.5 w-full rounded-full "
+                        />
+                      )}
+                      <View className="border-b border-gray-300 w-full opacity-20" />
+                    </View>
+                  );
+                }}
+              />
+            </View>
+
+            {/* Page Render */}
+            <View>
+              {activeNav === 1 && <PoolConditionPage />}
+              {activeNav === 2 && <PoolHistoryPage />}
+              {activeNav === 3 && <PoolSettingPage />}
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   imageHeader: {
     height: hp('30%'),
   },
