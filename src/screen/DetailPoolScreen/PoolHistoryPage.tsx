@@ -11,6 +11,7 @@ import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
 import BackIcon from '../../assets/icons/BackIcon.svg';
 import StackedLineChartComponent from '../../components/chart/StackedLineChartComponent';
 import DropdownComponent from '../../components/dropdown/DropdownComponent';
+import TableComponent from '../../components/table/TableComponent';
 
 const PoolHistoryPage = () => {
   return (
@@ -64,21 +65,7 @@ const PoolHistoryPage = () => {
       </View>
 
       <View className="mb-5">
-        <Text>Test Text 1</Text>
-        <Text>Test Text 2</Text>
-        <Text>Test Text 3</Text>
-        <Text>Test Text 4</Text>
-        <Text>Test Text 5</Text>
-        <Text>Test Text 6</Text>
-        <Text>Test Text 7</Text>
-        <Text>Test Text 8</Text>
-        <Text>Test Text 9</Text>
-        <Text>Test Text 10</Text>
-        <Text>Test Text 11</Text>
-        <Text>Test Text 12</Text>
-        <Text>Test Text 13</Text>
-        <Text>Test Text 14</Text>
-        <Text>Test Text 15</Text>
+        <TableComponent />
       </View>
     </View>
   );
