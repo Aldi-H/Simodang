@@ -2229,6 +2229,15 @@
     "@types/react-native" "*"
     react-native-svg "^6.2.1"
 
+"@types/react-native-table-component@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@types/react-native-table-component/-/react-native-table-component-1.2.4.tgz#0bc22c740de3b15a4c6833550cfcea8dc2190cba"
+  integrity sha512-JxTc3HXkBPxY/aFJpb4XFot+CM8ismemFCcPy7GlguX9C7Xc+kCmVOmFmA/o1jX2BNPuM45OS264QL6BMlPa6Q==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+    csstype "^3.0.3"
+
 "@types/react-native@*":
   version "0.72.2"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.72.2.tgz#27c931a899c555b28e20cdd12e570b017808de96"
@@ -3239,7 +3248,7 @@ csso@^5.0.5:
   dependencies:
     css-tree "~2.2.0"
 
-csstype@^3.0.2:
+csstype@^3.0.2, csstype@^3.0.3:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
@@ -6707,6 +6716,10 @@ react-native-svg@^6.2.1:
     color "^2.0.1"
     lodash "^4.16.6"
     pegjs "^0.10.0"
+
+react-native-table-component@sturmenta/react-native-table-component#e1582aaba92b7e070c31c98b116eea9c23e17f6d:
+  version "1.2.1"
+  resolved "https://codeload.github.com/sturmenta/react-native-table-component/tar.gz/e1582aaba92b7e070c31c98b116eea9c23e17f6d"
 
 react-native@0.72.4:
   version "0.72.4"
