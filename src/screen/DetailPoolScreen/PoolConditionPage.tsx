@@ -14,14 +14,20 @@ const PoolConditionPage = () => {
       </View>
 
       <View className="mb-2">
-        <DisplayTextComponent DisplayTitle="Kode Alat" DisplayValue="A-23CD" />
+        <DisplayTextComponent
+          DisplayTitle="Kode Alat"
+          DisplayValue="A-23CD"
+          TextStyle="ml-3"
+        />
         <DisplayTextComponent
           DisplayTitle="Tanggal Masuk Benih"
           DisplayValue="12 Agustus 2023"
+          TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="Status Tambak"
           DisplayValue="Kosong"
+          TextStyle="ml-3"
         />
       </View>
 
@@ -31,10 +37,26 @@ const PoolConditionPage = () => {
       </View>
 
       <View className="mb-4">
-        <DisplayTextComponent DisplayTitle="Suhu" DisplayValue="29&#176;C" />
-        <DisplayTextComponent DisplayTitle="pH" DisplayValue="8.3" />
-        <DisplayTextComponent DisplayTitle="TDO" DisplayValue="1.1 mg/L" />
-        <DisplayTextComponent DisplayTitle="TDS" DisplayValue="6 ppm" />
+        <DisplayTextComponent
+          DisplayTitle="Suhu"
+          DisplayValue="29&#176;C"
+          TextStyle="ml-3"
+        />
+        <DisplayTextComponent
+          DisplayTitle="pH"
+          DisplayValue="8.3"
+          TextStyle="ml-3"
+        />
+        <DisplayTextComponent
+          DisplayTitle="TDO"
+          DisplayValue="1.1 mg/L"
+          TextStyle="ml-3"
+        />
+        <DisplayTextComponent
+          DisplayTitle="TDS"
+          DisplayValue="6 ppm"
+          TextStyle="ml-3"
+        />
         <DisplayTextComponent
           DisplayTitle="Turbiditas"
           DisplayValue="0.25 NTU"
