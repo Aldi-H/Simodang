@@ -1,10 +1,11 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Modal } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+// import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../../themes';
 import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
@@ -12,8 +13,22 @@ import BackIcon from '../../assets/icons/BackIcon.svg';
 import StackedLineChartComponent from '../../components/chart/StackedLineChartComponent';
 import DropdownComponent from '../../components/dropdown/DropdownComponent';
 import TableComponent from '../../components/table/TableComponent';
+import DrawerScreenPage from './drawer/DrawerScreenPage';
+// import CalendarComponent from '../../components/calendar/CalendarComponent';
 
 const PoolHistoryPage = () => {
+  const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState(false);
+
+  const handleOpenBottomDrawer = () => {
+    setIsBottomDrawerOpen(true);
+    console.log('Drawer Open');
+  };
+
+  const handleCloseBottomDrawer = () => {
+    setIsBottomDrawerOpen(false);
+    console.log('Drawer Close');
+  };
+
   return (
     <View className="my-1">
       {/* Page Title Section */}
@@ -26,6 +41,17 @@ const PoolHistoryPage = () => {
         </View>
       </View>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isBottomDrawerOpen}
+        onRequestClose={handleCloseBottomDrawer}>
+        <DrawerScreenPage
+          CloseDrawer={handleCloseBottomDrawer}
+          UpdateDrawer={() => console.log('Perbarui Pressed')}
+        />
+      </Modal>
+
       {/* Indicator Filter Section */}
       <View className="flex flex-row justify-between items-center my-3">
         <TouchableHighlight
@@ -33,6 +59,7 @@ const PoolHistoryPage = () => {
           className="p-1 rounded-md"
           onPress={() => {
             console.log('Button Pressed');
+            handleOpenBottomDrawer();
           }}>
           <View className="flex flex-row items-center space-x-2 pr-2">
             <View className="-mr-1">
@@ -88,6 +115,20 @@ const styles = StyleSheet.create({
   indicatorText: {
     fontFamily: CONSTANT.customFonts.body,
     fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+
+  drawerContainer: {
+    backgroundColor: CONSTANT.themeColors.base,
+  },
+  actionText: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  dateRange: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    fontSize: CONSTANT.fontSizes.heading2,
     color: CONSTANT.themeColors.font,
   },
 });
