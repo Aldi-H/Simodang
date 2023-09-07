@@ -5,8 +5,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import ThresholdFieldComponent from '../../components/Field/ThresholdFieldComponent';
 import { CONSTANT } from '../../themes';
+
+import ThresholdFieldComponent from '../../components/Field/ThresholdFieldComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 
 const PoolSettingPage = () => {
