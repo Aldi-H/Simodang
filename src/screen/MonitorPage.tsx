@@ -83,6 +83,9 @@ const MonitorPage = () => {
               {/* Change this later */}
               <Text style={styles.count}>Count</Text>
             </View>
+            <View>
+              <Text style={styles.count}>Ubah</Text>
+            </View>
           </View>
 
           <View className="mt-3">
