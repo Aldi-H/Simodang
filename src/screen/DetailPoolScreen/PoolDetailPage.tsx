@@ -17,10 +17,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../../themes';
+
 import BackIcon from '../../assets/icons/BackIcon.svg';
 import PhIconOutline from '../../assets/icons/pHIconOutline.svg';
 import HistoryIconOutline from '../../assets/icons/HistoryIconOutline.svg';
 import GearIconOutline from '../../assets/icons/GearIconOutline.svg';
+
 import PoolConditionPage from './PoolConditionPage';
 import PoolHistoryPage from './PoolHistoryPage';
 import PoolSettingPage from './PoolSettingPage';
