@@ -5,9 +5,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+import { CONSTANT } from '../themes';
+import { RootStackParamList } from './NavigationTypes';
+
 import HomeIconSvg from '../assets/icons/HomeIcon.svg';
 import ChartIconSvg from '../assets/icons/ChartIcon.svg';
-import UserIconSvg from '../assets/icons/UserIcon.svg';
+import UserIconSvg from '../assets/icons/UserIconSolid.svg';
 
 import HomePage from '../screen/HomePage';
 import ProfilePage from '../screen/ProfilePage';
@@ -16,8 +19,6 @@ import NotificationPage from '../screen/NotificationPage';
 import WebView from '../screen/WebView';
 import RegisterPage from '../screen/RegisterPage';
 import LoginPage from '../screen/LoginPage';
-import { RootStackParamList } from './NavigationTypes';
-import { CONSTANT } from '../themes';
 import PoolConditionPage from '../screen/DetailPoolScreen/PoolConditionPage';
 import PoolHistoryPage from '../screen/DetailPoolScreen/PoolHistoryPage';
 import PoolSettingPage from '../screen/DetailPoolScreen/PoolSettingPage';
@@ -33,7 +34,8 @@ const Stack = createNativeStackNavigator();
 
 //* Change this later
 const getIsSignedIn = () => {
-  return false;
+  // return false;
+  return true;
 };
 
 const HomeNavigator = () => {

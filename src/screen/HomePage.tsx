@@ -11,7 +11,7 @@ import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
 import InformationCardComponent from '../components/cards/InformationCardComponent';
 import PoolCardComponent from '../components/cards/PoolCardComponent';
-import NotifIconSvg from '../assets/icons/NotifIcon.svg';
+import NotifIconSvg from '../assets/icons/NotifIconSolid.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 
 const HomePage = () => {
