@@ -5,6 +5,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../../themes';
 
@@ -15,8 +16,11 @@ import HistoryIconOutline from '../../assets/icons/HistoryIconOutline.svg';
 import HelpIconOutline from '../../assets/icons/HelpIconOutline.svg';
 
 import ButtonIconComponent from '../../components/button/ButtonIconComponent';
+import ButtonComponent from '../../components/button/ButtonComponent';
 
 const ProfilePage = () => {
+  const navigation = useNavigation();
+
   const profileButtonData = [
     {
       id: 1,
@@ -33,6 +37,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
+      screenName: 'ProfileSettingPage',
     },
     {
       id: 2,
@@ -49,6 +54,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
+      screenName: '404NotFound',
     },
     {
       id: 3,
@@ -65,6 +71,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
+      screenName: '404NotFound',
     },
     {
       id: 4,
@@ -81,22 +88,23 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
+      screenName: '404NotFound',
     },
   ];
 
   return (
     <ScrollView style={styles.profilePage}>
-      {/* Header Title */}
       <SafeAreaView className="m-4 my-5 px-3 items-center">
+        {/* Header Title */}
         <View className="mt-4 items-center">
-          <Text style={styles.profilePageHeader}>Profile Page</Text>
+          <Text style={styles.profileHeaderTitle}>Profile Page</Text>
         </View>
 
         {/* Photo Section */}
         <View className="mt-10 items-center justify-center">
           <Image
             className="rounded-full"
-            style={styles.tinyLogo}
+            style={styles.userProfile}
             source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
           />
           <View className="mt-5 items-center space-y-1">
@@ -120,11 +128,22 @@ const ProfilePage = () => {
                   buttonText={item.buttonTitle}
                   leftIcon={item.leftIcon}
                   rightIcon={item.rightIcon}
-                  onPress={() => console.log(item.buttonTitle)}
+                  // @ts-ignore
+                  onPress={() => navigation.navigate(item.screenName)}
                 />
               </View>
             );
           })}
+        </View>
+
+        {/* Buttoon Section */}
+        <View className="mt-12 mb-6">
+          <ButtonComponent
+            buttonText="Keluar"
+            style={styles.logoutButton}
+            className="rounded-md h-fit py-1"
+            onPress={() => console.log('Logout Button Pressed')}
+          />
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -135,12 +154,12 @@ const styles = StyleSheet.create({
   profilePage: {
     backgroundColor: CONSTANT.themeColors.base,
   },
-  profilePageHeader: {
+  profileHeaderTitle: {
     fontFamily: CONSTANT.customFonts.heading1,
     fontSize: CONSTANT.fontSizes.heading1,
     color: CONSTANT.themeColors.font,
   },
-  tinyLogo: {
+  userProfile: {
     width: wp('30%'),
     height: hp('15%'),
   },
@@ -161,6 +180,13 @@ const styles = StyleSheet.create({
   buttonLeftIconProfile: {
     height: hp('5%'),
     width: wp('5%'),
+  },
+  logoutButton: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    fontSize: CONSTANT.fontSizes.heading2,
+    color: CONSTANT.themeColors.base,
+    backgroundColor: CONSTANT.themeColors.warningRed,
+    width: wp('80%'),
   },
 });
 
