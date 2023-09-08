@@ -6,20 +6,21 @@ import {
   SafeAreaView,
   FlatList,
   Text,
+  Pressable,
 } from 'react-native';
 import {
   // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { ScrollView } from 'react-native-gesture-handler';
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../themes';
 import SearchComponent from '../components/search/SearchComponent';
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 
 const MonitorPage = () => {
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const Data = [
     {
@@ -83,9 +84,9 @@ const MonitorPage = () => {
               {/* Change this later */}
               <Text style={styles.count}>Count</Text>
             </View>
-            <View>
-              <Text style={styles.count}>Ubah</Text>
-            </View>
+            <Pressable onPress={() => navigation.navigate('AddPool')}>
+              <Text style={styles.count}>Tambah</Text>
+            </Pressable>
           </View>
 
           <View className="mt-3">
