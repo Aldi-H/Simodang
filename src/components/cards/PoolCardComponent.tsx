@@ -8,7 +8,7 @@ import { CONSTANT } from '../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-type PoolCardInterface = {
+type PoolCardProps = {
   poolNameProps: string;
   poolLocationProps: string;
 };
@@ -16,7 +16,7 @@ type PoolCardInterface = {
 const PoolCardComponent = ({
   poolNameProps,
   poolLocationProps,
-}: PoolCardInterface) => {
+}: PoolCardProps) => {
   const navigation = useNavigation();
 
   const handleItemPress = (poolId: string) => {
