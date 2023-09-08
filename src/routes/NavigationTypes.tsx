@@ -5,10 +5,13 @@ import type { StackScreenProps } from '@react-navigation/stack';
 export type RootStackParamList = {
   Beranda: undefined;
   Monitor: undefined;
-  Profile: { userId: string };
+  Profile: undefined;
+  AddPool: undefined;
   PoolDetail: { poolId: string };
   LoginPage: undefined;
   RegisterPage: undefined;
+  ProfileSettingPage: undefined;
+  '404NotFound': undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

@@ -13,16 +13,19 @@ import ChartIconSvg from '../assets/icons/ChartIcon.svg';
 import UserIconSvg from '../assets/icons/UserIconSolid.svg';
 
 import HomePage from '../screen/HomePage';
-import ProfilePage from '../screen/ProfilePage';
+import ProfilePage from '../screen/ProfileScreen/ProfilePage';
 import MonitorPage from '../screen/MonitorPage';
 import NotificationPage from '../screen/NotificationPage';
 import WebView from '../screen/WebView';
-import RegisterPage from '../screen/RegisterPage';
-import LoginPage from '../screen/LoginPage';
+import RegisterPage from '../screen/AuthScreen/RegisterPage';
+import LoginPage from '../screen/AuthScreen/LoginPage';
 import PoolConditionPage from '../screen/DetailPoolScreen/PoolConditionPage';
 import PoolHistoryPage from '../screen/DetailPoolScreen/PoolHistoryPage';
 import PoolSettingPage from '../screen/DetailPoolScreen/PoolSettingPage';
 import PoolDetailPage from '../screen/DetailPoolScreen/PoolDetailPage';
+import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
+import NotFoundPage from '../screen/NotFoundPage';
+import AddPoolPage from '../screen/AddPoolPage';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -80,12 +83,18 @@ const AppNavigator = () => {
           <Stack.Screen name="WebView" component={WebView} />
           <Stack.Screen name="Notification" component={NotificationPage} />
           <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
+          <Stack.Screen name="AddPool" component={AddPoolPage} />
           <Stack.Screen
             name="PoolConditionPage"
             component={PoolConditionPage}
           />
           <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
           <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
+          <Stack.Screen
+            name="ProfileSettingPage"
+            component={ProfileSettingPage}
+          />
+          <Stack.Screen name="404NotFound" component={NotFoundPage} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator
