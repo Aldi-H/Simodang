@@ -4,14 +4,22 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type ButtonComponent = {
   buttonText: string;
+  onPress: () => void;
   className: string;
   style?: ViewStyle;
 };
 
-const ButtonComponent = ({ buttonText, style, className }: ButtonComponent) => {
+const ButtonComponent = ({
+  buttonText,
+  onPress,
+  style,
+  className,
+}: ButtonComponent) => {
   return (
-    <TouchableOpacity style={style} className={className}>
-      <Text style={style}>{buttonText}</Text>
+    <TouchableOpacity style={style} className={className} onPress={onPress}>
+      <Text style={style} className="text-center">
+        {buttonText}
+      </Text>
     </TouchableOpacity>
   );
 };
