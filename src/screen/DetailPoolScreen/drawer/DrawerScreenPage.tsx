@@ -30,11 +30,11 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
     },
     {
       id: 4,
-      title: 'Bulan Lalu',
+      title: '90 Hari Terakhir',
     },
     {
       id: 5,
-      title: '90 Hari Terakhir',
+      title: 'Periode Lalu',
     },
   ];
 
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     color: CONSTANT.themeColors.font,
   },
   itemContainer: {
-    // backgroundColor: 'gray', // Ganti dengan warna latar belakang default
     padding: 8,
     borderRadius: 8,
   },
