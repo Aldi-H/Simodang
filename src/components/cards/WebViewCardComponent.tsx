@@ -8,14 +8,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import WebViewImage1 from '../../assets/images/WebViewImage1.svg';
 import { CONSTANT } from '../../themes';
+import { useNavigation } from '@react-navigation/native';
 
 const WebViewCardComponent = () => {
+  const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       style={styles.WebViewCardContainer}
       className="flex rounded-md shadow-md shadow-gray-600"
       onPress={() => {
         console.log('WebView Card Pressed');
+        navigation.navigate('WebViewPage');
       }}>
       <View className="absolute self-center inset-0 object-cover z-0 my-16">
         <WebViewImage1 height={hp('13%')} />
