@@ -39,6 +39,7 @@
     "react-native-svg": "^13.10.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-table-component": "sturmenta/react-native-table-component#e1582aaba92b7e070c31c98b116eea9c23e17f6d",
+    "react-native-webview": "^13.6.0",
     "yup": "^1.2.0",
     "zustand": "^4.4.0"
   },
