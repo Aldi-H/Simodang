@@ -8,6 +8,8 @@ export type RootStackParamList = {
   Profile: undefined;
   AddPool: undefined;
   PoolDetail: { poolId: string };
+  // WebView: { webViewId: string };
+  WebViewPage: undefined;
   LoginPage: undefined;
   RegisterPage: undefined;
   ProfileSettingPage: undefined;

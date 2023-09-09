@@ -16,7 +16,7 @@ import HomePage from '../screen/HomePage';
 import ProfilePage from '../screen/ProfileScreen/ProfilePage';
 import MonitorPage from '../screen/MonitorPage';
 import NotificationPage from '../screen/NotificationPage';
-import WebView from '../screen/WebView';
+import WebViewPage from '../screen/WebViewPage';
 import RegisterPage from '../screen/AuthScreen/RegisterPage';
 import LoginPage from '../screen/AuthScreen/LoginPage';
 import PoolConditionPage from '../screen/DetailPoolScreen/PoolConditionPage';
@@ -80,7 +80,7 @@ const AppNavigator = () => {
             contentStyle: { backgroundColor: CONSTANT.themeColors.base },
           }}>
           <Stack.Screen name="Home" component={HomeNavigator} />
-          <Stack.Screen name="WebView" component={WebView} />
+          <Stack.Screen name="WebViewPage" component={WebViewPage} />
           <Stack.Screen name="Notification" component={NotificationPage} />
           <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
           <Stack.Screen name="AddPool" component={AddPoolPage} />
