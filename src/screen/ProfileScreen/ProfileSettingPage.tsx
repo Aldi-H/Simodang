@@ -28,25 +28,27 @@ const ProfileSettingPage = () => {
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView>
+      behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView className="m-4 my-5 px-3">
-          {/* Header Title*/}
           <View className="flex flex-row items-center justify-between mt-4">
             <Pressable
-              onPress={() => navigation.goBack()}
-              className="items-start">
+              className="items-start"
+              onPress={() => navigation.goBack()}>
               <BackIcon fill={CONSTANT.themeColors.font} />
             </Pressable>
+
             <View className="items-center">
               <Text style={styles.profileSettingHeaderTitle}>
                 Pengaturan Profil
               </Text>
             </View>
+
             <View />
           </View>
 
-          <View className="items-center">
+          {/* Input Field Section */}
+          <View>
             {/* Photo Section */}
             <View className="mt-10 items-center justify-center">
               <Image
@@ -60,17 +62,24 @@ const ProfileSettingPage = () => {
             <View className="mt-6">
               <InputFieldComponent
                 inputTitle="Nama"
+                placeholder="Nama"
                 defaultValue="Katou Megumi"
               />
               <InputFieldComponent
                 inputTitle="Email"
-                defaultValue="KatouMegumi@mail.jp"
+                placeholder="someone@en-japan.com"
+                defaultValue="katoumegumi@en-japan.com"
               />
               <InputFieldComponent
                 inputTitle="No. Hp"
-                defaultValue="08123456789"
+                placeholder="080-1234-5678"
+                defaultValue="080-1234-5678"
               />
-              <InputFieldComponent inputTitle="Alamat" defaultValue="Japan" />
+              <InputFieldComponent
+                inputTitle="Alamat"
+                placeholder="Tokyo"
+                defaultValue="Tokyo"
+              />
             </View>
 
             {/* Buttoon Section */}
@@ -107,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: CONSTANT.fontSizes.heading2,
     color: CONSTANT.themeColors.base,
     backgroundColor: CONSTANT.themeColors.primary,
-    width: wp('80%'),
   },
 });
 
