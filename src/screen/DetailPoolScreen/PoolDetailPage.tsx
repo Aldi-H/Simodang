@@ -55,7 +55,7 @@ const PoolDetailPage = () => {
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar />
 
