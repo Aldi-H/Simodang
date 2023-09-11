@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TextInput, Text, View } from 'react-native';
 import {
-  widthPercentageToDP as wp,
+  // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { CONSTANT } from '../../themes';
@@ -41,8 +41,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: CONSTANT.themeColors.complementary,
-    height: hp('7%'),
-    width: wp('80%'),
+    height: hp('6%'),
   },
   textInputStyle: {
     fontFamily: CONSTANT.customFonts.heading2,
