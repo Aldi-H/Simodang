@@ -10,12 +10,16 @@ type InputFieldProps = {
   inputTitle: string;
   defaultValue?: string;
   placeholder?: string;
+  value?: string | undefined;
+  onChangeText?: (text: string) => void;
 };
 
 const InputFieldComponent = ({
   inputTitle,
   defaultValue,
   placeholder,
+  value,
+  onChangeText,
 }: InputFieldProps) => {
   return (
     <View className="my-2">
@@ -28,11 +32,14 @@ const InputFieldComponent = ({
           className="w-fit pl-4"
           placeholder={placeholder}
           defaultValue={defaultValue}
+          value={value}
+          onChangeText={onChangeText}
         />
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   textInputTitleStyle: {
     fontFamily: CONSTANT.customFonts.body,
