@@ -6,13 +6,12 @@ import {
   SafeAreaView,
   FlatList,
   Text,
-  Pressable,
 } from 'react-native';
 import {
   // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../themes';
@@ -84,9 +83,9 @@ const MonitorPage = () => {
               {/* Change this later */}
               <Text style={styles.count}>Count</Text>
             </View>
-            <Pressable onPress={() => navigation.navigate('AddPool')}>
+            <TouchableOpacity onPress={() => navigation.navigate('AddPool')}>
               <Text style={styles.count}>Tambah</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
 
           <View className="mt-3">

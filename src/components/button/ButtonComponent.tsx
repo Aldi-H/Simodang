@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, ViewStyle } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Pressable, Text, ViewStyle } from 'react-native';
 
 type ButtonComponent = {
   buttonText: string;
@@ -16,11 +15,11 @@ const ButtonComponent = ({
   className,
 }: ButtonComponent) => {
   return (
-    <TouchableOpacity style={style} className={className} onPress={onPress}>
+    <Pressable style={style} className={className} onPress={onPress}>
       <Text style={style} className="text-center">
         {buttonText}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

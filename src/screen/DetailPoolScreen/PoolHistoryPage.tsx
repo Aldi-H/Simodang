@@ -36,7 +36,7 @@ const PoolHistoryPage = () => {
         <Text style={styles.poolHistoryTitle}>Grafik Kondisi Kolam</Text>
         <View className="items-end">
           <View className="my-3">
-            <DropdownComponent />
+            <DropdownComponent dropdownStyle={styles.dropdown} />
           </View>
         </View>
       </View>
@@ -103,6 +103,14 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.heading2,
     color: CONSTANT.themeColors.font,
+  },
+  dropdown: {
+    height: hp('4%'),
+    width: wp('30%'),
+    borderColor: CONSTANT.themeColors.disable,
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
   filterButton: {
     backgroundColor: CONSTANT.themeColors.primary,
