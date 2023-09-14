@@ -6,49 +6,45 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import { WEBCLIENT_ID } from '@env';
-import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+
+import useAuthStore from '../../store/auth/AuthStore';
 
 import { CONSTANT } from '../../themes';
+
 import BackgroundImage from '../../assets/images/BackgroundCircleStyle.svg';
-import InputFieldComponent from '../../components/input/InputFieldComponent';
+import InputFieldWithIconComponent from '../../components/input/InputFieldWithIconComponent';
 import EmailIcon from '../../assets/icons/EmailIcon.svg';
 import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
-import { useNavigation } from '@react-navigation/native';
 
 const LoginPage = () => {
+  const { isConfigured, configureGoogleSignin, SignIn, SignOut } =
+    useAuthStore();
   const navigation = useNavigation();
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: WEBCLIENT_ID,
-      offlineAccess: true,
-      forceCodeForRefreshToken: true,
-    });
-  });
+    !isConfigured && configureGoogleSignin();
+  }, [isConfigured, configureGoogleSignin]);
 
-  const SignIn = async () => {
+  /* const SignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      // console.log(userInfo.user);
       const value = {
         email: userInfo.user.email,
         name: userInfo.user.name,
         photo: userInfo.user.photo,
       };
 
-      const sendUserInfo = await axios.post(
+      await axios.post(
         'http://www.devel-filkomub.site/auth/login-google',
         value,
       );
 
-      console.log(sendUserInfo);
+      const token = await GoogleSignin.getTokens();
+
+      console.log(token.accessToken);
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login flow');
@@ -62,31 +58,40 @@ const LoginPage = () => {
         console.log(error.code);
       }
     }
-  };
+  }; */
 
-  const logOut = async () => {
+  /* const SignIn = async () => {
     try {
-      // const logOutUser = await axios.post('url');
-      // const logoutUser = await GoogleSignin.signOut();
-      const data = {};
-      const headers = {
-        Authorization:
-          'Bearer ff6453f8692e205905e138a3dd3c0260806d97b432029e7fe09095ff3824',
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+
+      const { idToken } = await GoogleSignin.signIn();
+
+      const userInfo = firebase.auth().currentUser;
+
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      const value = {
+        email: userInfo?.email,
+        name: userInfo?.displayName,
+        photo: userInfo?.photoURL,
+        uid: userInfo?.uid,
       };
-      const logoutUser = await axios.patch(
-        // 'https://webhook.site/e0220a2f-a88d-4396-9b0e-128d227c0a8a',
-        'http://www.devel-filkomub.site/auth/logout',
-        data,
-        {
-          headers,
-        },
+
+      await axios.post(
+        // 'http://www.devel-filkomub.site/auth/login-google',
+        'https://webhook.site/900527eb-07c1-46fd-9141-0c4e9ad8d65e',
+        value,
       );
 
-      console.log(logoutUser);
+      auth().signInWithCredential(googleCredential);
+
+      console.log(value);
     } catch (error) {
       console.error(error);
     }
-  };
+  }; */
 
   return (
     <View style={styles.loginPage} className="flex-1 justify-center">
@@ -107,12 +112,12 @@ const LoginPage = () => {
           <View className="mt-2 px-5 pb-6 items-center">
             {/* Input Field */}
             <View>
-              <InputFieldComponent
+              <InputFieldWithIconComponent
                 secureTextEntry={false}
                 leftIcon={<EmailIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Email"
               />
-              <InputFieldComponent
+              <InputFieldWithIconComponent
                 secureTextEntry={true}
                 leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Email"
@@ -130,10 +135,25 @@ const LoginPage = () => {
 
             {/* Other Login Method */}
             <View className="mt-5">
+              {/* {accessToken ? (
+                <TouchableOpacity onPress={SignOut}>
+                  <Text>Logout</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={SignIn}>
+                  <GoogleIcon height={hp('4%')} width={wp('7%')} />
+                </TouchableOpacity>
+              )} */}
+
               <TouchableOpacity onPress={SignIn}>
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
               </TouchableOpacity>
             </View>
+
+            {/* Login method using deep linking */}
+            {/* <View>
+              <OpenUrlButton url={supportedURL} />
+            </View> */}
 
             {/* Button */}
             <View className="mt-5">
@@ -141,12 +161,13 @@ const LoginPage = () => {
                 buttonText="Masuk"
                 style={styles.loginButton}
                 className="rounded-full h-fit w-fit px-3 py-1"
+                onPress={() => console.log('Login Button Pressed')}
               />
             </View>
           </View>
         </View>
 
-        {/* Redirect to Login Page */}
+        {/* Redirect to Register Page */}
         <View className="mt-6 justify-center items-center flex-row space-x-1">
           <Text style={styles.redirectText}>Belum memiliki akun?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('RegisterPage')}>
@@ -158,7 +179,7 @@ const LoginPage = () => {
 
         {/* Temporary Logout */}
         <View>
-          <TouchableOpacity onPress={logOut}>
+          <TouchableOpacity onPress={SignOut}>
             <Text>Logout</Text>
           </TouchableOpacity>
         </View>

@@ -26,6 +26,7 @@ import PoolDetailPage from '../screen/DetailPoolScreen/PoolDetailPage';
 import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
 import NotFoundPage from '../screen/NotFoundPage';
 import AddPoolPage from '../screen/AddPoolPage';
+// import useAuthStore from '../store/auth/AuthStore';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -37,8 +38,8 @@ const Stack = createNativeStackNavigator();
 
 //* Change this later
 const getIsSignedIn = () => {
-  // return false;
-  return true;
+  return false;
+  // return true;
 };
 
 const HomeNavigator = () => {
@@ -69,11 +70,12 @@ const HomeNavigator = () => {
 };
 
 const AppNavigator = () => {
-  const isSignedIn = getIsSignedIn();
+  // const { _isSignIn } = useAuthStore();
+  const _isSignIn = getIsSignedIn();
 
   return (
     <NavigationContainer>
-      {isSignedIn ? (
+      {_isSignIn ? (
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
