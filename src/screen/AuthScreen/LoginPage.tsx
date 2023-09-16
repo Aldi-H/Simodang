@@ -19,7 +19,7 @@ import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 
 const LoginPage = () => {
-  const { isConfigured, configureGoogleSignin, SignIn, SignOut } =
+  const { isConfigured, configureGoogleSignin, configureKeychain, SignIn } =
     useAuthStore();
   const navigation = useNavigation();
 
@@ -27,71 +27,9 @@ const LoginPage = () => {
     !isConfigured && configureGoogleSignin();
   }, [isConfigured, configureGoogleSignin]);
 
-  /* const SignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const value = {
-        email: userInfo.user.email,
-        name: userInfo.user.name,
-        photo: userInfo.user.photo,
-      };
-
-      await axios.post(
-        'http://www.devel-filkomub.site/auth/login-google',
-        value,
-      );
-
-      const token = await GoogleSignin.getTokens();
-
-      console.log(token.accessToken);
-    } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User cancelled the login flow');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Signing in');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play services not available');
-      } else {
-        console.log('Some other error happened');
-        console.log(error.message);
-        console.log(error.code);
-      }
-    }
-  }; */
-
-  /* const SignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-
-      const { idToken } = await GoogleSignin.signIn();
-
-      const userInfo = firebase.auth().currentUser;
-
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-      const value = {
-        email: userInfo?.email,
-        name: userInfo?.displayName,
-        photo: userInfo?.photoURL,
-        uid: userInfo?.uid,
-      };
-
-      await axios.post(
-        // 'http://www.devel-filkomub.site/auth/login-google',
-        'https://webhook.site/900527eb-07c1-46fd-9141-0c4e9ad8d65e',
-        value,
-      );
-
-      auth().signInWithCredential(googleCredential);
-
-      console.log(value);
-    } catch (error) {
-      console.error(error);
-    }
-  }; */
+  useEffect(() => {
+    configureKeychain();
+  }, []);
 
   return (
     <View style={styles.loginPage} className="flex-1 justify-center">
@@ -135,25 +73,10 @@ const LoginPage = () => {
 
             {/* Other Login Method */}
             <View className="mt-5">
-              {/* {accessToken ? (
-                <TouchableOpacity onPress={SignOut}>
-                  <Text>Logout</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity onPress={SignIn}>
-                  <GoogleIcon height={hp('4%')} width={wp('7%')} />
-                </TouchableOpacity>
-              )} */}
-
               <TouchableOpacity onPress={SignIn}>
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
               </TouchableOpacity>
             </View>
-
-            {/* Login method using deep linking */}
-            {/* <View>
-              <OpenUrlButton url={supportedURL} />
-            </View> */}
 
             {/* Button */}
             <View className="mt-5">
@@ -174,13 +97,6 @@ const LoginPage = () => {
             <Text style={styles.redirectToLogin} className="justify-center">
               Daftar disini
             </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Temporary Logout */}
-        <View>
-          <TouchableOpacity onPress={SignOut}>
-            <Text>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -17,8 +17,10 @@ import HelpIconOutline from '../../assets/icons/HelpIconOutline.svg';
 
 import ButtonIconComponent from '../../components/button/ButtonIconComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
+import useAuthStore from '../../store/auth/AuthStore';
 
 const ProfilePage = () => {
+  const { SignOut } = useAuthStore();
   const navigation = useNavigation();
 
   const profileButtonData = [
@@ -142,7 +144,7 @@ const ProfilePage = () => {
             buttonText="Keluar"
             style={styles.logoutButton}
             className="rounded-md h-fit py-1"
-            onPress={() => console.log('Logout Button Pressed')}
+            onPress={SignOut}
           />
         </View>
       </SafeAreaView>

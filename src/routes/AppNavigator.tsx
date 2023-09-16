@@ -26,7 +26,7 @@ import PoolDetailPage from '../screen/DetailPoolScreen/PoolDetailPage';
 import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
 import NotFoundPage from '../screen/NotFoundPage';
 import AddPoolPage from '../screen/AddPoolPage';
-// import useAuthStore from '../store/auth/AuthStore';
+import useAuthStore from '../store/auth/AuthStore';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -35,12 +35,6 @@ interface MenuProps {
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator();
-
-//* Change this later
-const getIsSignedIn = () => {
-  return false;
-  // return true;
-};
 
 const HomeNavigator = () => {
   return (
@@ -70,8 +64,8 @@ const HomeNavigator = () => {
 };
 
 const AppNavigator = () => {
-  // const { _isSignIn } = useAuthStore();
-  const _isSignIn = getIsSignedIn();
+  const { _isSignIn } = useAuthStore();
+  // const _isSignIn = getIsSignedIn();
 
   return (
     <NavigationContainer>
