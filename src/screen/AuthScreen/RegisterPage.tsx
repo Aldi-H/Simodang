@@ -6,69 +6,30 @@ import {
 } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import { WEBCLIENT_ID } from '@env';
-import axios from 'axios';
 
 import { CONSTANT } from '../../themes';
 import BackgroundImage from '../../assets/images/BackgroundCircleStyle.svg';
-import InputFieldComponent from '../../components/input/InputFieldComponent';
+import InputFieldWithIconComponent from '../../components/input/InputFieldWithIconComponent';
 import EmailIcon from '../../assets/icons/EmailIcon.svg';
 import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
 import InputCheckBoxComponent from '../../components/checkbox/InputCheckBoxComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
+import useAuthStore from '../../store/auth/AuthStore';
 
 const RegisterPage = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const { isConfigured, configureGoogleSignin, configureKeychain, SignIn } =
+    useAuthStore();
   const navigation = useNavigation();
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: WEBCLIENT_ID,
-      offlineAccess: true,
-      forceCodeForRefreshToken: true,
-    });
-  });
+    !isConfigured && configureGoogleSignin();
+  }, [isConfigured, configureGoogleSignin]);
 
-  const SignUp = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const sendUserInfo = await axios.post(
-        'https://webhook.site/e0220a2f-a88d-4396-9b0e-128d227c0a8a',
-        userInfo.user,
-      );
-
-      console.log(sendUserInfo);
-    } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User cancelled the login flow');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Signing in');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play services not available');
-      } else {
-        console.log('Some other error happened');
-        console.log(error.message);
-        console.log(error.code);
-      }
-    }
-  };
-
-  const logOut = async () => {
-    try {
-      // const logOutUser = await axios.post('url');
-      const logoutUser = await GoogleSignin.signOut();
-
-      console.log(logoutUser);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  useEffect(() => {
+    configureKeychain();
+  }, []);
 
   return (
     <View style={styles.registerPage} className="flex-1 justify-center">
@@ -89,17 +50,17 @@ const RegisterPage = () => {
           <View className="mt-2 px-5 pb-6 items-center">
             {/* Input Field */}
             <View>
-              <InputFieldComponent
+              <InputFieldWithIconComponent
                 secureTextEntry={false}
                 leftIcon={<EmailIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Email"
               />
-              <InputFieldComponent
+              <InputFieldWithIconComponent
                 secureTextEntry={true}
                 leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Password"
               />
-              <InputFieldComponent
+              <InputFieldWithIconComponent
                 secureTextEntry={true}
                 leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Konfirmasi Password"
@@ -124,7 +85,7 @@ const RegisterPage = () => {
 
             {/* Other Register Method */}
             <View className="mt-5">
-              <TouchableOpacity onPress={SignUp}>
+              <TouchableOpacity onPress={SignIn}>
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
               </TouchableOpacity>
             </View>
@@ -135,6 +96,7 @@ const RegisterPage = () => {
                 buttonText="Buat Akun"
                 style={styles.registerButton}
                 className="rounded-full h-fit w-fit px-3 py-1"
+                onPress={() => console.log('Register Pressed')}
               />
             </View>
           </View>
@@ -147,13 +109,6 @@ const RegisterPage = () => {
             <Text style={styles.redirectToLogin} className="justify-center">
               Masuk disini
             </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Temporary Logout */}
-        <View>
-          <TouchableOpacity onPress={logOut}>
-            <Text>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>
