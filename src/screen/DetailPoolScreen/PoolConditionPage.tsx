@@ -60,6 +60,7 @@ const PoolConditionPage = () => {
         <DisplayTextComponent
           DisplayTitle="Turbiditas"
           DisplayValue="0.25 NTU"
+          TextStyle="ml-3"
         />
       </View>
     </View>

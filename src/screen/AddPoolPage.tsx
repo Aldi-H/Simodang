@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -24,12 +23,18 @@ import { PhotoIcon } from 'react-native-heroicons/solid';
 
 import { CONSTANT } from '../themes';
 
+import useDeviceStore from '../store/device/DeviceStore';
+import { PondsStatusDropdown } from '../utils/dropdownData/DropdownData';
+
 import BackIcon from '../assets/icons/BackIcon.svg';
 import InputFieldComponent from '../components/input/InputFieldComponent';
 import DropdownComponent from '../components/dropdown/DropdownComponent';
 import { ModalComponent } from '../components/popupDialog/ModalComponent';
+import ButtonComponent from '../components/button/ButtonComponent';
 
 const AddPoolPage = () => {
+  const { getAllDevices, dropdownData } = useDeviceStore();
+
   const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -211,6 +216,10 @@ const AddPoolPage = () => {
     }
   }, [progress]);
 
+  useEffect(() => {
+    getAllDevices();
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
@@ -252,16 +261,18 @@ const AddPoolPage = () => {
               value={inputData.city}
               onChangeText={text => handleChangeForm('city', text)}
             />
-            {/* <InputFieldComponent
-              inputTitle="Kode Alat"
-              placeholder="Kode Alat"
-              value={inputData.city}
-              onChangeText={text => handleChangeForm('city', text)}
-            /> */}
 
             <View className="flex-row justify-between mt-4">
-              <DropdownComponent dropdownStyle={styles.dropdown} />
-              <DropdownComponent dropdownStyle={styles.dropdown} />
+              <DropdownComponent
+                dropdownPlaceholder="Id Perangkat"
+                dropdownData={dropdownData}
+                dropdownStyle={styles.dropdown}
+              />
+              <DropdownComponent
+                dropdownPlaceholder="Status Kolam"
+                dropdownData={PondsStatusDropdown}
+                dropdownStyle={styles.dropdown}
+              />
             </View>
 
             <Pressable className="mt-6" onPress={handleModal}>
@@ -364,8 +375,14 @@ const AddPoolPage = () => {
             </ModalComponent>
           </View>
 
-          <View className="mt-6">
-            <Button onPress={() => handleSubmit()} title="Submit" />
+          {/* Buttoon Section */}
+          <View className="mt-12 mb-6">
+            <ButtonComponent
+              buttonText="Simpan"
+              style={styles.submitButton}
+              className="rounded-md h-fit py-1"
+              onPress={() => handleSubmit()}
+            />
           </View>
         </SafeAreaView>
       </ScrollView>
@@ -434,6 +451,12 @@ const styles = StyleSheet.create({
   },
   footerModalCancel: {
     color: CONSTANT.themeColors.warningRed,
+  },
+  submitButton: {
+    fontFamily: CONSTANT.customFonts.heading2,
+    fontSize: CONSTANT.fontSizes.heading2,
+    color: CONSTANT.themeColors.base,
+    backgroundColor: CONSTANT.themeColors.primary,
   },
 });
 

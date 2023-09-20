@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import {
@@ -7,46 +7,20 @@ import {
 } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
-import axios from 'axios';
-
-// type DataDropdown = {
-//   Value: string;
-//   Label: string;
-// };
 
 type DropdownProps = {
   dropdownStyle: ViewStyle;
+  dropdownPlaceholder?: string;
+  dropdownData?: { value: string; label: string }[];
 };
 
-const DropdownComponent = ({ dropdownStyle }: DropdownProps) => {
+const DropdownComponent = ({
+  dropdownStyle,
+  dropdownPlaceholder,
+  dropdownData = [],
+}: DropdownProps) => {
   const [value, setValue] = useState<string | undefined>();
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [dropdownData, setDropdownData] = useState<
-    { value: string; label: string }[]
-  >([]);
-
-  const getDeviceData = async () => {
-    try {
-      const response = await axios.get(
-        'http://www.devel-filkomub.site/devices',
-      );
-      const data = response.data.map(
-        (valueItem: { id: string; name: string }) => {
-          return {
-            value: valueItem.id,
-            label: valueItem.id,
-          };
-        },
-      );
-      setDropdownData(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    getDeviceData();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -61,7 +35,7 @@ const DropdownComponent = ({ dropdownStyle }: DropdownProps) => {
         data={dropdownData}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? 'Ubah Chart' : '...'}
+        placeholder={!isFocus ? `${dropdownPlaceholder}` : '...'}
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
@@ -78,20 +52,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: CONSTANT.themeColors.base,
   },
-  /* dropdown: {
-    height: hp('4%'),
-    width: wp('30%'),
-    borderColor: CONSTANT.themeColors.disable,
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-  }, */
   dropdownItemContainer: {
     height: hp('7.5%'),
     borderRadius: 4,
   },
   dropdownContainer: {
-    height: hp('38%'),
     borderRadius: 4,
   },
   itemTextStyle: {

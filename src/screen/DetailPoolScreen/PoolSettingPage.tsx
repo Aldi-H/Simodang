@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
 
@@ -96,7 +93,6 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANT.customFonts.body,
     fontSize: CONSTANT.fontSizes.body,
     color: CONSTANT.themeColors.base,
-    height: hp('6.5%'),
   },
   widthInputContainer: {
     width: wp('15%'),

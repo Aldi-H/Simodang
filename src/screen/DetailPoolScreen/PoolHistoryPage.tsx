@@ -5,9 +5,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-// import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../../themes';
+import { ChartDropdown } from '../../utils/dropdownData/DropdownData';
+
 import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
 import BackIcon from '../../assets/icons/BackIcon.svg';
 import StackedLineChartComponent from '../../components/chart/StackedLineChartComponent';
@@ -36,7 +37,11 @@ const PoolHistoryPage = () => {
         <Text style={styles.poolHistoryTitle}>Grafik Kondisi Kolam</Text>
         <View className="items-end">
           <View className="my-3">
-            <DropdownComponent dropdownStyle={styles.dropdown} />
+            <DropdownComponent
+              dropdownPlaceholder="Ubah Chart"
+              dropdownData={ChartDropdown}
+              dropdownStyle={styles.dropdown}
+            />
           </View>
         </View>
       </View>
