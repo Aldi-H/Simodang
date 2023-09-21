@@ -19,13 +19,6 @@ const PoolCardComponent = ({
   poolLocationProps,
   onPress,
 }: PoolCardProps) => {
-  // const navigation = useNavigation();
-
-  // const handleItemPress = (poolId: string) => {
-  //   console.log(`Detail of ${poolId}`);
-  //   navigation.navigate('PoolDetail', { poolId });
-  // };
-
   return (
     <View className="items-center px-1">
       <TouchableOpacity
