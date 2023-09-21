@@ -46,7 +46,7 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(set => ({
     try {
       const response = await axios.get(`${BASE_URL}/devices`, {
         headers: {
-          Authorization: useAuthStore.getState().userDetail.token,
+          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
         },
       });
 
