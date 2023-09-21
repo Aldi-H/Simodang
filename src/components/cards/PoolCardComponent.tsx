@@ -6,32 +6,32 @@ import {
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { CONSTANT } from '../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 
 type PoolCardProps = {
   poolNameProps: string;
   poolLocationProps: string;
+  onPress: () => void;
 };
 
 const PoolCardComponent = ({
   poolNameProps,
   poolLocationProps,
+  onPress,
 }: PoolCardProps) => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
-  const handleItemPress = (poolId: string) => {
-    console.log(`Detail of ${poolId}`);
-    navigation.navigate('PoolDetail', { poolId });
-  };
+  // const handleItemPress = (poolId: string) => {
+  //   console.log(`Detail of ${poolId}`);
+  //   navigation.navigate('PoolDetail', { poolId });
+  // };
 
   return (
     <View className="items-center px-1">
       <TouchableOpacity
         style={styles.cardContainer}
         className="my-2 p-2 px-3 rounded-lg shadow-md drop-shadow-sm shadow-gray-600"
-        onPress={() => {
-          handleItemPress(poolNameProps);
-        }}>
+        onPress={onPress}>
         <View>
           <View className="items-center">
             {/* Change this image later */}
