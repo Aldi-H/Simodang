@@ -19,13 +19,12 @@ import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 
 const LoginPage = () => {
-  const { isConfigured, configureGoogleSignin, configureKeychain, SignIn } =
-    useAuthStore();
+  const { configureGoogleSignin, configureKeychain, SignIn } = useAuthStore();
   const navigation = useNavigation();
 
   useEffect(() => {
-    !isConfigured && configureGoogleSignin();
-  }, [isConfigured, configureGoogleSignin]);
+    configureGoogleSignin();
+  }, [configureGoogleSignin]);
 
   useEffect(() => {
     configureKeychain();

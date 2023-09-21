@@ -7,7 +7,7 @@ export type RootStackParamList = {
   Monitor: undefined;
   Profile: undefined;
   AddPool: undefined;
-  PoolDetail: { poolId: string };
+  PoolDetail: { pondId: string };
   // WebView: { webViewId: string };
   WebViewPage: undefined;
   LoginPage: undefined;

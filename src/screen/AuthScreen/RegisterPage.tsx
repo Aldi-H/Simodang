@@ -19,13 +19,12 @@ import useAuthStore from '../../store/auth/AuthStore';
 
 const RegisterPage = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const { isConfigured, configureGoogleSignin, configureKeychain, SignIn } =
-    useAuthStore();
+  const { configureGoogleSignin, configureKeychain, SignIn } = useAuthStore();
   const navigation = useNavigation();
 
   useEffect(() => {
-    !isConfigured && configureGoogleSignin();
-  }, [isConfigured, configureGoogleSignin]);
+    configureGoogleSignin();
+  }, [configureGoogleSignin]);
 
   useEffect(() => {
     configureKeychain();

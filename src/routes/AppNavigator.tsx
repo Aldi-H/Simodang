@@ -63,45 +63,56 @@ const HomeNavigator = () => {
   );
 };
 
+const MainNavigator = () => {
+  return (
+    <Stack.Navigator
+      // initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: CONSTANT.themeColors.base },
+      }}>
+      <Stack.Screen name="Home" component={HomeNavigator} />
+      <Stack.Screen name="WebViewPage" component={WebViewPage} />
+      <Stack.Screen name="Notification" component={NotificationPage} />
+      <Stack.Screen
+        name="PoolDetail"
+        component={PoolDetailPage}
+        options={({ route }) => {
+          return {
+            title: (route.params as { pondName?: string }).pondName ?? '',
+          } as { title: string };
+        }}
+      />
+      <Stack.Screen name="AddPool" component={AddPoolPage} />
+      <Stack.Screen name="PoolConditionPage" component={PoolConditionPage} />
+      <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
+      <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
+      <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
+      <Stack.Screen name="404NotFound" component={NotFoundPage} />
+    </Stack.Navigator>
+  );
+};
+
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator
+      // initialRouteName="LoginPage"
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: CONSTANT.themeColors.base },
+      }}>
+      <Stack.Screen name="RegisterPage" component={RegisterPage} />
+      <Stack.Screen name="LoginPage" component={LoginPage} />
+    </Stack.Navigator>
+  );
+};
+
 const AppNavigator = () => {
   const { _isSignIn } = useAuthStore();
-  // const _isSignIn = getIsSignedIn();
 
   return (
     <NavigationContainer>
-      {_isSignIn ? (
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: CONSTANT.themeColors.base },
-          }}>
-          <Stack.Screen name="Home" component={HomeNavigator} />
-          <Stack.Screen name="WebViewPage" component={WebViewPage} />
-          <Stack.Screen name="Notification" component={NotificationPage} />
-          <Stack.Screen name="PoolDetail" component={PoolDetailPage} />
-          <Stack.Screen name="AddPool" component={AddPoolPage} />
-          <Stack.Screen
-            name="PoolConditionPage"
-            component={PoolConditionPage}
-          />
-          <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
-          <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
-          <Stack.Screen
-            name="ProfileSettingPage"
-            component={ProfileSettingPage}
-          />
-          <Stack.Screen name="404NotFound" component={NotFoundPage} />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: CONSTANT.themeColors.base },
-          }}>
-          <Stack.Screen name="RegisterPage" component={RegisterPage} />
-          <Stack.Screen name="LoginPage" component={LoginPage} />
-        </Stack.Navigator>
-      )}
+      {_isSignIn ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };

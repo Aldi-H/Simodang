@@ -1,42 +1,106 @@
 import { create } from 'zustand';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 import {
   BASE_URL,
   SCOPES_USERINFO_EMAIL,
   SCOPES_USERINFO_PROFILE,
   WEBCLIENT_ID,
 } from '@env';
-import auth, { firebase } from '@react-native-firebase/auth';
 import axios from 'axios';
 import * as Keychain from 'react-native-keychain';
 
-type userDetail = {
-  userName: string;
-  token: string;
+type UserDetail = {
+  userName: string | null;
+  token: string | null;
 };
 
 type AuthStoreState = {
-  isConfigured: boolean;
+  userDetail: UserDetail;
   _isSignIn: boolean;
-  userToken: string | null;
-  userDetail: userDetail;
 };
 
-type AuthStoreAction = {
-  configureGoogleSignin: () => void;
+interface AuthStoreAction {
   SignIn: () => Promise<void>;
   SignOut: () => Promise<void>;
+  configureGoogleSignin: () => void;
   configureKeychain: () => Promise<void>;
-};
+}
 
-const useAuthStore = create<AuthStoreState & AuthStoreAction>()(set => ({
-  isConfigured: false,
+const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
+  userDetail: {
+    userName: null,
+    token: null,
+  },
   _isSignIn: false,
-  userToken: '',
-  userDetail: { userName: '', token: '' },
+
+  SignIn: async () => {
+    try {
+      // Google Sign In
+      await GoogleSignin.hasPlayServices();
+      const { idToken } = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const googleUser = await auth().signInWithCredential(googleCredential);
+
+      // Send token to endpoint
+      const response = await axios.post(
+        `${BASE_URL}/auth/${googleUser.user?.uid}`,
+        {
+          email: googleUser.user?.email,
+          name: googleUser.user?.displayName,
+          photo: googleUser.user?.photoURL,
+          uid: googleUser.user?.uid,
+        },
+      );
+
+      // Store token in local storage
+      await Keychain.setGenericPassword('token', response.data.token);
+
+      set({
+        _isSignIn: true,
+        userDetail: {
+          userName: googleUser.user?.displayName || null,
+          token: response.data.token,
+        },
+      });
+    } catch (error: any) {
+      console.log(error.code);
+    }
+  },
+
+  SignOut: async () => {
+    try {
+      // Remove token from server and local storage
+      const { userName } = useAuthStore.getState().userDetail;
+      // console.log(token);
+      const signOutResponse = await axios.post(
+        `${BASE_URL}/auth/logout`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          },
+        },
+      );
+
+      console.log(signOutResponse.data);
+
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      // const keychainResponse =
+      await Keychain.resetGenericPassword();
+
+      set({
+        _isSignIn: false,
+        userDetail: {
+          userName: userName || null,
+          token: null,
+        },
+      });
+    } catch (error: any) {
+      console.log(error.code);
+    }
+  },
 
   configureGoogleSignin: () => {
     GoogleSignin.configure({
@@ -44,18 +108,16 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>()(set => ({
       webClientId: WEBCLIENT_ID,
     });
 
-    set({ isConfigured: true });
+    // set({ isConfigured: true });
   },
 
   configureKeychain: async () => {
     try {
       const credential = await Keychain.getGenericPassword();
 
-      // const { userName, token } = credential;
-      console.log(credential);
-
       if (credential) {
         const { username, password } = credential;
+        console.log(credential);
 
         set({
           _isSignIn: true,
@@ -69,83 +131,6 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>()(set => ({
       }
     } catch (error) {
       console.log(error);
-    }
-  },
-
-  SignIn: async () => {
-    try {
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-
-      const { idToken } = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      auth().signInWithCredential(googleCredential);
-      const userInfo = firebase.auth().currentUser;
-      const value = {
-        email: userInfo?.email,
-        name: userInfo?.displayName,
-        photo: userInfo?.photoURL,
-        uid: userInfo?.uid,
-      };
-
-      const response = await axios.post(
-        // 'https://webhook.site/900527eb-07c1-46fd-9141-0c4e9ad8d65e',
-        `${BASE_URL}/auth/${userInfo?.uid}`,
-        value,
-      );
-
-      const userName = response.data.name;
-      const token = response.data.token;
-      const keychainResponse = await Keychain.setGenericPassword(
-        userName,
-        token,
-      );
-
-      set({
-        _isSignIn: true,
-        userDetail: {
-          userName,
-          token,
-        },
-      });
-
-      console.log(keychainResponse);
-    } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User cancelled the login flow');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Signing in');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play services not available');
-      } else {
-        console.log('Some other error happened');
-        console.log(error.message);
-        console.log(error.code);
-      }
-    }
-  },
-
-  SignOut: async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-
-      const removeToken = await Keychain.resetGenericPassword();
-      console.log({ removeToken });
-
-      if (removeToken) {
-        set({
-          _isSignIn: false,
-          userDetail: {
-            userName: '',
-            token: '',
-          },
-        });
-      }
-    } catch (error: any) {
-      error.code === statusCodes.SIGN_IN_REQUIRED &&
-        console.log('SignIn Required');
     }
   },
 }));
