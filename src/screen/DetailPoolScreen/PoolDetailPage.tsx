@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+
+import usePondStore from '../../store/pond/PondStore';
 
 import { CONSTANT } from '../../themes';
 
@@ -22,15 +24,29 @@ import BackIcon from '../../assets/icons/BackIcon.svg';
 import PhIconOutline from '../../assets/icons/pHIconOutline.svg';
 import HistoryIconOutline from '../../assets/icons/HistoryIconOutline.svg';
 import GearIconOutline from '../../assets/icons/GearIconOutline.svg';
+import EditIcon from '../../assets/icons/EditIcon.svg';
 
 import PoolConditionPage from './PoolConditionPage';
 import PoolHistoryPage from './PoolHistoryPage';
 import PoolSettingPage from './PoolSettingPage';
+import { RootStackParamList } from '../../routes/NavigationTypes';
+
+type PondScreenRouteProp = RouteProp<RootStackParamList, 'PoolDetail'>;
 
 const PoolDetailPage = () => {
+  const { getOnePond } = usePondStore();
+
   const [activeNav, setActiveNav] = useState(1);
 
+  const route = useRoute<PondScreenRouteProp>();
   const navigation = useNavigation();
+
+  const { pondId } = route.params;
+  console.log(pondId);
+
+  useEffect(() => {
+    getOnePond(pondId);
+  }, [getOnePond]);
 
   const NavList = [
     {
@@ -48,9 +64,12 @@ const PoolDetailPage = () => {
       name: 'Pengaturan',
       Icon: GearIconOutline,
     },
+    {
+      id: 4,
+      name: 'Edit Kolam',
+      Icon: EditIcon,
+    },
   ];
-
-  // nestedScrollEnabled={true} showsVerticalScrollIndicator={false}
 
   return (
     <KeyboardAvoidingView
@@ -108,7 +127,6 @@ const PoolDetailPage = () => {
               <FlatList
                 data={NavList}
                 horizontal
-                scrollEnabled={false}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => {
                   let isActive = item.id === activeNav;
@@ -119,7 +137,8 @@ const PoolDetailPage = () => {
                       <TouchableOpacity
                         className="px-2"
                         onPress={() => setActiveNav(item.id)}>
-                        {item.Icon === GearIconOutline ? (
+                        {item.Icon === GearIconOutline ||
+                        item.Icon === EditIcon ? (
                           <View className="flex-row justify-center items-center space-x-2">
                             <item.Icon
                               width={wp('6%')}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -17,44 +17,19 @@ import { useNavigation } from '@react-navigation/native';
 import { CONSTANT } from '../themes';
 import SearchComponent from '../components/search/SearchComponent';
 import PoolCardComponent from '../components/cards/PoolCardComponent';
+import usePondStore from '../store/pond/PondStore';
 
 const MonitorPage = () => {
+  const { totalPonds, pondsData, getAllPonds } = usePondStore();
   const navigation = useNavigation();
 
-  const Data = [
-    {
-      name: 'Kolam Udang 1',
-      location: 'Plososari, Mojokerto',
-    },
-    {
-      name: 'Kolam Udang Petak 1',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 2',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 3',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 4',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 5',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 6',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-    {
-      name: 'Kolam Udang 7',
-      location: 'Lemah Kembar, Probolinggo',
-    },
-  ];
+  const handlePondPress = (pondId: string) => {
+    navigation.navigate('PoolDetail', { pondId });
+  };
+
+  useEffect(() => {
+    getAllPonds();
+  }, [getAllPonds]);
 
   return (
     <ScrollView
@@ -80,8 +55,7 @@ const MonitorPage = () => {
             <View className="flex-row justify-center items-center space-x-1">
               <Text style={styles.myPool}>Kolam Saya</Text>
               <Text style={styles.separator}>●</Text>
-              {/* Change this later */}
-              <Text style={styles.count}>Count</Text>
+              <Text style={styles.count}>{totalPonds}</Text>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate('AddPool')}>
               <Text style={styles.count}>Tambah</Text>
@@ -90,11 +64,12 @@ const MonitorPage = () => {
 
           <View className="mt-3">
             <FlatList
-              data={Data}
+              data={pondsData}
               renderItem={({ item }) => (
                 <PoolCardComponent
-                  poolNameProps={item.name}
-                  poolLocationProps={item.location}
+                  poolNameProps={item.pondName}
+                  poolLocationProps={item.city}
+                  onPress={() => handlePondPress(item.pondId)}
                 />
               )}
               numColumns={2}

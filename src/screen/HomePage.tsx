@@ -1,5 +1,12 @@
-import React from 'react';
-import { Text, View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  StatusBar,
+  SafeAreaView,
+  FlatList,
+} from 'react-native';
 import { CONSTANT } from '../themes';
 import {
   // widthPercentageToDP as wp,
@@ -9,13 +16,25 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRightIcon } from 'react-native-heroicons/solid';
 
+import usePondStore from '../store/pond/PondStore';
+
 import InformationCardComponent from '../components/cards/InformationCardComponent';
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIconSolid.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 
 const HomePage = () => {
+  const { pondsData, getAllPonds } = usePondStore();
+
   const navigation = useNavigation();
+
+  const handlePondPress = (pondId: string) => {
+    navigation.navigate('PoolDetail', { pondId });
+  };
+
+  useEffect(() => {
+    getAllPonds();
+  }, [getAllPonds]);
 
   return (
     <ScrollView
@@ -67,25 +86,20 @@ const HomePage = () => {
               />
             </TouchableOpacity>
           </View>
-          <ScrollView
+          <FlatList
+            data={pondsData}
             horizontal
             showsHorizontalScrollIndicator={false}
-            className="mt-2">
-            <View className="flex-row">
-              <PoolCardComponent
-                poolNameProps="Kolam Udang 1"
-                poolLocationProps="Plososari, Mojokerto"
-              />
-              <PoolCardComponent
-                poolNameProps="Kolam Udang Petak 1"
-                poolLocationProps="Blimbing, Malang"
-              />
-              <PoolCardComponent
-                poolNameProps="Kolam Udang Bersama"
-                poolLocationProps="Lemah Kembar, Probolinggo"
-              />
-            </View>
-          </ScrollView>
+            renderItem={({ item }) => {
+              return (
+                <PoolCardComponent
+                  poolNameProps={item.pondName}
+                  poolLocationProps={item.city}
+                  onPress={() => handlePondPress(item.pondId)}
+                />
+              );
+            }}
+          />
         </View>
 
         {/* News Section */}
