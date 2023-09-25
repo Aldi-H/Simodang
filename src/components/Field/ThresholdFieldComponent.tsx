@@ -1,25 +1,26 @@
 import React from 'react';
-import { Text, View, StyleSheet, ViewStyle } from 'react-native';
-// import {
-//   widthPercentageToDP as wp,
-//   heightPercentageToDP as hp,
-// } from 'react-native-responsive-screen';
+import { Text, View, StyleSheet } from 'react-native';
 
 import { CONSTANT } from '../../themes';
+
 import InputSpinnerComponent from '../input/InputSpinnerComponent';
 
 type ThresholdFieldProps = {
   thresholdTitle: string;
-  thresholdUnit?: string;
-  width?: ViewStyle;
-  thresholdUnitContainer?: string;
+  thresholdUnit?: React.ReactElement;
+  type?: string;
+  max?: number;
+  valueLow: string | number;
+  valueHigh: string | number;
 };
 
 const ThresholdFieldComponent = ({
   thresholdTitle,
   thresholdUnit,
-  width,
-  thresholdUnitContainer,
+  type,
+  max,
+  valueLow,
+  valueHigh,
 }: ThresholdFieldProps) => {
   return (
     <View className="my-1">
@@ -35,9 +36,10 @@ const ThresholdFieldComponent = ({
         {/* Lower Threshold */}
         <View>
           <InputSpinnerComponent
+            value={valueLow}
+            type={type}
+            max={max}
             thresholdUnit={thresholdUnit}
-            width={width}
-            thresholdUnitContainer={thresholdUnitContainer}
           />
         </View>
 
@@ -49,9 +51,10 @@ const ThresholdFieldComponent = ({
         {/* Higher Threshold */}
         <View>
           <InputSpinnerComponent
+            value={valueHigh}
+            type={type}
+            max={max}
             thresholdUnit={thresholdUnit}
-            width={width}
-            thresholdUnitContainer={thresholdUnitContainer}
           />
         </View>
       </View>
@@ -71,6 +74,11 @@ const styles = StyleSheet.create({
   separator: {
     fontFamily: CONSTANT.customFonts.body,
     fontSize: CONSTANT.fontSizes.heading2,
+    color: CONSTANT.themeColors.font,
+  },
+  appendTextStyle: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.caption,
     color: CONSTANT.themeColors.font,
   },
 });

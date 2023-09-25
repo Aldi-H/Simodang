@@ -1,76 +1,55 @@
 import React from 'react';
-import { Text, View, ViewStyle, TextInput, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
-import MinusIcon from '../../assets/icons/MinusIcon.svg';
-import PlusIcon from '../../assets/icons/PlusIcon.svg';
+import InputSpinner from 'react-native-input-spinner';
 
 type ThresholdFieldProps = {
-  thresholdUnit?: string;
-  thresholdUnitContainer?: string;
-  width?: ViewStyle;
+  thresholdUnit?: React.ReactElement;
+  type?: string;
+  max?: number;
+  value: string | number;
 };
 
 const InputSpinnerComponent = ({
   thresholdUnit,
-  width,
-  thresholdUnitContainer,
+  type,
+  max,
+  value,
 }: ThresholdFieldProps) => {
   return (
-    <View className="flex flex-row items-center space-x-1 content-center justify-between">
-      <View>
-        <TouchableOpacity>
-          <MinusIcon
-            fill={CONSTANT.themeColors.primary}
-            height={hp('5%')}
-            width={wp('7%')}
-          />
-        </TouchableOpacity>
-      </View>
-      <View className="flex-row items-center">
-        <TextInput
-          textAlign="center"
-          style={[styles.inputContainer, width]}
-          placeholderTextColor={CONSTANT.themeColors.disable}
-          defaultValue="50"
-          className="my-2 rounded-md text-center p-0"
-          placeholder=""
-        />
-        <View className={thresholdUnitContainer}>
-          <Text style={styles.thresholdUnit}>{thresholdUnit}</Text>
-        </View>
-      </View>
-      <View>
-        <TouchableOpacity>
-          <PlusIcon
-            fill={CONSTANT.themeColors.primary}
-            height={hp('5%')}
-            width={wp('7%')}
-          />
-        </TouchableOpacity>
-      </View>
+    <View className="mx-px">
+      <InputSpinner
+        value={value}
+        type={type}
+        max={max}
+        height={hp('3.5%')}
+        width={wp('33%')}
+        buttonFontSize={CONSTANT.fontSizes.heading1}
+        buttonFontFamily={CONSTANT.customFonts.body}
+        buttonTextColor={CONSTANT.themeColors.complementary}
+        buttonStyle={{ backgroundColor: CONSTANT.themeColors.primary }}
+        textColor={CONSTANT.themeColors.font}
+        fontFamily={CONSTANT.customFonts.body}
+        fontSize={CONSTANT.fontSizes.heading2}
+        inputStyle={styles.inputContainer}
+        append={thresholdUnit}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
-    fontFamily: CONSTANT.customFonts.body,
-    fontSize: CONSTANT.fontSizes.body,
-    color: CONSTANT.themeColors.font,
+    height: hp('3%'),
+    paddingVertical: 0,
+    marginHorizontal: 5,
+    borderRadius: 2,
     backgroundColor: CONSTANT.themeColors.base,
-    // width: wp('15%'),
-    height: hp('4%'),
-  },
-  thresholdUnit: {
-    fontFamily: CONSTANT.customFonts.caption,
-    fontSize: CONSTANT.fontSizes.body,
-    color: CONSTANT.themeColors.disable,
   },
 });
 
