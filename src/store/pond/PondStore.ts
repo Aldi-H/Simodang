@@ -8,6 +8,21 @@ enum PondStatus {
   good = 1,
 }
 
+enum isFilled {
+  false = 0,
+  true = 1,
+}
+
+enum NotificationStatus {
+  false = 0,
+  true = 1,
+}
+
+enum isSaved {
+  false = 0,
+  true = 1,
+}
+
 type PondsData = {
   pondId: string;
   pondName: string;
@@ -17,6 +32,31 @@ type PondsData = {
 type PondStoreState = {
   pondsData: PondsData[];
   totalPonds: number;
+  pondDetail: {
+    pondName: string;
+    adress: string;
+    city: string;
+    seedDate: string;
+    imageUrl: string;
+    status: PondStatus;
+    isFilled: isFilled;
+    deviceId: string;
+    device: {
+      DeviceName: string;
+      notificationEnabled: NotificationStatus;
+      isSaved: isSaved;
+      tempLow: string;
+      tempHigh: string;
+      phLow: string;
+      phHigh: string;
+      tdoLow: string;
+      tdoHigh: string;
+      tdsLow: string;
+      tdsHigh: string;
+      turbiditiesLow: string;
+      turbiditiesHigh: string;
+    };
+  };
 };
 
 type PondStoreAction = {
@@ -26,6 +66,31 @@ type PondStoreAction = {
 
 const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
   pondsData: [],
+  pondDetail: {
+    pondName: '',
+    adress: '',
+    city: '',
+    seedDate: '',
+    imageUrl: '',
+    status: PondStatus.bad,
+    isFilled: isFilled.true,
+    deviceId: '',
+    device: {
+      DeviceName: '',
+      notificationEnabled: NotificationStatus.true,
+      isSaved: isSaved.false,
+      tempLow: '',
+      tempHigh: '',
+      phLow: '',
+      phHigh: '',
+      tdoLow: '',
+      tdoHigh: '',
+      tdsLow: '',
+      tdsHigh: '',
+      turbiditiesLow: '',
+      turbiditiesHigh: '',
+    },
+  },
   totalPonds: 0,
 
   getAllPonds: async () => {
@@ -54,7 +119,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
         },
       );
 
-      // console.log(pondData);
+      // console.log(response.data);
       set({
         pondsData: pondData,
         totalPonds: response.data.length,
@@ -72,7 +137,34 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
         },
       });
 
-      console.log(response.data);
+      set({
+        pondDetail: {
+          pondName: response.data.name,
+          adress: response.data.address,
+          city: response.data.city,
+          seedDate: response.data.seedDate,
+          imageUrl: response.data.imageUrl,
+          status: response.data.status,
+          isFilled: response.data.isFilled as isFilled,
+          deviceId: response.data.deviceId,
+          device: {
+            DeviceName: response.data.device.name,
+            notificationEnabled: response.data.device.notificationEnabled,
+            isSaved: response.data.device.isSaved,
+            tempLow: response.data.device.tempLow,
+            tempHigh: response.data.device.tempHigh,
+            phLow: response.data.device.phLow,
+            phHigh: response.data.device.phHigh,
+            tdoLow: response.data.device.tdoLow,
+            tdoHigh: response.data.device.tdoHigh,
+            tdsLow: response.data.device.tdsLow,
+            tdsHigh: response.data.device.tdsHigh,
+            turbiditiesLow: response.data.device.turbiditiesLow,
+            turbiditiesHigh: response.data.device.turbiditiesHigh,
+          },
+        },
+      });
+      // console.log(usePondStore.getState().pondDetail);
     } catch (error) {
       console.log(error);
     }

@@ -1,11 +1,19 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useState } from 'react';
+import moment from 'moment';
+import { StyleSheet, View, Text, Switch } from 'react-native';
+
+import usePondStore from '../../store/pond/PondStore';
 
 import { CONSTANT } from '../../themes';
 
 import DisplayTextComponent from '../../components/text/DisplayTextComponent';
 
 const PoolConditionPage = () => {
+  const { pondDetail } = usePondStore();
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   return (
     <View className="my-1">
       {/* Page Title Section */}
@@ -16,24 +24,38 @@ const PoolConditionPage = () => {
       <View className="mb-2">
         <DisplayTextComponent
           DisplayTitle="Kode Alat"
-          DisplayValue="A-23CD"
+          DisplayValue={pondDetail.device.DeviceName}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="Tanggal Masuk Benih"
-          DisplayValue="12 Agustus 2023"
+          DisplayValue={moment(pondDetail.seedDate)
+            .utcOffset('+0700')
+            .format('D MMMM YYYY')}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="Status Tambak"
-          DisplayValue="Kosong"
+          DisplayValue={pondDetail.isFilled ? 'Terisi' : 'Kosong'}
           TextStyle="ml-3"
         />
       </View>
 
-      {/* Pool Threshold Parameter Section */}
-      <View>
-        <Text style={styles.poolConditionTitle}>Threshold Parameter</Text>
+      {/* Pool Measurement Section */}
+      <View className="flex flex-row mt-2 justify-between items-center">
+        <Text style={styles.poolConditionTitle}>Pengukuran Saat Ini</Text>
+        <Switch
+          trackColor={{
+            false: CONSTANT.themeColors.disable,
+            true: CONSTANT.themeColors.complementary,
+          }}
+          thumbColor={
+            isEnabled ? CONSTANT.themeColors.primary : CONSTANT.themeColors.base
+          }
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
       </View>
 
       <View className="mb-4">

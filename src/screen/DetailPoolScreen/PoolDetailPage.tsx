@@ -34,7 +34,7 @@ import { RootStackParamList } from '../../routes/NavigationTypes';
 type PondScreenRouteProp = RouteProp<RootStackParamList, 'PoolDetail'>;
 
 const PoolDetailPage = () => {
-  const { getOnePond } = usePondStore();
+  const { pondDetail, getOnePond } = usePondStore();
 
   const [activeNav, setActiveNav] = useState(1);
 
@@ -42,11 +42,12 @@ const PoolDetailPage = () => {
   const navigation = useNavigation();
 
   const { pondId } = route.params;
-  console.log(pondId);
 
   useEffect(() => {
     getOnePond(pondId);
-  }, [getOnePond]);
+  }, [getOnePond, pondId]);
+
+  // console.log(pondId);
 
   const NavList = [
     {
@@ -82,18 +83,23 @@ const PoolDetailPage = () => {
         <View>
           {/* Change this image later */}
           <View>
-            <Image
-              source={require('../../assets/images/ImagePlaceholder.png')}
-              style={styles.imageHeader}
-              className="w-full"
-            />
+            {pondDetail.imageUrl && (
+              <Image
+                source={{ uri: pondDetail.imageUrl }}
+                style={styles.imageHeader}
+                className="w-full"
+              />
+            )}
           </View>
           <View className="mx-4 mt-6 px-3 absolute">
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
               }}>
-              <BackIcon height={hp('4%')} fill={CONSTANT.themeColors.font} />
+              <BackIcon
+                height={hp('4%')}
+                fill={CONSTANT.themeColors.complementary}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -107,7 +113,7 @@ const PoolDetailPage = () => {
                   style={styles.poolName}
                   numberOfLines={1}
                   className="text-ellipsis">
-                  Kolam Udang Petak Bersama
+                  {pondDetail.pondName}
                 </Text>
                 <View style={styles.separator} className="rounded-full" />
               </View>
@@ -116,7 +122,7 @@ const PoolDetailPage = () => {
                   style={styles.poolLocation}
                   numberOfLines={2}
                   className="text-ellipsis">
-                  Jl. Veteran, Ketawanggede, Lowokwaru, Malang, Jawa Timur
+                  {pondDetail.adress}
                 </Text>
               </View>
             </View>

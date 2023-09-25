@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  // Switch
+} from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+
+import usePondStore from '../../store/pond/PondStore';
 
 import { CONSTANT } from '../../themes';
 
@@ -8,13 +15,15 @@ import ThresholdFieldComponent from '../../components/Field/ThresholdFieldCompon
 import ButtonComponent from '../../components/button/ButtonComponent';
 
 const PoolSettingPage = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const { pondDetail } = usePondStore();
+
+  // const [isEnabled, setIsEnabled] = useState(false);
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   return (
     <View className="my-1">
       {/* Notif Setting Section */}
-      <View className="flex flex-row justify-between items-center">
+      {/* <View className="flex flex-row justify-between items-center">
         <Text style={styles.poolSettingTitle}>Atur Notifikasi</Text>
         <Switch
           trackColor={{
@@ -28,7 +37,7 @@ const PoolSettingPage = () => {
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
-      </View>
+      </View> */}
 
       {/* Threshold Setting Section */}
       <View className="mt-4">
@@ -39,32 +48,55 @@ const PoolSettingPage = () => {
         {/* Threshold Parameter Setup Section */}
         <View className="mb-2">
           <ThresholdFieldComponent
+            valueLow={pondDetail.device.tempLow}
+            valueHigh={pondDetail.device.tempHigh}
+            type="float"
             thresholdTitle="Suhu"
-            thresholdUnit="&#176;C"
-            thresholdUnitContainer="pl-0.5"
-            width={{ width: wp('15%') }}
+            thresholdUnit={
+              <Text style={styles.appendTextStyle} className="mr-1">
+                &#176;C
+              </Text>
+            }
           />
           <ThresholdFieldComponent
+            valueLow={pondDetail.device.phLow}
+            valueHigh={pondDetail.device.phHigh}
+            type="float"
+            max={14.0}
             thresholdTitle="pH"
-            width={{ width: wp('19.5%') }}
           />
           <ThresholdFieldComponent
+            valueLow={pondDetail.device.tdoLow}
+            valueHigh={pondDetail.device.tdoHigh}
+            type="float"
             thresholdTitle="TDO"
-            thresholdUnit="mg/L"
-            thresholdUnitContainer="pl-0.5"
-            width={{ width: wp('10%') }}
+            thresholdUnit={
+              <Text style={styles.appendTextStyle} className="mr-1">
+                mg/L
+              </Text>
+            }
           />
           <ThresholdFieldComponent
+            valueLow={pondDetail.device.tdsLow}
+            valueHigh={pondDetail.device.tdsHigh}
+            type="int"
             thresholdTitle="TDS"
-            thresholdUnit="ppm"
-            thresholdUnitContainer="pl-0.5"
-            width={{ width: wp('11%') }}
+            thresholdUnit={
+              <Text style={styles.appendTextStyle} className="mr-1">
+                ppm
+              </Text>
+            }
           />
           <ThresholdFieldComponent
+            valueLow={pondDetail.device.turbiditiesLow}
+            valueHigh={pondDetail.device.turbiditiesHigh}
+            type="float"
             thresholdTitle="Turbiditas"
-            thresholdUnit="NTU"
-            thresholdUnitContainer="pl-1"
-            width={{ width: wp('11.5%') }}
+            thresholdUnit={
+              <Text style={styles.appendTextStyle} className="mr-1">
+                NTU
+              </Text>
+            }
           />
         </View>
       </View>
@@ -96,6 +128,11 @@ const styles = StyleSheet.create({
   },
   widthInputContainer: {
     width: wp('15%'),
+  },
+  appendTextStyle: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.caption,
+    color: CONSTANT.themeColors.font,
   },
 });
 
