@@ -33,6 +33,7 @@ type PondStoreState = {
   pondsData: PondsData[];
   totalPonds: number;
   pondDetail: {
+    pondId: string;
     pondName: string;
     adress: string;
     city: string;
@@ -67,6 +68,7 @@ type PondStoreAction = {
 const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
   pondsData: [],
   pondDetail: {
+    pondId: '',
     pondName: '',
     adress: '',
     city: '',
@@ -139,6 +141,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
 
       set({
         pondDetail: {
+          pondId: response.data.id,
           pondName: response.data.name,
           adress: response.data.address,
           city: response.data.city,

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { StyleSheet, View, Text, Switch } from 'react-native';
 
 import usePondStore from '../../store/pond/PondStore';
+import useSocketStore from '../../store/socket/SocketStore';
 
 import { CONSTANT } from '../../themes';
 
@@ -10,9 +11,20 @@ import DisplayTextComponent from '../../components/text/DisplayTextComponent';
 
 const PoolConditionPage = () => {
   const { pondDetail } = usePondStore();
+  const { temperature, pH, tdo, tds, turbidity, connect, disconnect } =
+    useSocketStore();
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+      // socket.disconnect();
+    };
+  }, [pondDetail.pondId]);
 
   return (
     <View className="my-1">
@@ -61,27 +73,27 @@ const PoolConditionPage = () => {
       <View className="mb-4">
         <DisplayTextComponent
           DisplayTitle="Suhu"
-          DisplayValue="29&#176;C"
+          DisplayValue={`${temperature} \u00B0C`}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="pH"
-          DisplayValue="8.3"
+          DisplayValue={pH}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="TDO"
-          DisplayValue="1.1 mg/L"
+          DisplayValue={`${tdo} mg/L`}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="TDS"
-          DisplayValue="6 ppm"
+          DisplayValue={`${tds} ppm`}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
           DisplayTitle="Turbiditas"
-          DisplayValue="0.25 NTU"
+          DisplayValue={`${turbidity} NTU`}
           TextStyle="ml-3"
         />
       </View>
