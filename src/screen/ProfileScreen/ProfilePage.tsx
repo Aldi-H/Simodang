@@ -1,5 +1,12 @@
-import React from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Switch,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
@@ -23,6 +30,9 @@ const ProfilePage = () => {
   const { SignOut } = useAuthStore();
   const navigation = useNavigation();
 
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   const profileButtonData = [
     {
       id: 1,
@@ -43,23 +53,6 @@ const ProfilePage = () => {
     },
     {
       id: 2,
-      buttonTitle: 'Notifikasi',
-      leftIcon: (
-        <View
-          className="my-1 mx-2 items-center justify-center"
-          style={{ height: hp('5%'), width: wp('6%') }}>
-          <NotifIconOutline fill={CONSTANT.themeColors.font} />
-        </View>
-      ),
-      rightIcon: (
-        <View className="my-1 mx-2 rotate-180 justify-center items-center">
-          <IconNext fill={CONSTANT.themeColors.font} />
-        </View>
-      ),
-      screenName: '404NotFound',
-    },
-    {
-      id: 3,
       buttonTitle: 'Riwayat Aktivitas',
       leftIcon: (
         <View
@@ -76,7 +69,7 @@ const ProfilePage = () => {
       screenName: '404NotFound',
     },
     {
-      id: 4,
+      id: 3,
       buttonTitle: 'Bantuan',
       leftIcon: (
         <View
@@ -136,6 +129,34 @@ const ProfilePage = () => {
               </View>
             );
           })}
+
+          <ButtonIconComponent
+            style={styles.buttonNavigationProfile}
+            buttonText="Notifikasi"
+            leftIcon={
+              <View
+                className="my-1 mx-2 items-center justify-center"
+                style={{ height: hp('5%'), width: wp('6%') }}>
+                <NotifIconOutline fill={CONSTANT.themeColors.font} />
+              </View>
+            }
+            rightIcon={
+              <Switch
+                trackColor={{
+                  false: CONSTANT.themeColors.disable,
+                  true: CONSTANT.themeColors.base,
+                }}
+                thumbColor={
+                  isEnabled
+                    ? CONSTANT.themeColors.primary
+                    : CONSTANT.themeColors.base
+                }
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            }
+          />
         </View>
 
         {/* Buttoon Section */}

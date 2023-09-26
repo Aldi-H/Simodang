@@ -6,7 +6,7 @@ import { CONSTANT } from '../../themes';
 
 type ButtonIconProps = {
   buttonText?: string;
-  onPress: () => void;
+  onPress?: () => void;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   style?: ViewStyle;
