@@ -12,6 +12,8 @@ type ThresholdFieldProps = {
   max?: number;
   valueLow: string | number;
   valueHigh: string | number;
+  onChangeLowValue?: (value: string | number) => void;
+  onChangeHighValue?: (value: string | number) => void;
 };
 
 const ThresholdFieldComponent = ({
@@ -21,6 +23,8 @@ const ThresholdFieldComponent = ({
   max,
   valueLow,
   valueHigh,
+  onChangeLowValue,
+  onChangeHighValue,
 }: ThresholdFieldProps) => {
   return (
     <View className="my-1">
@@ -32,11 +36,12 @@ const ThresholdFieldComponent = ({
       {/* Threshold Setup Section */}
       <View
         style={styles.thresholdContainer}
-        className="flex flex-row justify-between items-center rounded-md px-3 py-1 space-x-1">
+        className="flex flex-row justify-between items-center rounded-md px-3 py-2 space-x-1">
         {/* Lower Threshold */}
         <View>
           <InputSpinnerComponent
             value={valueLow}
+            onChange={onChangeLowValue}
             type={type}
             max={max}
             thresholdUnit={thresholdUnit}
@@ -52,6 +57,7 @@ const ThresholdFieldComponent = ({
         <View>
           <InputSpinnerComponent
             value={valueHigh}
+            onChange={onChangeHighValue}
             type={type}
             max={max}
             thresholdUnit={thresholdUnit}

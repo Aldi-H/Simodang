@@ -1,7 +1,9 @@
 import { BASE_URL } from '@env';
 import axios from 'axios';
 import { create } from 'zustand';
+
 import useAuthStore from '../auth/AuthStore';
+// import { produce } from 'immer';
 
 enum PondStatus {
   bad = 0,
@@ -29,43 +31,50 @@ type PondsData = {
   city: string;
 };
 
+type PondDetail = {
+  pondId: string;
+  pondName: string;
+  adress: string;
+  city: string;
+  seedDate: string;
+  imageUrl: string;
+  status: PondStatus;
+  isFilled: isFilled;
+  deviceId: string;
+  device: {
+    deviceId: string;
+    DeviceName: string;
+    notificationEnabled: NotificationStatus;
+    isSaved: isSaved;
+    tempLow: string;
+    tempHigh: string;
+    phLow: string;
+    phHigh: string;
+    tdoLow: string;
+    tdoHigh: string;
+    tdsLow: string;
+    tdsHigh: string;
+    turbiditiesLow: string;
+    turbiditiesHigh: string;
+  };
+};
+
 type PondStoreState = {
   pondsData: PondsData[];
   totalPonds: number;
-  pondDetail: {
-    pondId: string;
-    pondName: string;
-    adress: string;
-    city: string;
-    seedDate: string;
-    imageUrl: string;
-    status: PondStatus;
-    isFilled: isFilled;
-    deviceId: string;
-    device: {
-      DeviceName: string;
-      notificationEnabled: NotificationStatus;
-      isSaved: isSaved;
-      tempLow: string;
-      tempHigh: string;
-      phLow: string;
-      phHigh: string;
-      tdoLow: string;
-      tdoHigh: string;
-      tdsLow: string;
-      tdsHigh: string;
-      turbiditiesLow: string;
-      turbiditiesHigh: string;
-    };
-  };
+  pondDetail: PondDetail;
 };
 
 type PondStoreAction = {
   getAllPonds: () => Promise<void>;
   getOnePond: (pondId: string) => Promise<void>;
+  updateThresholdData: (
+    // pondId: string,
+    thresholdData: PondDetail,
+  ) => Promise<void>;
 };
 
-const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
+const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
   pondsData: [],
   pondDetail: {
     pondId: '',
@@ -78,6 +87,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
     isFilled: isFilled.true,
     deviceId: '',
     device: {
+      deviceId: '',
       DeviceName: '',
       notificationEnabled: NotificationStatus.true,
       isSaved: isSaved.false,
@@ -151,6 +161,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
           isFilled: response.data.isFilled as isFilled,
           deviceId: response.data.deviceId,
           device: {
+            deviceId: response.data.device.id,
             DeviceName: response.data.device.name,
             notificationEnabled: response.data.device.notificationEnabled,
             isSaved: response.data.device.isSaved,
@@ -170,6 +181,39 @@ const usePondStore = create<PondStoreState & PondStoreAction>()(set => ({
       // console.log(usePondStore.getState().pondDetail);
     } catch (error) {
       console.log(error);
+    }
+  },
+
+  updateThresholdData: async (data: Partial<PondDetail>) => {
+    try {
+      console.log(data.device);
+
+      const response = await axios.patch(
+        `${BASE_URL}/ponds/${get().pondDetail.pondId}/device`,
+        // 'https://webhook.site/a333c63c-7560-426b-b89e-87aad7d5734a',
+        data.device,
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          },
+          // validateStatus: () => {
+          //   return false;
+          // },
+        },
+      );
+
+      set({ pondDetail: response.data });
+    } catch (error: any) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
     }
   },
 }));

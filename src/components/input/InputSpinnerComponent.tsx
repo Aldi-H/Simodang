@@ -13,6 +13,7 @@ type ThresholdFieldProps = {
   type?: string;
   max?: number;
   value: string | number;
+  onChange?: (value: string | number) => void;
 };
 
 const InputSpinnerComponent = ({
@@ -20,10 +21,12 @@ const InputSpinnerComponent = ({
   type,
   max,
   value,
+  onChange,
 }: ThresholdFieldProps) => {
   return (
     <View className="mx-px">
       <InputSpinner
+        onChange={(num: string | number) => onChange && onChange(num)}
         value={value}
         type={type}
         max={max}

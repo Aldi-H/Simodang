@@ -1,10 +1,5 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  // Switch
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import usePondStore from '../../store/pond/PondStore';
@@ -15,30 +10,46 @@ import ThresholdFieldComponent from '../../components/Field/ThresholdFieldCompon
 import ButtonComponent from '../../components/button/ButtonComponent';
 
 const PoolSettingPage = () => {
-  const { pondDetail } = usePondStore();
+  const { pondDetail, updateThresholdData } = usePondStore();
 
-  // const [isEnabled, setIsEnabled] = useState(false);
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [newLowValue, setNewLowValue] = useState({
+    newTempLow: pondDetail.device.tempLow,
+    newPHLow: pondDetail.device.phLow,
+    newTDOLow: pondDetail.device.tdoLow,
+    newTDSLow: pondDetail.device.tdsLow,
+    newTurbiditiesLow: pondDetail.device.turbiditiesLow,
+  });
+  const [newHighValue, setNewHighValue] = useState({
+    newTempHigh: pondDetail.device.tempHigh,
+    newPHHigh: pondDetail.device.phHigh,
+    newTDOHigh: pondDetail.device.tdoHigh,
+    newTDSHigh: pondDetail.device.tdsHigh,
+    newTurbiditiesHigh: pondDetail.device.turbiditiesHigh,
+  });
+
+  const handleUpdateThresholdData = async () => {
+    const updatedData = {
+      ...pondDetail,
+      device: {
+        ...pondDetail.device,
+        tempLow: String(newLowValue.newTempLow),
+        tempHigh: String(newHighValue.newTempHigh),
+        phLow: String(newLowValue.newPHLow),
+        phHigh: String(newHighValue.newPHHigh),
+        tdoLow: String(newLowValue.newTDOLow),
+        tdoHigh: String(newHighValue.newTDOHigh),
+        tdsLow: String(newLowValue.newTDSLow),
+        tdsHigh: String(newHighValue.newTDSHigh),
+        turbiditiesLow: String(newLowValue.newTurbiditiesLow),
+        turbiditiesHigh: String(newHighValue.newTurbiditiesHigh),
+      },
+    };
+
+    await updateThresholdData(updatedData);
+  };
 
   return (
     <View className="my-1">
-      {/* Notif Setting Section */}
-      {/* <View className="flex flex-row justify-between items-center">
-        <Text style={styles.poolSettingTitle}>Atur Notifikasi</Text>
-        <Switch
-          trackColor={{
-            false: CONSTANT.themeColors.disable,
-            true: CONSTANT.themeColors.complementary,
-          }}
-          thumbColor={
-            isEnabled ? CONSTANT.themeColors.primary : CONSTANT.themeColors.base
-          }
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
-      </View> */}
-
       {/* Threshold Setting Section */}
       <View className="mt-4">
         <View>
@@ -50,6 +61,18 @@ const PoolSettingPage = () => {
           <ThresholdFieldComponent
             valueLow={pondDetail.device.tempLow}
             valueHigh={pondDetail.device.tempHigh}
+            onChangeLowValue={value =>
+              setNewLowValue(prevState => ({
+                ...prevState,
+                newTempLow: String(value),
+              }))
+            }
+            onChangeHighValue={value =>
+              setNewHighValue(prevState => ({
+                ...prevState,
+                newTempHigh: String(value),
+              }))
+            }
             type="float"
             thresholdTitle="Suhu"
             thresholdUnit={
@@ -61,6 +84,18 @@ const PoolSettingPage = () => {
           <ThresholdFieldComponent
             valueLow={pondDetail.device.phLow}
             valueHigh={pondDetail.device.phHigh}
+            onChangeLowValue={value =>
+              setNewLowValue(prevState => ({
+                ...prevState,
+                newPHLow: String(value),
+              }))
+            }
+            onChangeHighValue={value =>
+              setNewHighValue(prevState => ({
+                ...prevState,
+                newPHHigh: String(value),
+              }))
+            }
             type="float"
             max={14.0}
             thresholdTitle="pH"
@@ -68,6 +103,18 @@ const PoolSettingPage = () => {
           <ThresholdFieldComponent
             valueLow={pondDetail.device.tdoLow}
             valueHigh={pondDetail.device.tdoHigh}
+            onChangeLowValue={value =>
+              setNewLowValue(prevState => ({
+                ...prevState,
+                newTDOLow: String(value),
+              }))
+            }
+            onChangeHighValue={value =>
+              setNewHighValue(prevState => ({
+                ...prevState,
+                newTDOHigh: String(value),
+              }))
+            }
             type="float"
             thresholdTitle="TDO"
             thresholdUnit={
@@ -79,6 +126,18 @@ const PoolSettingPage = () => {
           <ThresholdFieldComponent
             valueLow={pondDetail.device.tdsLow}
             valueHigh={pondDetail.device.tdsHigh}
+            onChangeLowValue={value =>
+              setNewLowValue(prevState => ({
+                ...prevState,
+                newTDSLow: String(value),
+              }))
+            }
+            onChangeHighValue={value =>
+              setNewHighValue(prevState => ({
+                ...prevState,
+                newTDSHigh: String(value),
+              }))
+            }
             type="int"
             thresholdTitle="TDS"
             thresholdUnit={
@@ -90,6 +149,18 @@ const PoolSettingPage = () => {
           <ThresholdFieldComponent
             valueLow={pondDetail.device.turbiditiesLow}
             valueHigh={pondDetail.device.turbiditiesHigh}
+            onChangeLowValue={value =>
+              setNewLowValue(prevState => ({
+                ...prevState,
+                newTurbiditiesLow: String(value),
+              }))
+            }
+            onChangeHighValue={value =>
+              setNewHighValue(prevState => ({
+                ...prevState,
+                newTurbiditiesHigh: String(value),
+              }))
+            }
             type="float"
             thresholdTitle="Turbiditas"
             thresholdUnit={
@@ -107,7 +178,10 @@ const PoolSettingPage = () => {
           buttonText="Simpan Perubahan"
           style={styles.saveButton}
           className="rounded-md w-fit px-3 py-1.5 text-center align-middle"
-          onPress={() => console.log('Button Save Pressed')}
+          onPress={() => {
+            handleUpdateThresholdData();
+            // console.log('Button Save Pressed');
+          }}
         />
       </View>
     </View>
