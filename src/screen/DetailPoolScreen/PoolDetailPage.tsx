@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,11 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -37,6 +41,7 @@ const PoolDetailPage = () => {
   const { pondDetail, getOnePond } = usePondStore();
 
   const [activeNav, setActiveNav] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
 
   const route = useRoute<PondScreenRouteProp>();
   const navigation = useNavigation();
@@ -46,6 +51,12 @@ const PoolDetailPage = () => {
   useEffect(() => {
     getOnePond(pondId);
   }, [getOnePond, pondId]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    getOnePond(pondId);
+    setRefreshing(false);
+  }, [getOnePond]);
 
   // console.log(pondId);
 
@@ -76,7 +87,11 @@ const PoolDetailPage = () => {
     <KeyboardAvoidingView
       style={styles.keyboardAvoidingView}
       behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <StatusBar />
 
         {/* Header Section */}
