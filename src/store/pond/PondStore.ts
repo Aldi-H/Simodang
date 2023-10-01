@@ -188,7 +188,8 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     try {
       console.log(data.device);
 
-      const response = await axios.patch(
+      // const response =
+      await axios.patch(
         `${BASE_URL}/ponds/${get().pondDetail.pondId}/device`,
         // 'https://webhook.site/a333c63c-7560-426b-b89e-87aad7d5734a',
         data.device,
@@ -202,7 +203,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
         },
       );
 
-      set({ pondDetail: response.data });
+      // set({ pondDetail: response.data });
+      set({
+        pondDetail: {
+          ...get().pondDetail,
+          device: {
+            ...get().pondDetail.device,
+            ...data.device,
+          },
+        },
+      });
     } catch (error: any) {
       if (error.response) {
         console.log(error.response.data);
