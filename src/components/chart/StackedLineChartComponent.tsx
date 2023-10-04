@@ -1,166 +1,241 @@
-import React from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
-// import { ScrollView } from 'react-native-gesture-handler';
+import React, { useState, useRef, useEffect } from 'react';
+import { Dimensions, View, StyleSheet, PanResponder } from 'react-native';
 import * as shape from 'd3-shape';
-import { LineChart } from 'react-native-svg-charts';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { LineChart, YAxis } from 'react-native-svg-charts';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import { Circle, G, Line, Path, Rect, Text as SvgText } from 'react-native-svg';
+
 import { CONSTANT } from '../../themes';
 
-// import { CONSTANT } from '../../themes';
+type ChartData = {
+  SensorData?: number[];
+  SensorDateData?: string[];
+  SensorDataValue?: string;
+};
 
 const apx = (size: number = 0) => {
   let width = Dimensions.get('window').width;
   return (width / 750) * size;
 };
 
-const StackedLineChartComponent = () => {
-  const suhu = [24, 29, 22, 28, 27, 26, 25, 21, 23, 30, 20, 24, 28, 22, 26];
-  const pH = [
-    6.7, 7.8, 5.5, 6.2, 7.2, 5.8, 6.9, 7.5, 5.4, 8.0, 6.1, 7.0, 5.7, 7.3, 6.4,
-  ];
-  const TDO = [
-    2.8, 1.5, 3.2, 0.9, 0.3, 2.1, 3.9, 1.2, 0.7, 3.7, 2.4, 0.5, 1.8, 3.5, 2.2,
-  ];
-  const TDS = [
-    873, 1245, 671, 1067, 589, 1322, 734, 925, 1411, 612, 987, 1348, 548, 1176,
-    736,
-  ];
-  const turbiditas = [
-    3.2, 1.7, 4.5, 2.1, 0.8, 3.9, 2.6, 1.1, 4.3, 0.6, 2.8, 1.4, 4.8, 3.5, 2.3,
-  ];
+const StackedLineChartComponent = ({
+  SensorData,
+  SensorDateData,
+  SensorDataValue,
+}: ChartData) => {
+  const [positionX, setPositionX] = useState(-1);
 
-  // Datasets Array
-  /* const sensorData = [
-    {
-      data: suhu,
-      svg: { stroke: 'purple' },
-    },
-    {
-      data: pH,
-      svg: { stroke: 'red' },
-    },
-    {
-      data: TDO,
-      svg: { stroke: 'blue' },
-    },
-    {
-      data: TDS,
-      svg: { stroke: '#6D3BAC' },
-    },
-    {
-      data: turbiditas,
-      svg: { stroke: 'green' },
-    },
-  ]; */
+  const size = useRef(SensorDateData?.length ?? 0);
 
-  const verticalContentInset = { top: apx(40), bottom: apx(40) };
+  useEffect(() => {
+    size.current = SensorDateData?.length ?? 0;
+  }, [SensorDateData]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderTerminationRequest: () => true,
+
+      onPanResponderGrant: evt => {
+        updatePosition(evt.nativeEvent.locationX);
+        return true;
+      },
+
+      onPanResponderMove: evt => {
+        updatePosition(evt.nativeEvent.locationX);
+        return true;
+      },
+
+      onPanResponderRelease: () => {
+        setPositionX(-1);
+      },
+    }),
+  );
+
+  const updatePosition = (x: number) => {
+    // const yAxisWidth = wp('2%');
+    // const x0 = wp('0%');
+    // const chartWidth = wp('1%') - yAxisWidth - x0;
+    // const xN = x0 + chartWidth;
+    // // const xDistance = chartWidth / (size.current ?? 1);
+    // const xDistance = chartWidth / size.current;
+
+    const yAxisWidth = apx(130);
+    const x0 = apx(0);
+    const chartWidth = apx(750) - yAxisWidth - x0;
+    const xN = x0 + chartWidth;
+    // const xDistance = chartWidth / (size.current ?? 1);
+    const xDistance = chartWidth / size.current;
+
+    if (x <= x0) {
+      x = x0;
+    }
+
+    if (x >= xN) {
+      x = xN;
+    }
+
+    // let value = Math.round((x - x0) / xDistance);
+    // if (value >= ((size.current ?? 1) - 1 || 0)) {
+    //   value = (size.current ?? 1) - 1 || 0;
+    // }
+
+    let value = Math.round((x - x0) / xDistance);
+    if (value >= size.current - 1) {
+      value = size.current - 1;
+    }
+
+    setPositionX(Number(value));
+  };
+
+  const CustomLine = ({ line }: any) => {
+    return (
+      <Path
+        key="line"
+        d={line}
+        //! Change this later
+        stroke={CONSTANT.themeColors.font}
+        strokeWidth={apx(4)}
+        fill="none"
+      />
+    );
+  };
+
+  const ToolTip = ({ x, y }: any) => {
+    if (positionX < 0) {
+      return null;
+    }
+
+    const sensorData = SensorData?.[positionX];
+    const sensorDateData = SensorDateData?.[positionX];
+
+    return (
+      <G x={x(positionX)} key="tooltip">
+        <G
+          // x={positionX > dateData.length / 2 ? -wp('28%') : wp('3%')}
+          x={
+            positionX > (SensorDateData?.length ?? 0) / 3
+              ? -wp('23%')
+              : wp('3%')
+          }
+          y={y(sensorData)}
+          // y={y(ppm) - wp('2%')}\
+        >
+          <Rect
+            y={-wp('9%') / 2}
+            ry={wp('1')}
+            width={wp('20%')}
+            height={wp('11%')}
+            //! Change this later
+            stroke={CONSTANT.themeColors.font}
+            fill={CONSTANT.themeColors.base}
+          />
+
+          <SvgText
+            x={wp('3%')}
+            fontSize={CONSTANT.fontSizes.caption}
+            fontFamily={CONSTANT.customFonts.heading2}
+            //! Change this later
+            fill={CONSTANT.themeColors.font}>
+            {sensorData} {SensorDataValue}
+          </SvgText>
+          <SvgText
+            x={wp('3%')}
+            y={wp('4%')}
+            opacity={0.65}
+            fontSize={CONSTANT.fontSizes.caption}
+            fontFamily={CONSTANT.customFonts.body}
+            //! Change this later
+            fill={CONSTANT.themeColors.font}>
+            {sensorDateData}
+          </SvgText>
+        </G>
+
+        <G x={x}>
+          <Line
+            // y1={ticks[0]}
+            // y2={ticks[Number(ticks.length)]}
+            //! Change this later
+            stroke={CONSTANT.themeColors.font}
+            strokeWidth={wp('0.5%')}
+            strokeDasharray={[6, 3]}
+          />
+
+          <Circle
+            cy={y(sensorData)}
+            r={wp('1%')}
+            stroke={CONSTANT.themeColors.base}
+            strokeWidth={wp('0.5%')}
+            fill={CONSTANT.themeColors.font}
+          />
+        </G>
+      </G>
+    );
+  };
+
+  const verticalContentInset = {
+    top: wp('5%'),
+    bottom: wp('10%'),
+  };
 
   return (
-    <View style={styles.chartContainer}>
-      <LineChart
-        style={styles.areaChart}
-        data={TDS}
-        curve={shape.curveMonotoneX}
-        contentInset={verticalContentInset}
-        svg={{ stroke: CONSTANT.themeColors.tubidityIndicator }}
-      />
+    <View className="my-10">
+      <View style={styles.container} className="flex-row">
+        <YAxis
+          data={SensorData || []}
+          contentInset={{ ...verticalContentInset }}
+          svg={{
+            fill: CONSTANT.themeColors.font,
+            fontSize: CONSTANT.fontSizes.caption,
+            fontFamily: CONSTANT.customFonts.body,
+          }}
+          numberOfTicks={5}
+        />
+        <View style={styles.flexContainer} className="pl-2 flex-1">
+          <View
+            style={styles.chartContainer}
+            {...panResponder.current.panHandlers}>
+            <LineChart
+              style={styles.areaChart}
+              data={SensorData || []}
+              curve={shape.curveMonotoneX}
+              contentInset={{ ...verticalContentInset }}
+              svg={{ stroke: CONSTANT.themeColors.tubidityIndicator }}
+              numberOfTicks={5}>
+              <CustomLine />
+              <ToolTip />
+            </LineChart>
+          </View>
+        </View>
+      </View>
     </View>
   );
 };
-/* <View className="flex-1">
-  <LineChart
-    data={suhu}
-    curve={shape.curveMonotoneX}
-    svg={{
-      stroke: CONSTANT.themeColors.tempIndicator,
-      strokeWidth: 2,
-    }}
-    style={{ height: hp('25%') }}
-    contentInset={{ top: 20, bottom: 20 }}
-  />
-</View>
-<View className="flex-1">
-  <LineChart
-    data={pH}
-    curve={shape.curveMonotoneX}
-    svg={{
-      stroke: CONSTANT.themeColors.phIndicator,
-      strokeWidth: 2,
-    }}
-    style={{ height: hp('25%') }}
-    contentInset={{ top: 20, bottom: 20 }}
-  />
-</View>
-<View className="flex-1">
-  <LineChart
-    data={TDO}
-    curve={shape.curveMonotoneX}
-    svg={{
-      stroke: CONSTANT.themeColors.TDOIndicator,
-      strokeWidth: 2,
-    }}
-    style={{ height: hp('25%') }}
-    contentInset={{ top: 20, bottom: 20 }}
-  />
-</View>
-<View className="flex-1">
-  <LineChart
-    data={TDS}
-    curve={shape.curveMonotoneX}
-    svg={{
-      stroke: CONSTANT.themeColors.TDSIndicator,
-      strokeWidth: 2,
-    }}
-    style={{ height: hp('25%') }}
-    contentInset={{ top: 20, bottom: 20 }}
-  />
-</View>
-<View className="flex-1">
-  <LineChart
-    data={turbiditas}
-    curve={shape.curveMonotoneX}
-    svg={{
-      stroke: CONSTANT.themeColors.tubidityIndicator,
-      strokeWidth: 2,
-    }}
-    style={{ height: hp('25%') }}
-    contentInset={{ top: 20, bottom: 20 }}
-  />
-</View> */
-
-/* <View className="mt-2">
-    <LineChart
-      data={sensorData}
-      curve={shape.curveMonotoneX}
-      style={{ height: hp('25%') }}
-    />
-  </View> */
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: CONSTANT.themeColors.base,
     alignItems: 'stretch',
   },
   flexContainer: {
-    // flexDirection: 'row',
-    flex: 1,
-    // width: apx(750),
-    // height: apx(570),
-    height: hp('25%'),
-    alignSelf: 'stretch',
-    paddingHorizontal: apx(8),
+    height: hp('28%'),
   },
   chartContainer: {
-    flex: 1,
-    height: hp('25%'), // Adjust the height as needed
+    height: hp('28%'),
+    borderColor: CONSTANT.themeColors.font,
   },
   areaChart: {
     flex: 1,
   },
   xAxisContainer: {
     alignSelf: 'stretch',
-    width: apx(800),
-    height: apx(60),
+    width: wp('105%'),
   },
 });
 

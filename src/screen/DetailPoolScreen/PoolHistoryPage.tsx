@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Modal } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
@@ -15,9 +15,11 @@ import StackedLineChartComponent from '../../components/chart/StackedLineChartCo
 import DropdownComponent from '../../components/dropdown/DropdownComponent';
 import TableComponent from '../../components/table/TableComponent';
 import DrawerScreenPage from './drawer/DrawerScreenPage';
-// import CalendarComponent from '../../components/calendar/CalendarComponent';
+import useMetricStore from '../../store/metric/MetricStore';
 
 const PoolHistoryPage = () => {
+  const { getChartDataByDate, temperature, createdAt } = useMetricStore();
+
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState(false);
 
   const handleOpenBottomDrawer = () => {
@@ -29,6 +31,10 @@ const PoolHistoryPage = () => {
     setIsBottomDrawerOpen(false);
     console.log('Drawer Close');
   };
+
+  useEffect(() => {
+    getChartDataByDate();
+  }, [getChartDataByDate]);
 
   return (
     <View className="my-1">
@@ -93,7 +99,10 @@ const PoolHistoryPage = () => {
 
       {/* Chart Section */}
       <View>
-        <StackedLineChartComponent />
+        <StackedLineChartComponent
+          SensorData={temperature}
+          SensorDateData={createdAt}
+        />
       </View>
 
       <View className="mb-5">
