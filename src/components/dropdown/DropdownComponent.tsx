@@ -7,6 +7,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
+import { ChartDropdown } from '../../utils/dropdownData/DropdownData';
 
 type DropdownProps = {
   dropdownStyle: ViewStyle;
@@ -17,10 +18,12 @@ type DropdownProps = {
 const DropdownComponent = ({
   dropdownStyle,
   dropdownPlaceholder,
-  dropdownData = [],
+  dropdownData = ChartDropdown,
 }: DropdownProps) => {
   const [value, setValue] = useState<string | undefined>();
   const [isFocus, setIsFocus] = useState<boolean>(false);
+
+  const initialPlaceholder = dropdownData[0]?.label;
 
   return (
     <View style={styles.container}>
@@ -35,7 +38,9 @@ const DropdownComponent = ({
         data={dropdownData}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? `${dropdownPlaceholder}` : '...'}
+        placeholder={
+          !isFocus ? dropdownPlaceholder || initialPlaceholder : '...'
+        }
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
