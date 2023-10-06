@@ -5,40 +5,12 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
 
-const TableComponent = () => {
-  const tableHead = ['Tanggal', 'Value'];
-  // const tableData = [['1', '2']];
+type TabelDataProps = {
+  TabelData: { date?: string; value?: number }[];
+};
 
-  const dataExamp = [
-    {
-      date: '18/05/23',
-      pH: 6.8,
-    },
-    {
-      date: '19/05/23',
-      pH: 7.0,
-    },
-    {
-      date: '19/05/23',
-      pH: 6.6,
-    },
-    {
-      date: '19/05/23',
-      pH: 7.9,
-    },
-    {
-      date: '19/05/23',
-      pH: 7.9,
-    },
-    {
-      date: '19/05/23',
-      pH: 7.9,
-    },
-    {
-      date: '19/05/23',
-      pH: 7.9,
-    },
-  ];
+const TableComponent = ({ TabelData }: TabelDataProps) => {
+  const tableHead = ['Tanggal', 'Value'];
 
   return (
     <View>
@@ -49,11 +21,11 @@ const TableComponent = () => {
             style={styles.header}
             textStyle={styles.textStyle}
           />
-          {dataExamp.map((value, index) => {
+          {TabelData?.map((value, index) => {
             return (
               <Row
                 key={index}
-                data={[value.date, value.pH]}
+                data={[value.date, value.value]}
                 textStyle={styles.dataTextStyle}
               />
             );

@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Dimensions, View, StyleSheet, PanResponder } from 'react-native';
+import {
+  Dimensions,
+  View,
+  StyleSheet,
+  PanResponder,
+  ColorValue,
+} from 'react-native';
 import * as shape from 'd3-shape';
 import { LineChart, YAxis } from 'react-native-svg-charts';
 import {
@@ -14,6 +20,8 @@ type ChartData = {
   SensorData?: number[];
   SensorDateData?: string[];
   SensorDataValue?: string;
+  Stroke?: ColorValue | undefined;
+  Fill?: ColorValue | undefined;
 };
 
 const apx = (size: number = 0) => {
@@ -25,6 +33,8 @@ const StackedLineChartComponent = ({
   SensorData,
   SensorDateData,
   SensorDataValue,
+  Stroke,
+  Fill,
 }: ChartData) => {
   const [positionX, setPositionX] = useState(-1);
 
@@ -100,7 +110,7 @@ const StackedLineChartComponent = ({
         key="line"
         d={line}
         //! Change this later
-        stroke={CONSTANT.themeColors.font}
+        stroke={Stroke}
         strokeWidth={apx(4)}
         fill="none"
       />
@@ -121,7 +131,7 @@ const StackedLineChartComponent = ({
           // x={positionX > dateData.length / 2 ? -wp('28%') : wp('3%')}
           x={
             positionX > (SensorDateData?.length ?? 0) / 3
-              ? -wp('23%')
+              ? -wp('28%')
               : wp('3%')
           }
           y={y(sensorData)}
@@ -130,10 +140,10 @@ const StackedLineChartComponent = ({
           <Rect
             y={-wp('9%') / 2}
             ry={wp('1')}
-            width={wp('20%')}
+            width={wp('25%')}
             height={wp('11%')}
             //! Change this later
-            stroke={CONSTANT.themeColors.font}
+            stroke={Stroke}
             fill={CONSTANT.themeColors.base}
           />
 
@@ -142,7 +152,7 @@ const StackedLineChartComponent = ({
             fontSize={CONSTANT.fontSizes.caption}
             fontFamily={CONSTANT.customFonts.heading2}
             //! Change this later
-            fill={CONSTANT.themeColors.font}>
+            fill={Fill}>
             {sensorData} {SensorDataValue}
           </SvgText>
           <SvgText
@@ -152,7 +162,7 @@ const StackedLineChartComponent = ({
             fontSize={CONSTANT.fontSizes.caption}
             fontFamily={CONSTANT.customFonts.body}
             //! Change this later
-            fill={CONSTANT.themeColors.font}>
+            fill={Fill}>
             {sensorDateData}
           </SvgText>
         </G>
@@ -162,7 +172,7 @@ const StackedLineChartComponent = ({
             // y1={ticks[0]}
             // y2={ticks[Number(ticks.length)]}
             //! Change this later
-            stroke={CONSTANT.themeColors.font}
+            stroke={Stroke}
             strokeWidth={wp('0.5%')}
             strokeDasharray={[6, 3]}
           />
@@ -172,7 +182,7 @@ const StackedLineChartComponent = ({
             r={wp('1%')}
             stroke={CONSTANT.themeColors.base}
             strokeWidth={wp('0.5%')}
-            fill={CONSTANT.themeColors.font}
+            fill={Fill}
           />
         </G>
       </G>

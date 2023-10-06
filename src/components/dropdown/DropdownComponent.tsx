@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import {
@@ -10,18 +11,28 @@ import { CONSTANT } from '../../themes';
 import { ChartDropdown } from '../../utils/dropdownData/DropdownData';
 
 type DropdownProps = {
+  isFocus: boolean;
+  value: string | undefined;
   dropdownStyle: ViewStyle;
   dropdownPlaceholder?: string;
   dropdownData?: { value: string; label: string }[];
+  onFocus: () => void;
+  onBlur: () => void;
+  onChange: (item: any) => void;
 };
 
 const DropdownComponent = ({
+  isFocus,
+  value,
+  onFocus,
+  onBlur,
+  onChange,
   dropdownStyle,
   dropdownPlaceholder,
   dropdownData = ChartDropdown,
 }: DropdownProps) => {
-  const [value, setValue] = useState<string | undefined>();
-  const [isFocus, setIsFocus] = useState<boolean>(false);
+  // const [value, setValue] = useState<string | undefined>();
+  // const [isFocus, setIsFocus] = useState<boolean>(false);
 
   const initialPlaceholder = dropdownData[0]?.label;
 
@@ -41,13 +52,20 @@ const DropdownComponent = ({
         placeholder={
           !isFocus ? dropdownPlaceholder || initialPlaceholder : '...'
         }
+        // placeholder={
+        //   !isFocus ? dropdownPlaceholder || initialPlaceholder : '...'
+        // }
+        // value={value}
         value={value}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        onChange={item => {
-          setValue(item.value);
-          setIsFocus(false);
-        }}
+        // onFocus={() => setIsFocus(true)}
+        // onBlur={() => setIsFocus(false)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onChange={onChange}
+        // onChange={item => {
+        //   setValue(item.value);
+        //   setIsFocus(false);
+        // }}
       />
     </View>
   );

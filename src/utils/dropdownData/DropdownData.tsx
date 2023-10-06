@@ -1,23 +1,40 @@
+import { CONSTANT } from '../../themes';
+
 const ChartDropdown = [
   {
-    label: 'TDS',
     value: '1',
+    label: 'TDS',
+    chartData: 'tds',
+    stroke: CONSTANT.themeColors.TDSIndicator,
+    fill: CONSTANT.themeColors.TDSIndicator,
   },
   {
-    label: 'TDO',
     value: '2',
+    label: 'TDO',
+    chartData: 'tdo',
+    stroke: CONSTANT.themeColors.TDOIndicator,
+    fill: CONSTANT.themeColors.TDOIndicator,
   },
   {
-    label: 'pH',
     value: '3',
+    label: 'pH',
+    chartData: 'ph',
+    stroke: CONSTANT.themeColors.phIndicator,
+    fill: CONSTANT.themeColors.phIndicator,
   },
   {
-    label: 'Suhu',
     value: '4',
+    label: 'Suhu',
+    chartData: 'temperature',
+    stroke: CONSTANT.themeColors.tempIndicator,
+    fill: CONSTANT.themeColors.tempIndicator,
   },
   {
-    label: 'Turbiditas',
     value: '5',
+    label: 'Turbiditas',
+    chartData: 'turbidity',
+    stroke: CONSTANT.themeColors.tubidityIndicator,
+    fill: CONSTANT.themeColors.tubidityIndicator,
   },
 ];
 

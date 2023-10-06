@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal } from 'react-native';
+import { StyleSheet, Text, View, Modal, ColorValue } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
@@ -18,9 +18,18 @@ import DrawerScreenPage from './drawer/DrawerScreenPage';
 import useMetricStore from '../../store/metric/MetricStore';
 
 const PoolHistoryPage = () => {
-  const { getChartDataByDate, temperature, createdAt } = useMetricStore();
+  const { getChartDataByDate, dataSensor } = useMetricStore();
 
-  const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState(false);
+  const [value, setValue] = useState<string | undefined>();
+  const [isFocus, setIsFocus] = useState<boolean>(false);
+  const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState<boolean>(false);
+  const [selectedData, setSelectedData] = useState<{
+    label: string;
+    chartData: string;
+    stroke: ColorValue | undefined;
+    fill: ColorValue | undefined;
+    value: string;
+  }>();
 
   const handleOpenBottomDrawer = () => {
     setIsBottomDrawerOpen(true);
@@ -32,9 +41,31 @@ const PoolHistoryPage = () => {
     console.log('Drawer Close');
   };
 
+  const getDataBasedSelectedDropdown = (selectedValue: string) => {
+    const selected = ChartDropdown.find(item => item.value === selectedValue);
+    console.log(selectedValue);
+
+    return selected;
+  };
+
   useEffect(() => {
     getChartDataByDate();
-  }, [getChartDataByDate]);
+    setSelectedData(prevData => {
+      const selected = getDataBasedSelectedDropdown(value || '1');
+      if (prevData && prevData.value === selected?.value) {
+        return prevData;
+      }
+      return selected as {
+        label: string;
+        chartData: string;
+        stroke: ColorValue | undefined;
+        fill: ColorValue | undefined;
+        value: string;
+      };
+    });
+  }, [getChartDataByDate, value]);
+
+  console.log(dataSensor);
 
   return (
     <View className="my-1">
@@ -44,9 +75,16 @@ const PoolHistoryPage = () => {
         <View className="items-end">
           <View className="my-3">
             <DropdownComponent
-              dropdownPlaceholder="Ubah Chart"
               dropdownData={ChartDropdown}
               dropdownStyle={styles.dropdown}
+              isFocus={isFocus}
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item: any) => {
+                setValue(item.value);
+                setIsFocus(false);
+              }}
             />
           </View>
         </View>
@@ -100,13 +138,31 @@ const PoolHistoryPage = () => {
       {/* Chart Section */}
       <View>
         <StackedLineChartComponent
-          SensorData={temperature}
-          SensorDateData={createdAt}
+          SensorData={
+            dataSensor[selectedData?.chartData.toLowerCase() || 'tds']
+          }
+          Stroke={selectedData?.stroke || '#D1DE3A'}
+          Fill={selectedData?.fill || '#D1DE3A'}
+          SensorDateData={
+            dataSensor.createdAt.map(date => date.toString()) as string[]
+          }
         />
       </View>
 
       <View className="mb-5">
-        <TableComponent />
+        <TableComponent
+          TabelData={
+            dataSensor.createdAt
+              .map((date, index) => ({
+                date: date.toString(),
+                value:
+                  dataSensor[selectedData?.chartData.toLowerCase() || 'tds'][
+                    index
+                  ],
+              }))
+              .reverse() as { date?: string; value?: number }[]
+          }
+        />
       </View>
     </View>
   );

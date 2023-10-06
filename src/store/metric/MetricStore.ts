@@ -4,21 +4,18 @@ import { create } from 'zustand';
 import usePondStore from '../pond/PondStore';
 import moment from 'moment';
 
-/* type chartDataState = {
-  temperature: string;
-  pH: string;
-  tdo: string;
-  tds: string;
-  turbidity: string;
-  createdAt: string;
-}; */
-type chartDataState = {
+type DataSensor = {
+  [key: string]: number[];
   temperature: number[];
-  pH: number;
-  tdo: number;
+  ph: number[];
+  tdo: number[];
   tds: number[];
-  turbidity: number;
-  createdAt: string[];
+  turbidity: number[];
+  createdAt: number[];
+};
+
+type chartDataState = {
+  dataSensor: DataSensor;
 };
 
 type chartDataAction = {
@@ -27,12 +24,14 @@ type chartDataAction = {
 };
 
 const useMetricStore = create<chartDataState & chartDataAction>()(set => ({
-  temperature: [],
-  pH: 0,
-  tdo: 0,
-  tds: [],
-  turbidity: 0,
-  createdAt: [],
+  dataSensor: {
+    temperature: [],
+    ph: [],
+    tdo: [],
+    tds: [],
+    turbidity: [],
+    createdAt: [],
+  },
 
   getChartDataByDate: async () => {
     try {
@@ -50,16 +49,26 @@ const useMetricStore = create<chartDataState & chartDataAction>()(set => ({
       // console.log(response.data.map((item: any) => item.tds));
 
       set({
-        temperature: response.data.map(
-          (item: any) => Math.round(parseFloat(item.temperature) * 100) / 100,
-        ),
-        pH: response.data.map((item: any) => item.pH),
-        tdo: response.data.map((item: any) => item.tdo),
-        tds: response.data.map((item: any) => Number(item.tds)),
-        turbidity: response.data.map((item: any) => item.turbidity),
-        createdAt: response.data.map((item: any) =>
-          moment(item.createdAt).utcOffset('+0700').format('D MMM YY'),
-        ),
+        dataSensor: {
+          temperature: response.data.map(
+            (item: any) => Math.round(parseFloat(item.temperature) * 100) / 100,
+          ),
+          ph: response.data.map(
+            (item: any) => Math.round(parseFloat(item.ph) * 100) / 100,
+          ),
+          tdo: response.data.map(
+            (item: any) => Math.round(parseFloat(item.tdo) * 100) / 100,
+          ),
+          tds: response.data.map(
+            (item: any) => Math.round(parseFloat(item.tds) * 100) / 100,
+          ),
+          turbidity: response.data.map(
+            (item: any) => Math.round(parseFloat(item.turbidity) * 100) / 100,
+          ),
+          createdAt: response.data.map((item: any) =>
+            moment(item.createdAt).utcOffset('+0700').format('D MMM YYYY'),
+          ),
+        },
       });
     } catch (error) {
       console.log(error);
