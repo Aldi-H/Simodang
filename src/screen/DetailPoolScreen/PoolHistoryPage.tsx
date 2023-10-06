@@ -7,7 +7,10 @@ import {
 } from 'react-native-responsive-screen';
 
 import { CONSTANT } from '../../themes';
-import { ChartDropdown } from '../../utils/dropdownData/DropdownData';
+import {
+  ChartDropdown,
+  PaginationDropdown,
+} from '../../utils/dropdownData/DropdownData';
 
 import FilterIconOutline from '../../assets/icons/FilterIconOutline.svg';
 import BackIcon from '../../assets/icons/BackIcon.svg';
@@ -20,8 +23,18 @@ import useMetricStore from '../../store/metric/MetricStore';
 const PoolHistoryPage = () => {
   const { getChartDataByDate, dataSensor } = useMetricStore();
 
-  const [value, setValue] = useState<string | undefined>();
-  const [isFocus, setIsFocus] = useState<boolean>(false);
+  // const postPerPage = 2;
+  const pageLimit = 3;
+  const pageNumber = [];
+  const [dropdownPaginationValue, setDropdownPaginationValue] = useState<
+    number | string | undefined
+  >(5);
+  const [isFocusPagination, setIsFocusPagination] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [chartDropdownValue, setChartDropdownValue] = useState<
+    string | undefined
+  >();
+  const [isFocusChart, setIsFocusChart] = useState<boolean>(false);
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<{
     label: string;
@@ -43,15 +56,40 @@ const PoolHistoryPage = () => {
 
   const getDataBasedSelectedDropdown = (selectedValue: string) => {
     const selected = ChartDropdown.find(item => item.value === selectedValue);
-    console.log(selectedValue);
 
     return selected;
+  };
+
+  const lastData = currentPage * Number(dropdownPaginationValue);
+  const firstData = lastData - Number(dropdownPaginationValue);
+  const currentData = dataSensor.createdAt
+    .map((date, index) => ({
+      date: date.toString(),
+      value: dataSensor[selectedData?.chartData.toLowerCase() || 'tds'][index],
+    }))
+    .reverse()
+    .slice(firstData, lastData) as { date?: string; value?: number }[];
+
+  for (
+    let i = 1;
+    i <=
+    Math.ceil(
+      dataSensor[selectedData?.chartData.toLowerCase() || 'tds'].length /
+        Number(dropdownPaginationValue),
+    );
+    i++
+  ) {
+    pageNumber.push(i);
+  }
+
+  const setPage = (pageNum: number) => {
+    setCurrentPage(pageNum);
   };
 
   useEffect(() => {
     getChartDataByDate();
     setSelectedData(prevData => {
-      const selected = getDataBasedSelectedDropdown(value || '1');
+      const selected = getDataBasedSelectedDropdown(chartDropdownValue || '1');
       if (prevData && prevData.value === selected?.value) {
         return prevData;
       }
@@ -63,9 +101,7 @@ const PoolHistoryPage = () => {
         value: string;
       };
     });
-  }, [getChartDataByDate, value]);
-
-  console.log(dataSensor);
+  }, [getChartDataByDate, chartDropdownValue]);
 
   return (
     <View className="my-1">
@@ -77,13 +113,13 @@ const PoolHistoryPage = () => {
             <DropdownComponent
               dropdownData={ChartDropdown}
               dropdownStyle={styles.dropdown}
-              isFocus={isFocus}
-              value={value}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
+              isFocus={isFocusChart}
+              value={chartDropdownValue}
+              onFocus={() => setIsFocusChart(true)}
+              onBlur={() => setIsFocusChart(false)}
               onChange={(item: any) => {
-                setValue(item.value);
-                setIsFocus(false);
+                setChartDropdownValue(item.value);
+                setIsFocusChart(false);
               }}
             />
           </View>
@@ -150,19 +186,87 @@ const PoolHistoryPage = () => {
       </View>
 
       <View className="mb-5">
-        <TableComponent
-          TabelData={
-            dataSensor.createdAt
-              .map((date, index) => ({
-                date: date.toString(),
-                value:
-                  dataSensor[selectedData?.chartData.toLowerCase() || 'tds'][
-                    index
-                  ],
-              }))
-              .reverse() as { date?: string; value?: number }[]
-          }
-        />
+        <View className="flex flex-row justify-end items-center space-x-2">
+          <Text style={styles.paginationData}>Data:</Text>
+          <View className="my-3">
+            <DropdownComponent
+              dropdownData={PaginationDropdown}
+              dropdownStyle={styles.dropdownPagination}
+              itemContainerStyle={styles.itemContainerStyle}
+              isFocus={isFocusPagination}
+              value={String(dropdownPaginationValue)}
+              onFocus={() => setIsFocusPagination(true)}
+              onBlur={() => setIsFocusPagination(false)}
+              onChange={(item: any) => {
+                setDropdownPaginationValue(item.value);
+                setIsFocusPagination(false);
+              }}
+            />
+          </View>
+        </View>
+
+        <TableComponent TabelData={currentData} />
+
+        <View className="flex-row justify-between mt-1 mx-1">
+          <View />
+          <View className="flex-row">
+            {pageNumber
+              .slice(
+                Math.max(currentPage - Math.floor(pageLimit / 1), 0),
+                Math.min(
+                  currentPage + Math.floor(pageLimit / 1),
+                  pageNumber.length,
+                ),
+              )
+              .map((pageNum, index) => {
+                return (
+                  <Text
+                    key={index}
+                    className={
+                      pageNum === currentPage ? 'border px-3 rounded' : 'px-3'
+                    }
+                    style={[
+                      styles.paginationPage,
+                      pageNum === currentPage
+                        ? styles.activePage
+                        : styles.inactivePage,
+                    ]}
+                    onPress={() => {
+                      setPage(pageNum);
+                    }}>
+                    {pageNum}
+                  </Text>
+                );
+              })}
+          </View>
+
+          {/* <View className="flex-row justify-between mt-1 mx-1">
+          <View />
+          <View className="flex-row space-x-2">
+            {[currentPage - 1, currentPage, currentPage + 1].map(
+              (pageNum, index) =>
+                pageNum >= 1 &&
+                pageNum <= pageNumber.length && (
+                  <Text
+                    key={index}
+                    className={
+                      pageNum === currentPage
+                        ? 'border px-3 rounded'
+                        : 'text-black'
+                    }
+                    style={[
+                      styles.paginationPage,
+                      pageNum === currentPage
+                        ? styles.activePage
+                        : styles.inactivePage,
+                    ]}
+                    onPress={() => setPage(pageNum)}>
+                    {pageNum === currentPage ? currentPage : pageNum}
+                  </Text>
+                ),
+            )}
+          </View> */}
+        </View>
       </View>
     </View>
   );
@@ -179,8 +283,19 @@ const styles = StyleSheet.create({
     width: wp('30%'),
     borderColor: CONSTANT.themeColors.disable,
     borderWidth: 0.5,
-    borderRadius: 8,
+    borderRadius: 3,
     paddingHorizontal: 8,
+  },
+  dropdownPagination: {
+    height: hp('4%'),
+    width: wp('20%'),
+    borderColor: CONSTANT.themeColors.disable,
+    borderWidth: 0.5,
+    borderRadius: 3,
+    paddingHorizontal: 8,
+  },
+  itemContainerStyle: {
+    margin: -10,
   },
   filterButton: {
     backgroundColor: CONSTANT.themeColors.primary,
@@ -208,6 +323,23 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.heading2,
     color: CONSTANT.themeColors.font,
+  },
+  paginationData: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  paginationPage: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.heading2,
+  },
+  activePage: {
+    borderColor: CONSTANT.themeColors.primary,
+    color: CONSTANT.themeColors.primary,
+  },
+  inactivePage: {
+    borderColor: CONSTANT.themeColors.disable,
+    color: CONSTANT.themeColors.disable,
   },
 });
 

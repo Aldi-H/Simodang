@@ -195,7 +195,7 @@ const StackedLineChartComponent = ({
   };
 
   return (
-    <View className="my-10">
+    <View className="mt-5">
       <View style={styles.container} className="flex-row">
         <YAxis
           data={SensorData || []}

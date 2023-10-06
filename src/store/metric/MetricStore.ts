@@ -39,14 +39,18 @@ const useMetricStore = create<chartDataState & chartDataAction>()(set => ({
         `${BASE_URL}/metrics/${usePondStore.getState().pondDetail.pondId}`,
         {
           params: {
-            startDate: '2023-09-29',
-            endDate: '2023-10-02',
+            startDate: '2023-09-25',
+            endDate: '2023-10-06',
             avg: '1',
           },
         },
       );
 
-      // console.log(response.data.map((item: any) => item.tds));
+      console.log(
+        response.data.map((item: any) =>
+          moment(item.createdAt).utcOffset('+0700').format(),
+        ),
+      );
 
       set({
         dataSensor: {

@@ -14,6 +14,7 @@ type DropdownProps = {
   isFocus: boolean;
   value: string | undefined;
   dropdownStyle: ViewStyle;
+  itemContainerStyle?: ViewStyle;
   dropdownPlaceholder?: string;
   dropdownData?: { value: string; label: string }[];
   onFocus: () => void;
@@ -27,6 +28,7 @@ const DropdownComponent = ({
   onFocus,
   onBlur,
   onChange,
+  itemContainerStyle,
   dropdownStyle,
   dropdownPlaceholder,
   dropdownData = ChartDropdown,
@@ -44,7 +46,7 @@ const DropdownComponent = ({
         selectedTextStyle={styles.selectedTextStyle}
         containerStyle={styles.dropdownContainer}
         itemTextStyle={styles.itemTextStyle}
-        itemContainerStyle={styles.dropdownItemContainer}
+        itemContainerStyle={[styles.dropdownItemContainer, itemContainerStyle]}
         fontFamily={CONSTANT.customFonts.body}
         data={dropdownData}
         labelField="label"

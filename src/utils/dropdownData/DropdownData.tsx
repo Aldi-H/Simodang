@@ -38,6 +38,25 @@ const ChartDropdown = [
   },
 ];
 
+const PaginationDropdown = [
+  {
+    value: '5',
+    label: '5',
+  },
+  {
+    value: '10',
+    label: '10',
+  },
+  {
+    value: '15',
+    label: '15',
+  },
+  {
+    value: '20',
+    label: '20',
+  },
+];
+
 const PondsStatusDropdown = [
   {
     label: 'Kosong',
@@ -49,4 +68,4 @@ const PondsStatusDropdown = [
   },
 ];
 
-export { ChartDropdown, PondsStatusDropdown };
+export { ChartDropdown, PaginationDropdown, PondsStatusDropdown };
