@@ -39,6 +39,7 @@
     "react-native-input-spinner": "^1.8.1",
     "react-native-keychain": "^8.1.2",
     "react-native-modal": "^13.0.1",
+    "react-native-pagination": "^1.5.5",
     "react-native-reanimated": "^3.4.2",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^4.7.1",
