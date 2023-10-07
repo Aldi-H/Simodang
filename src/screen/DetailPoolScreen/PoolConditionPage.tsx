@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { StyleSheet, View, Text, Switch } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../../store/pond/PondStore';
 import useSocketStore from '../../store/socket/SocketStore';
@@ -9,22 +10,33 @@ import { CONSTANT } from '../../themes';
 
 import DisplayTextComponent from '../../components/text/DisplayTextComponent';
 
-const PoolConditionPage = () => {
+type PoolConditionProps = {
+  pondId: string;
+};
+
+const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
   const { pondDetail } = usePondStore();
-  const { temperature, pH, tdo, tds, turbidity, connect, disconnect } =
-    useSocketStore();
+  const [temperature, setTemperature] = useState<number>(0);
+  const { pH, tdo, tds, turbidity } = useSocketStore();
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
-    connect();
+    // console.log(pondId);
 
-    return () => {
-      disconnect();
-      // socket.disconnect();
-    };
-  }, [pondDetail.pondId]);
+    // message(pondId);
+    messaging().onMessage(async remoteMessage => {
+      const topic = remoteMessage.from?.split('/').pop();
+
+      if (topic?.split('-').pop() === 'realtime') {
+        topic.split('-')[0] === pondId &&
+          setTemperature(() =>
+            remoteMessage.data ? Number(remoteMessage.data.temperature) : 0,
+          );
+      }
+    });
+  }, [pondId]);
 
   return (
     <View className="my-1">

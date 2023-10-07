@@ -38,13 +38,13 @@ const HomePage = () => {
   useEffect(() => {
     const pondIds = usePondStore.getState().pondsData.map(item => item.pondId);
     pondIds.forEach(message => {
-      console.log(message);
+      // console.log(message);
 
-      messaging()
-        .subscribeToTopic(message)
-        .then(() => {
-          console.log('Subscribed to Topic');
-        });
+      // fcm for notification
+      messaging().subscribeToTopic(message);
+      // .then(() => {
+      //   console.log('Subscribed to Topic!');
+      // });
     });
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
