@@ -15,6 +15,7 @@ import {
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRightIcon } from 'react-native-heroicons/solid';
+import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../store/pond/PondStore';
 
@@ -28,9 +29,28 @@ const HomePage = () => {
 
   const navigation = useNavigation();
 
+  // console.log(usePondStore.getState().pondsData.map(item => item.pondId));
+
   const handlePondPress = (pondId: string) => {
     navigation.navigate('PoolDetail', { pondId });
   };
+
+  useEffect(() => {
+    const pondIds = usePondStore.getState().pondsData.map(item => item.pondId);
+    pondIds.forEach(message => {
+      console.log(message);
+
+      messaging()
+        .subscribeToTopic(message)
+        .then(() => {
+          console.log('Subscribed to Topic');
+        });
+    });
+
+    messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
+      console.log(`Remote Message ${remoteMessage}`);
+    });
+  }, []);
 
   useEffect(() => {
     getAllPonds();
