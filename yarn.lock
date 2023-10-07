@@ -1850,6 +1850,11 @@
   dependencies:
     plist "^3.1.0"
 
+"@react-native-firebase/messaging@^18.5.0":
+  version "18.5.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.5.0.tgz#2a80b25816470e9843682e031a3a113566067ce6"
+  integrity sha512-y1FApYxBMcygmbWBqUPFC+fCfvx6Yf6TdZewun7kPwx+S+tkYzoKx1IsXtxOXtqyJjCNEYirjFgNrs5SSd02zA==
+
 "@react-native-google-signin/google-signin@^10.0.1":
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-10.0.1.tgz#5ca5208c6677aca7e8b12f73699de3048d9a5a31"
