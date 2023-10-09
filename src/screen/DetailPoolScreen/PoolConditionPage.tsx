@@ -10,7 +10,7 @@ import { CONSTANT } from '../../themes';
 import DisplayTextComponent from '../../components/text/DisplayTextComponent';
 
 type PoolConditionProps = {
-  pondId: string;
+  pondId?: string;
 };
 
 const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
