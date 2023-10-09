@@ -19,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../../store/pond/PondStore';
 
@@ -47,6 +48,18 @@ const PoolDetailPage = () => {
   const navigation = useNavigation();
 
   const { pondId } = route.params;
+
+  useEffect(() => {
+    messaging()
+      .subscribeToTopic(`${pondId}-realtime`)
+      .then(() => {
+        console.log('Subscribed to topic', pondId);
+      });
+
+    messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
+      console.log(`Remote Message ${remoteMessage}`);
+    });
+  }, []);
 
   useEffect(() => {
     getOnePond(pondId);
@@ -202,7 +215,7 @@ const PoolDetailPage = () => {
 
             {/* Page Render */}
             <View>
-              {activeNav === 1 && <PoolConditionPage />}
+              {activeNav === 1 && <PoolConditionPage pondId={pondId} />}
               {activeNav === 2 && <PoolHistoryPage />}
               {activeNav === 3 && <PoolSettingPage />}
             </View>
