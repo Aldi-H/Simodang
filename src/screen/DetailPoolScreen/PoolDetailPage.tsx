@@ -48,24 +48,13 @@ const PoolDetailPage = () => {
   const navigation = useNavigation();
 
   const { pondId } = route.params;
-  console.log('current page', route.params);
 
   useEffect(() => {
-    messaging().subscribeToTopic(`${pondDetail.pondId}-realtime`);
-    // .then(() => console.log('Subscibed to topic!'));
-
-    // const pondIds = usePondStore.getState().pondsData.map(item => item.pondId);
-    // pondIds.forEach(message => {
-    //   console.log(message);
-
-    //   // fcm for socket
-
-    //   messaging()
-    //     .subscribeToTopic(`${message}-realtime`)
-    //     .then(() => console.log('Subscibed to topic!'));
-    // });
-
-    console.log(pondDetail.pondId);
+    messaging()
+      .subscribeToTopic(`${pondId}-realtime`)
+      .then(() => {
+        console.log('Subscribed to topic', pondId);
+      });
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
       console.log(`Remote Message ${remoteMessage}`);

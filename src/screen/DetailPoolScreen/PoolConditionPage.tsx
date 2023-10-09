@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, Switch } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../../store/pond/PondStore';
-import useSocketStore from '../../store/socket/SocketStore';
 
 import { CONSTANT } from '../../themes';
 
@@ -17,23 +16,29 @@ type PoolConditionProps = {
 const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
   const { pondDetail } = usePondStore();
   const [temperature, setTemperature] = useState<number>(0);
-  const { pH, tdo, tds, turbidity } = useSocketStore();
+  const [pH, setPH] = useState<number>(0);
+  const [tdo, setTDO] = useState<number>(0);
+  const [tds, setTDS] = useState<number>(0);
+  const [turbidity, setTurbidity] = useState<number>(0);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
-    // console.log(pondId);
-
-    // message(pondId);
     messaging().onMessage(async remoteMessage => {
       const topic = remoteMessage.from?.split('/').pop();
-
       if (topic?.split('-').pop() === 'realtime') {
-        topic.split('-')[0] === pondId &&
-          setTemperature(() =>
+        if (topic.split('-')[0] === pondId) {
+          setTemperature(
             remoteMessage.data ? Number(remoteMessage.data.temperature) : 0,
           );
+          setPH(remoteMessage.data ? Number(remoteMessage.data.ph) : 0);
+          setTDO(remoteMessage.data ? Number(remoteMessage.data.tdo) : 0);
+          setTDS(remoteMessage.data ? Number(remoteMessage.data.tds) : 0);
+          setTurbidity(
+            remoteMessage.data ? Number(remoteMessage.data.turbidity) : 0,
+          );
+        }
       }
     });
   }, [pondId]);
