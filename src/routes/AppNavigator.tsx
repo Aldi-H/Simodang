@@ -88,6 +88,7 @@ const MainNavigator = () => {
       <Stack.Screen name="PoolHistoryPage" component={PoolHistoryPage} />
       <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
+      <Stack.Screen name="NotificationPage" component={NotificationPage} />
       <Stack.Screen name="404NotFound" component={NotFoundPage} />
     </Stack.Navigator>
   );

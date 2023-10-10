@@ -13,6 +13,7 @@ export type RootStackParamList = {
   LoginPage: undefined;
   RegisterPage: undefined;
   ProfileSettingPage: undefined;
+  NotificationPage: undefined;
   '404NotFound': undefined;
 };
 

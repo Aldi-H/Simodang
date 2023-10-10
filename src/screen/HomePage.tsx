@@ -6,10 +6,11 @@ import {
   StatusBar,
   SafeAreaView,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { CONSTANT } from '../themes';
 import {
-  // widthPercentageToDP as wp,
+  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -35,16 +36,15 @@ const HomePage = () => {
     navigation.navigate('PoolDetail', { pondId });
   };
 
+  const handleNotificationPress = () => {
+    navigation.navigate('NotificationPage');
+  };
+
   useEffect(() => {
     const pondIds = usePondStore.getState().pondsData.map(item => item.pondId);
     pondIds.forEach(message => {
-      // console.log(message);
-
       // fcm for notification
       messaging().subscribeToTopic(message);
-      // .then(() => {
-      //   console.log('Subscribed to Topic!');
-      // });
     });
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
@@ -69,15 +69,21 @@ const HomePage = () => {
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
               <Text style={styles.heading}>Hai, Name!</Text>
-              <Text style={styles.caption} className="my-1">
+              <Text
+                style={styles.caption}
+                numberOfLines={1}
+                className="my-1 text-ellipsis">
                 Bagaimana kondisi rata-rata kolam anda?
               </Text>
             </View>
             <View className="align-middle">
-              <NotifIconSvg
-                height={hp('4%')}
-                fill={CONSTANT.themeColors.base}
-              />
+              <Pressable onPress={() => handleNotificationPress()}>
+                <NotifIconSvg
+                  height={hp('3.5%')}
+                  width={wp('7%')}
+                  fill={CONSTANT.themeColors.base}
+                />
+              </Pressable>
             </View>
           </View>
           <View
