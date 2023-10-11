@@ -31,6 +31,7 @@ const NotificationPage = () => {
     loadMoreData,
     isLoading,
     visibleData,
+    deleteAllNotification,
   } = useNotificationStore();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -73,7 +74,7 @@ const NotificationPage = () => {
               height={hp('3.5%')}
               width={wp('5%')}
               fill={CONSTANT.themeColors.warningRed}
-              onPress={() => console.log('Deleted')}
+              onPress={() => deleteAllNotification()}
             />
           </Pressable>
         </View>

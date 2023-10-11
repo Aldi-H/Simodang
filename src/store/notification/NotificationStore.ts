@@ -23,6 +23,7 @@ type notificationAction = {
   getAllNotification: () => Promise<void>;
   updateNotificationStatus: (notifId: string) => Promise<void>;
   loadMoreData: () => void;
+  deleteAllNotification: () => Promise<void>;
 };
 
 const useNotificationStore = create<
@@ -104,6 +105,18 @@ const useNotificationStore = create<
           visibleData: [...prevData.visibleData, ...remainingData],
         }));
       }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  deleteAllNotification: async () => {
+    try {
+      await axios.delete(`${BASE_URL}/notifications`, {
+        headers: {
+          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
