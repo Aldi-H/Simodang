@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Pressable, ViewStyle } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -9,35 +9,51 @@ import { CONSTANT } from '../../themes';
 
 import WarningIcon from '../../assets/icons/WarningIcon.svg';
 
-const NotificationCardComponent = () => {
-  return (
-    <View className="flex flex-row space-x-2 mr-5 mb-5">
-      <View
-        style={styles.warningIconContainer2}
-        className="rounded-full items-center justify-center">
-        <WarningIcon
-          width={wp('10%')}
-          height={hp('3.5%')}
-          fill={CONSTANT.themeColors.primary}
-          style={styles.warningIcon}
-        />
-      </View>
+type NotificationCardProps = {
+  notificationTitle: string;
+  notificationMessage: string;
+  containerStyle: ViewStyle;
+  onPress: () => void;
+};
 
-      <View className="px-3">
-        <Text
-          style={styles.titleNotificationText}
-          numberOfLines={2}
-          className="text-ellipsis">
-          Kolam Yukino Pond2 berada dalam kondisi tidak baik
-        </Text>
-        <Text
-          style={styles.messageNotificationText}
-          numberOfLines={2}
-          className="text-ellipsis">
-          Parameter yang terdampak temperature, ph, tdo, tds, turbidities
-        </Text>
+const NotificationCardComponent = ({
+  notificationTitle,
+  notificationMessage,
+  onPress,
+  containerStyle,
+}: NotificationCardProps) => {
+  return (
+    <Pressable style={containerStyle} onPress={onPress}>
+      <View className="m-4 my-6 px-3">
+        <View className="flex flex-row space-x-2 mr-5">
+          <View
+            style={styles.warningIconContainer2}
+            className="rounded-full items-center justify-center">
+            <WarningIcon
+              width={wp('10%')}
+              height={hp('3.5%')}
+              fill={CONSTANT.themeColors.primary}
+              style={styles.warningIcon}
+            />
+          </View>
+
+          <View className="px-3">
+            <Text
+              style={styles.titleNotificationText}
+              numberOfLines={2}
+              className="text-ellipsis">
+              {notificationTitle}
+            </Text>
+            <Text
+              style={styles.messageNotificationText}
+              numberOfLines={2}
+              className="text-ellipsis">
+              {notificationMessage}
+            </Text>
+          </View>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
