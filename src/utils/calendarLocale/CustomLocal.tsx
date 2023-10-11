@@ -13,7 +13,7 @@ export const CUSTOM_LOCALE = {
     'November',
     'Desember',
   ],
-  dayNames: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+  dayNames: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
   today: '',
   year: '',
 };
