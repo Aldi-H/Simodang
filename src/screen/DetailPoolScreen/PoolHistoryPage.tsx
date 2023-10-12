@@ -192,8 +192,11 @@ const PoolHistoryPage = () => {
 
         <View>
           <Text style={styles.indicatorText}>
-            {moment(startDate).format('DD MMM')} -{' '}
-            {moment(endDate).format('DD MMM')}
+            {startDate === endDate
+              ? `${moment(startDate).format('DD MMM')}`
+              : `${moment(startDate).format('DD MMM')} - ${moment(
+                  endDate,
+                ).format('DD MMM')}`}
           </Text>
         </View>
       </View>

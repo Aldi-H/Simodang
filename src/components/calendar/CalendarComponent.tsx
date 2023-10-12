@@ -7,41 +7,23 @@ import { CUSTOM_LOCALE } from '../../utils/calendarLocale/CustomLocal';
 import { CONSTANT } from '../../themes';
 
 type CalendarComponentProps = {
-  startDate?: string;
-  endDate?: string;
-  onChange?: () => void;
+  getStartDate?: string;
+  getEndDate?: string;
+  onChange?: (startDate: string, endDate: string) => void;
 };
 
 const CalendarComponent = ({
-  startDate,
-  endDate,
+  getStartDate,
+  getEndDate,
   onChange,
 }: CalendarComponentProps) => {
-  // const today = new Date();
-  // const todayFormatted = `${today.getFullYear()}-${String(
-  //   today.getMonth() + 1,
-  // ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-  // console.log(todayFormatted);
-
-  // const sevenDaysFromToday = new Date();
-  // sevenDaysFromToday.setDate(today.getDate() - 14);
-  // // console.log(sevenDaysFromToday);
-  // const getEndDate = today.setDate(today.getDate() - 14);
-
-  // console.log(today);
-
-  // const sevenDaysFromTodayFormatted = `${sevenDaysFromToday.getFullYear()}-${String(
-  //   sevenDaysFromToday.getMonth() + 1,
-  // ).padStart(2, '0')}-${String(sevenDaysFromToday.getDate()).padStart(2, '0')}`;
-
   return (
     <View style={styles.calendarContainer}>
       <Calendar
         // startDate={sevenDaysFromTodayFormatted}
         // endDate={todayFormatted}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={getStartDate}
+        endDate={getEndDate}
         locale={CUSTOM_LOCALE}
         pastYearRange={0}
         futureYearRange={1}
@@ -68,7 +50,9 @@ const CalendarComponent = ({
           todayColor: CONSTANT.themeColors.complementary,
           selectedDayTextColor: CONSTANT.themeColors.base,
         }}
-        onChange={() => onChange}
+        onChange={({ startDate, endDate }) =>
+          onChange && onChange(startDate, endDate)
+        }
       />
     </View>
   );

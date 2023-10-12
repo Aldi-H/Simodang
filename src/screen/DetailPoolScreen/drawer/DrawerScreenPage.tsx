@@ -17,7 +17,8 @@ type DrawerScreenProps = {
 };
 
 const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
-  const { getStartDate, getEndDate, startDate, endDate } = useMetricStore();
+  const { handleChangeDate, getStartDate, getEndDate, startDate, endDate } =
+    useMetricStore();
 
   const [activeDuration, setIsActiveDuration] = useState(1);
 
@@ -37,8 +38,11 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
         </Pressable>
         <View>
           <Text style={styles.dateRange}>
-            {moment(startDate).format('DD MMM')} -{' '}
-            {moment(endDate).format('DD MMM')}
+            {startDate === endDate
+              ? `${moment(startDate).format('DD MMM')}`
+              : `${moment(startDate).format('DD MMM')} - ${moment(
+                  endDate,
+                ).format('DD MMM')}`}
           </Text>
         </View>
         <Pressable onPress={UpdateDrawer}>
@@ -78,7 +82,13 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
 
       {/* Show Calendar */}
       <View>
-        <CalendarComponent startDate={startDate} endDate={endDate} />
+        <CalendarComponent
+          getStartDate={startDate}
+          getEndDate={endDate}
+          onChange={(newStartDate, newEndDate) => {
+            handleChangeDate(newStartDate, newEndDate);
+          }}
+        />
       </View>
     </View>
   );
