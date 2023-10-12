@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-// import { ScrollView } from 'react-native-gesture-handler';
+import moment from 'moment';
 
 import { CONSTANT } from '../../../themes';
+
+import useMetricStore from '../../../store/metric/MetricStore';
+
 import CalendarComponent from '../../../components/calendar/CalendarComponent';
 import DisplayTextComponent from '../../../components/text/DisplayTextComponent';
+import { ChartDurationByDate } from '../../../utils/chartDuration/ChartDuration';
 
 type DrawerScreenProps = {
   CloseDrawer: () => void;
@@ -13,30 +17,10 @@ type DrawerScreenProps = {
 };
 
 const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
-  const [activeDuration, setIsActiveDuration] = useState(1);
+  const { handleChangeDate, getStartDate, getEndDate, startDate, endDate } =
+    useMetricStore();
 
-  const duration = [
-    {
-      id: 1,
-      title: '7 Hari Terakhir',
-    },
-    {
-      id: 2,
-      title: '14 Hari Terakhir',
-    },
-    {
-      id: 3,
-      title: '30 Hari Terakhir',
-    },
-    {
-      id: 4,
-      title: '90 Hari Terakhir',
-    },
-    {
-      id: 5,
-      title: 'Periode Lalu',
-    },
-  ];
+  const [activeDuration, setIsActiveDuration] = useState(1);
 
   return (
     <View
@@ -53,7 +37,13 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
           <Text style={styles.actionText}>Batalkan</Text>
         </Pressable>
         <View>
-          <Text style={styles.dateRange}>1 Sept - 7 Sept</Text>
+          <Text style={styles.dateRange}>
+            {startDate === endDate
+              ? `${moment(startDate).format('DD MMM')}`
+              : `${moment(startDate).format('DD MMM')} - ${moment(
+                  endDate,
+                ).format('DD MMM')}`}
+          </Text>
         </View>
         <Pressable onPress={UpdateDrawer}>
           <Text style={styles.actionText}>Perbarui</Text>
@@ -65,14 +55,19 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          data={duration}
+          data={ChartDurationByDate}
           renderItem={({ item }) => {
             const isActive = item.id === activeDuration;
             const activeContainerStyle = isActive ? styles.activeItem : {};
 
             return (
               <View>
-                <Pressable onPress={() => setIsActiveDuration(item.id)}>
+                <Pressable
+                  onPress={() => {
+                    setIsActiveDuration(item.id);
+                    getStartDate(item.rangeDate);
+                    getEndDate();
+                  }}>
                   <DisplayTextComponent
                     DisplayValue={item.title}
                     ClassnameContainerStyle="w-fit px-2 mx-2"
@@ -87,7 +82,13 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
 
       {/* Show Calendar */}
       <View>
-        <CalendarComponent />
+        <CalendarComponent
+          getStartDate={startDate}
+          getEndDate={endDate}
+          onChange={(newStartDate, newEndDate) => {
+            handleChangeDate(newStartDate, newEndDate);
+          }}
+        />
       </View>
     </View>
   );

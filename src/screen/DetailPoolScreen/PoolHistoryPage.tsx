@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal, ColorValue } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  FlatList,
+  ColorValue,
+  ViewStyle,
+} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import moment from 'moment';
 
 import { CONSTANT } from '../../themes';
 import {
@@ -19,11 +28,15 @@ import DropdownComponent from '../../components/dropdown/DropdownComponent';
 import TableComponent from '../../components/table/TableComponent';
 import DrawerScreenPage from './drawer/DrawerScreenPage';
 import useMetricStore from '../../store/metric/MetricStore';
+import ButtonComponent from '../../components/button/ButtonComponent';
+
+import { ChartDurationByHour } from '../../utils/chartDuration/ChartDuration';
 
 const PoolHistoryPage = () => {
-  const { getChartDataByDate, dataSensor } = useMetricStore();
+  const { getChartDataByDate, dataSensor, startDate, endDate } =
+    useMetricStore();
 
-  // const postPerPage = 2;
+  //* Pagination
   const pageLimit = 3;
   const pageNumber = [];
   const [dropdownPaginationValue, setDropdownPaginationValue] = useState<
@@ -31,10 +44,17 @@ const PoolHistoryPage = () => {
   >(5);
   const [isFocusPagination, setIsFocusPagination] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  //* Chart Dropdown
   const [chartDropdownValue, setChartDropdownValue] = useState<
     string | undefined
   >();
   const [isFocusChart, setIsFocusChart] = useState<boolean>(false);
+
+  //* Chart Duration
+  const [activeDuration, setActiveDuration] = useState<number>(1);
+
+  //* Drawer
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<{
     label: string;
@@ -62,6 +82,7 @@ const PoolHistoryPage = () => {
 
   const lastData = currentPage * Number(dropdownPaginationValue);
   const firstData = lastData - Number(dropdownPaginationValue);
+
   const currentData = dataSensor.createdAt
     .map((date, index) => ({
       date: date.toString(),
@@ -87,7 +108,7 @@ const PoolHistoryPage = () => {
   };
 
   useEffect(() => {
-    getChartDataByDate();
+    getChartDataByDate(startDate, endDate);
     setSelectedData(prevData => {
       const selected = getDataBasedSelectedDropdown(chartDropdownValue || '1');
       if (prevData && prevData.value === selected?.value) {
@@ -133,7 +154,10 @@ const PoolHistoryPage = () => {
         onRequestClose={handleCloseBottomDrawer}>
         <DrawerScreenPage
           CloseDrawer={handleCloseBottomDrawer}
-          UpdateDrawer={() => console.log('Perbarui Pressed')}
+          UpdateDrawer={() => {
+            getChartDataByDate(startDate, endDate);
+            handleCloseBottomDrawer();
+          }}
         />
       </Modal>
 
@@ -167,7 +191,13 @@ const PoolHistoryPage = () => {
         </TouchableHighlight>
 
         <View>
-          <Text style={styles.indicatorText}>1 Sept - 7 Sept</Text>
+          <Text style={styles.indicatorText}>
+            {startDate === endDate
+              ? `${moment(startDate).format('DD MMM')}`
+              : `${moment(startDate).format('DD MMM')} - ${moment(
+                  endDate,
+                ).format('DD MMM')}`}
+          </Text>
         </View>
       </View>
 
@@ -183,6 +213,32 @@ const PoolHistoryPage = () => {
             dataSensor.createdAt.map(date => date.toString()) as string[]
           }
         />
+
+        <View className="items-center">
+          <FlatList
+            horizontal={true}
+            data={ChartDurationByHour}
+            renderItem={({ item }) => {
+              const isActive = item.id === activeDuration;
+              const activeContainerStyle = isActive
+                ? { color: CONSTANT.themeColors.font }
+                : { color: CONSTANT.themeColors.disable };
+              return (
+                <ButtonComponent
+                  buttonText={item.title}
+                  style={
+                    [styles.loginButton, activeContainerStyle] as ViewStyle
+                  }
+                  className="h-fit py-1 px-1.5"
+                  onPress={() => {
+                    console.log('hour = ', item.value);
+                    setActiveDuration(item.id);
+                  }}
+                />
+              );
+            }}
+          />
+        </View>
       </View>
 
       <View className="mb-5">
@@ -239,33 +295,6 @@ const PoolHistoryPage = () => {
                 );
               })}
           </View>
-
-          {/* <View className="flex-row justify-between mt-1 mx-1">
-          <View />
-          <View className="flex-row space-x-2">
-            {[currentPage - 1, currentPage, currentPage + 1].map(
-              (pageNum, index) =>
-                pageNum >= 1 &&
-                pageNum <= pageNumber.length && (
-                  <Text
-                    key={index}
-                    className={
-                      pageNum === currentPage
-                        ? 'border px-3 rounded'
-                        : 'text-black'
-                    }
-                    style={[
-                      styles.paginationPage,
-                      pageNum === currentPage
-                        ? styles.activePage
-                        : styles.inactivePage,
-                    ]}
-                    onPress={() => setPage(pageNum)}>
-                    {pageNum === currentPage ? currentPage : pageNum}
-                  </Text>
-                ),
-            )}
-          </View> */}
         </View>
       </View>
     </View>
@@ -309,6 +338,11 @@ const styles = StyleSheet.create({
     fontFamily: CONSTANT.customFonts.body,
     fontSize: CONSTANT.fontSizes.body,
     color: CONSTANT.themeColors.font,
+  },
+
+  loginButton: {
+    fontFamily: CONSTANT.customFonts.body,
+    fontSize: CONSTANT.fontSizes.body,
   },
 
   drawerContainer: {

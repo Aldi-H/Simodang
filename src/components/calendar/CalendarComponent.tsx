@@ -6,25 +6,24 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { CUSTOM_LOCALE } from '../../utils/calendarLocale/CustomLocal';
 import { CONSTANT } from '../../themes';
 
-const CalendarComponent = () => {
-  const today = new Date();
-  const todayFormatted = `${today.getFullYear()}-${String(
-    today.getMonth() + 1,
-  ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+type CalendarComponentProps = {
+  getStartDate?: string;
+  getEndDate?: string;
+  onChange?: (startDate: string, endDate: string) => void;
+};
 
-  const sevenDaysFromToday = new Date(today);
-  sevenDaysFromToday.setDate(today.getDate() + 14);
-  const sevenDaysFromTodayFormatted = `${sevenDaysFromToday.getFullYear()}-${String(
-    sevenDaysFromToday.getMonth() + 1,
-  ).padStart(2, '0')}-${String(sevenDaysFromToday.getDate()).padStart(2, '0')}`;
-
+const CalendarComponent = ({
+  getStartDate,
+  getEndDate,
+  onChange,
+}: CalendarComponentProps) => {
   return (
     <View style={styles.calendarContainer}>
       <Calendar
-        // startDate="2023-09-06"
-        startDate={todayFormatted}
-        // endDate="2023-12-31"
-        endDate={sevenDaysFromTodayFormatted}
+        // startDate={sevenDaysFromTodayFormatted}
+        // endDate={todayFormatted}
+        startDate={getStartDate}
+        endDate={getEndDate}
         locale={CUSTOM_LOCALE}
         pastYearRange={0}
         futureYearRange={1}
@@ -51,7 +50,9 @@ const CalendarComponent = () => {
           todayColor: CONSTANT.themeColors.complementary,
           selectedDayTextColor: CONSTANT.themeColors.base,
         }}
-        onChange={date => console.log(date)}
+        onChange={({ startDate, endDate }) =>
+          onChange && onChange(startDate, endDate)
+        }
       />
     </View>
   );
