@@ -23,7 +23,7 @@ type chartDataState = {
 
 type chartDataAction = {
   getChartDataByDate: (startDate: string, endDate: string) => Promise<void>;
-  getChartDataByHour: () => Promise<void>;
+  getChartDataByHour: (hour: number) => Promise<void>;
   getStartDate: (rangeDate: number) => void;
   getEndDate: () => void;
   handleChangeDate: (startDate: string, endDate: string) => void;
@@ -105,14 +105,8 @@ const useMetricStore = create<chartDataState & chartDataAction>()(
             },
           );
 
-          console.log('startDate: ', startDate);
-          console.log('endDate: ', endDate);
-
-          console.log(
-            response.data.map((item: any) =>
-              moment(item.createdAt).utcOffset('+0700').format(),
-            ),
-          );
+          // console.log('startDate: ', startDate);
+          // console.log('endDate: ', endDate);
 
           set({
             dataSensor: {
@@ -143,7 +137,49 @@ const useMetricStore = create<chartDataState & chartDataAction>()(
         }
       },
 
-      getChartDataByHour: async () => {},
+      getChartDataByHour: async (hour: number) => {
+        try {
+          const timeString = new Date().toISOString();
+          console.log(timeString);
+
+          const response = await axios.get(
+            `${BASE_URL}/metrics/${usePondStore.getState().pondDetail.pondId}`,
+            {
+              params: {
+                timeString: timeString,
+                hours: hour,
+              },
+            },
+          );
+
+          set({
+            dataSensor: {
+              temperature: response.data.map(
+                (item: any) =>
+                  Math.round(parseFloat(item.temperature) * 100) / 100,
+              ),
+              ph: response.data.map(
+                (item: any) => Math.round(parseFloat(item.ph) * 100) / 100,
+              ),
+              tdo: response.data.map(
+                (item: any) => Math.round(parseFloat(item.tdo) * 100) / 100,
+              ),
+              tds: response.data.map(
+                (item: any) => Math.round(parseFloat(item.tds) * 100) / 100,
+              ),
+              turbidity: response.data.map(
+                (item: any) =>
+                  Math.round(parseFloat(item.turbidity) * 100) / 100,
+              ),
+              createdAt: response.data.map((item: any) =>
+                moment(item.createdAt).utcOffset('+0700').format('D MMM YYYY'),
+              ),
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      },
     };
   },
 );
