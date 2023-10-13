@@ -31,10 +31,16 @@ import useMetricStore from '../../store/metric/MetricStore';
 import ButtonComponent from '../../components/button/ButtonComponent';
 
 import { ChartDurationByHour } from '../../utils/chartDuration/ChartDuration';
+import { useDurationContext } from '../../context/ChartDurationContext';
 
 const PoolHistoryPage = () => {
-  const { getChartDataByDate, dataSensor, startDate, endDate } =
-    useMetricStore();
+  const {
+    getChartDataByDate,
+    getChartDataByHour,
+    dataSensor,
+    startDate,
+    endDate,
+  } = useMetricStore();
 
   //* Pagination
   const pageLimit = 3;
@@ -52,7 +58,10 @@ const PoolHistoryPage = () => {
   const [isFocusChart, setIsFocusChart] = useState<boolean>(false);
 
   //* Chart Duration
-  const [activeDuration, setActiveDuration] = useState<number>(1);
+  const [activeHourDuration, setActiveHourDuration] = useState<number>(0);
+
+  //* useDurationContext
+  const { activeDurationTitle } = useDurationContext();
 
   //* Drawer
   const [isBottomDrawerOpen, setIsBottomDrawerOpen] = useState<boolean>(false);
@@ -64,22 +73,23 @@ const PoolHistoryPage = () => {
     value: string;
   }>();
 
+  //* drawer handler button function
   const handleOpenBottomDrawer = () => {
     setIsBottomDrawerOpen(true);
-    console.log('Drawer Open');
   };
 
   const handleCloseBottomDrawer = () => {
     setIsBottomDrawerOpen(false);
-    console.log('Drawer Close');
   };
 
+  //* dropdown handler
   const getDataBasedSelectedDropdown = (selectedValue: string) => {
     const selected = ChartDropdown.find(item => item.value === selectedValue);
 
     return selected;
   };
 
+  //* pagination
   const lastData = currentPage * Number(dropdownPaginationValue);
   const firstData = lastData - Number(dropdownPaginationValue);
 
@@ -109,11 +119,13 @@ const PoolHistoryPage = () => {
 
   useEffect(() => {
     getChartDataByDate(startDate, endDate);
+
     setSelectedData(prevData => {
       const selected = getDataBasedSelectedDropdown(chartDropdownValue || '1');
       if (prevData && prevData.value === selected?.value) {
         return prevData;
       }
+
       return selected as {
         label: string;
         chartData: string;
@@ -140,6 +152,7 @@ const PoolHistoryPage = () => {
               onBlur={() => setIsFocusChart(false)}
               onChange={(item: any) => {
                 setChartDropdownValue(item.value);
+                setActiveHourDuration(0);
                 setIsFocusChart(false);
               }}
             />
@@ -167,7 +180,6 @@ const PoolHistoryPage = () => {
           style={styles.filterButton}
           className="p-1 rounded-md"
           onPress={() => {
-            console.log('Button Pressed');
             handleOpenBottomDrawer();
           }}>
           <View className="flex flex-row items-center space-x-2 pr-2">
@@ -178,7 +190,8 @@ const PoolHistoryPage = () => {
               />
             </View>
             <Text style={styles.filterText} className="mx-1">
-              7 Hari Terakhir
+              {/* 7 Hari Terakhir */}
+              {activeDurationTitle}
             </Text>
             <View className="-rotate-90">
               <BackIcon
@@ -219,7 +232,7 @@ const PoolHistoryPage = () => {
             horizontal={true}
             data={ChartDurationByHour}
             renderItem={({ item }) => {
-              const isActive = item.id === activeDuration;
+              const isActive = item.id === activeHourDuration;
               const activeContainerStyle = isActive
                 ? { color: CONSTANT.themeColors.font }
                 : { color: CONSTANT.themeColors.disable };
@@ -232,7 +245,8 @@ const PoolHistoryPage = () => {
                   className="h-fit py-1 px-1.5"
                   onPress={() => {
                     console.log('hour = ', item.value);
-                    setActiveDuration(item.id);
+                    getChartDataByHour(item.value);
+                    setActiveHourDuration(item.id);
                   }}
                 />
               );

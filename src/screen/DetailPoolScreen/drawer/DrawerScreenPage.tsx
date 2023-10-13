@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import useMetricStore from '../../../store/metric/MetricStore';
 import CalendarComponent from '../../../components/calendar/CalendarComponent';
 import DisplayTextComponent from '../../../components/text/DisplayTextComponent';
 import { ChartDurationByDate } from '../../../utils/chartDuration/ChartDuration';
+import { useDurationContext } from '../../../context/ChartDurationContext';
 
 type DrawerScreenProps = {
   CloseDrawer: () => void;
@@ -20,7 +21,8 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
   const { handleChangeDate, getStartDate, getEndDate, startDate, endDate } =
     useMetricStore();
 
-  const [activeDuration, setIsActiveDuration] = useState(1);
+  const { activeDuration, setActiveDuration, setActiveDurationTitle } =
+    useDurationContext();
 
   return (
     <View
@@ -64,7 +66,8 @@ const DrawerScreenPage = ({ CloseDrawer, UpdateDrawer }: DrawerScreenProps) => {
               <View>
                 <Pressable
                   onPress={() => {
-                    setIsActiveDuration(item.id);
+                    setActiveDuration(item.id);
+                    setActiveDurationTitle(item.title);
                     getStartDate(item.rangeDate);
                     getEndDate();
                   }}>
