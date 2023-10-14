@@ -14,6 +14,8 @@ type DropdownProps = {
   isFocus: boolean;
   value: string | undefined;
   dropdownStyle: ViewStyle;
+  labelField: 'value' | 'label';
+  valueField: 'value' | 'label';
   itemContainerStyle?: ViewStyle;
   dropdownPlaceholder?: string;
   dropdownData?: { value: string; label: string }[];
@@ -28,6 +30,8 @@ const DropdownComponent = ({
   onFocus,
   onBlur,
   onChange,
+  labelField,
+  valueField,
   itemContainerStyle,
   dropdownStyle,
   dropdownPlaceholder,
@@ -49,8 +53,8 @@ const DropdownComponent = ({
         itemContainerStyle={[styles.dropdownItemContainer, itemContainerStyle]}
         fontFamily={CONSTANT.customFonts.body}
         data={dropdownData}
-        labelField="label"
-        valueField="value"
+        labelField={labelField}
+        valueField={valueField}
         placeholder={
           !isFocus ? dropdownPlaceholder || initialPlaceholder : '...'
         }
