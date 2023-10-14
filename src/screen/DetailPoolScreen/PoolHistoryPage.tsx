@@ -148,6 +148,8 @@ const PoolHistoryPage = () => {
               dropdownStyle={styles.dropdown}
               isFocus={isFocusChart}
               value={chartDropdownValue}
+              labelField="label"
+              valueField="value"
               onFocus={() => setIsFocusChart(true)}
               onBlur={() => setIsFocusChart(false)}
               onChange={(item: any) => {
@@ -264,6 +266,8 @@ const PoolHistoryPage = () => {
               dropdownStyle={styles.dropdownPagination}
               itemContainerStyle={styles.itemContainerStyle}
               isFocus={isFocusPagination}
+              labelField="label"
+              valueField="value"
               value={String(dropdownPaginationValue)}
               onFocus={() => setIsFocusPagination(true)}
               onBlur={() => setIsFocusPagination(false)}
