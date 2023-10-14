@@ -27,6 +27,7 @@ import useDeviceStore from '../store/device/DeviceStore';
 import { PondsStatusDropdown } from '../utils/dropdownData/DropdownData';
 
 import BackIcon from '../assets/icons/BackIcon.svg';
+import IconQROutline from '../assets/icons/IconQROutline.svg';
 import InputFieldComponent from '../components/input/InputFieldComponent';
 import DropdownComponent from '../components/dropdown/DropdownComponent';
 import { ModalComponent } from '../components/popupDialog/ModalComponent';
@@ -35,10 +36,23 @@ import ButtonComponent from '../components/button/ButtonComponent';
 const AddPoolPage = () => {
   const { getAllDevices, dropdownData } = useDeviceStore();
 
+  //* Dropdown State
+  const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
+  const [isFocusPondStatus, setIsFocusPondStatus] = useState<boolean>(false);
+  const [dropdownIdDevicesValue, setDropdownIdDevicesValue] = useState<
+    string | undefined
+  >();
+  const [dropdownPondStatusValue, setDropdownPondStatusValue] = useState<
+    string | undefined
+  >();
+
+  //* state for filepath image uploade
   const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+
+  //* state for submit button
   const [inputData, setInputData] = useState({
     name: '',
     address: '',
@@ -262,17 +276,51 @@ const AddPoolPage = () => {
               onChangeText={text => handleChangeForm('city', text)}
             />
 
-            <View className="flex-row justify-between mt-4">
-              <DropdownComponent
-                dropdownPlaceholder="Id Perangkat"
-                dropdownData={dropdownData}
-                dropdownStyle={styles.dropdown}
-              />
-              <DropdownComponent
-                dropdownPlaceholder="Status Kolam"
-                dropdownData={PondsStatusDropdown}
-                dropdownStyle={styles.dropdown}
-              />
+            <View className="flex mt-4">
+              <View className="flex-row items-center">
+                <DropdownComponent
+                  dropdownPlaceholder="Id Perangkat"
+                  valueField="label"
+                  labelField="value"
+                  value={dropdownIdDevicesValue}
+                  dropdownData={dropdownData}
+                  dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
+                  isFocus={isFocusIdDevices}
+                  onFocus={() => setIsFocusIdDevices(true)}
+                  onBlur={() => setIsFocusIdDevices(false)}
+                  onChange={(item: any) => {
+                    setDropdownIdDevicesValue(item.label);
+                    setIsFocusIdDevices(false);
+                  }}
+                />
+                <Pressable
+                  className="mx-2"
+                  onPress={() => console.log('QR Pressed')}>
+                  <IconQROutline
+                    height={hp('3.5%')}
+                    width={wp('7%')}
+                    fill={CONSTANT.themeColors.font}
+                  />
+                </Pressable>
+              </View>
+
+              <View className="mt-4">
+                <DropdownComponent
+                  dropdownPlaceholder="Status Kolam"
+                  valueField="value"
+                  labelField="label"
+                  value={dropdownPondStatusValue}
+                  dropdownData={PondsStatusDropdown}
+                  dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
+                  isFocus={isFocusPondStatus}
+                  onFocus={() => setIsFocusPondStatus(true)}
+                  onBlur={() => setIsFocusPondStatus(false)}
+                  onChange={(item: any) => {
+                    setDropdownPondStatusValue(item.value);
+                    setIsFocusPondStatus(false);
+                  }}
+                />
+              </View>
             </View>
 
             <Pressable className="mt-6" onPress={handleModal}>
@@ -421,7 +469,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: hp('6%'),
-    width: wp('40%'),
+    // width: wp('40%'),
     borderColor: CONSTANT.themeColors.disable,
     borderWidth: 0.5,
     borderRadius: 8,
