@@ -236,12 +236,19 @@ const AddPoolPage = () => {
                 <DropdownComponent
                   // dropdownPlaceholder="Id Perangkat"
                   dropdownPlaceholder={
-                    deviceId === filteredDeviceId ? deviceId : 'Id Perangkat'
+                    deviceId === filteredDeviceId[0]?.value
+                      ? deviceId
+                      : 'Id Perangkat'
                   }
                   valueField="label"
                   labelField="value"
                   value={dropdownIdDevicesValue}
-                  dropdownData={dropdownData}
+                  // dropdownData={dropdownData}
+                  dropdownData={
+                    deviceId === filteredDeviceId[0]?.value
+                      ? filteredDeviceId
+                      : dropdownData
+                  }
                   dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
                   isFocus={isFocusIdDevices}
                   onFocus={() => {
@@ -249,7 +256,7 @@ const AddPoolPage = () => {
                   }}
                   onBlur={() => setIsFocusIdDevices(false)}
                   onChange={(item: any) => {
-                    deviceId === filteredDeviceId
+                    deviceId === filteredDeviceId[0]?.value
                       ? useDeviceStore.setState({
                           dropdownIdDevicesValue: deviceId,
                         })

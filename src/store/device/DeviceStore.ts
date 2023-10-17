@@ -13,9 +13,9 @@ type DeviceStoreState = {
   notificationEnabled: notificationEnabled;
   dropdownData: { value: string; label: string }[];
   deviceId: string;
-  filteredDeviceId: string;
+  // filteredDeviceId: string;
+  filteredDeviceId: { value: string; label: string }[];
   dropdownIdDevicesValue: string | undefined;
-  // filteredDeviceId: { value: string; label: string }[];
   scan: boolean;
   scanResult: boolean;
   // tempLow: number;
@@ -41,7 +41,7 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
     dropdownData: [],
     dropdownIdDevicesValue: '',
     deviceId: '',
-    filteredDeviceId: '',
+    filteredDeviceId: [],
     scan: false,
     scanResult: false,
     // tempLow: 26,
@@ -83,7 +83,7 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
         item.value.toUpperCase().includes(get().deviceId.toUpperCase()),
       );
 
-      set({ filteredDeviceId: filtered[0]?.value });
+      set({ filteredDeviceId: filtered });
     },
   }),
 );
