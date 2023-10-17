@@ -27,6 +27,7 @@ import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
 import NotFoundPage from '../screen/NotFoundPage';
 import AddPoolPage from '../screen/AddPoolPage';
 import useAuthStore from '../store/auth/AuthStore';
+import QRScanPage from '../screen/QRScanPage';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -90,6 +91,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
       <Stack.Screen name="NotificationPage" component={NotificationPage} />
       <Stack.Screen name="404NotFound" component={NotFoundPage} />
+      <Stack.Screen name="QRCode" component={QRScanPage} />
     </Stack.Navigator>
   );
 };
