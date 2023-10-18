@@ -9,6 +9,7 @@ import {
   Pressable,
   PermissionsAndroid,
   Alert,
+  Image,
   // ActivityIndicator,
 } from 'react-native';
 import {
@@ -58,6 +59,9 @@ const AddPoolPage = () => {
   //* state for filepath image uploade
   const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [imageUri, setImageUri] = useState<string | undefined>();
+  const [imageWidth, setImageWidth] = useState<number>();
+  const [imageHeight, setImageHeight] = useState<number>();
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [progress, setProgress] = useState<number>(0);
 
@@ -152,6 +156,9 @@ const AddPoolPage = () => {
           return;
         }
 
+        setImageUri(response.assets?.[0].uri);
+        setImageHeight(response.assets?.[0].height);
+        setImageWidth(response.assets?.[0].width);
         setFilePath(response.assets);
       });
     }
@@ -180,6 +187,9 @@ const AddPoolPage = () => {
         return;
       }
 
+      setImageUri(response.assets?.[0].uri);
+      setImageHeight(response.assets?.[0].height);
+      setImageWidth(response.assets?.[0].width);
       setFilePath(response.assets);
     });
   };
@@ -354,18 +364,40 @@ const AddPoolPage = () => {
                     </Text>
                   ) : (
                     <View>
-                      <Text
-                        style={[
-                          styles.uploadImageText,
-                          { color: CONSTANT.themeColors.disable },
-                        ]}>
-                        {filePath[0].fileName}
-                      </Text>
+                      <Image
+                        source={{
+                          uri: imageUri,
+                        }}
+                        height={(imageHeight ?? 0) / hp('2%')}
+                        width={(imageWidth ?? 0) / wp('4%')}
+                      />
                     </View>
                   )}
                 </ModalComponent.Body>
+
                 <ModalComponent.Footer>
+                  <View className="flex-row space-x-5 py-3">
+                    <Pressable
+                      className="items-center"
+                      onPress={() => captureImage('photo')}>
+                      <Text style={styles.footerModalTextStyle}>
+                        Buka Kamera
+                      </Text>
+                    </Pressable>
+                    <View style={styles.separator} />
+                    <Pressable
+                      // style={styles.footerModal}
+                      className="items-center">
+                      <Text
+                        style={styles.footerModalTextStyle}
+                        onPress={() => chooseFile('photo')}>
+                        Buka Galeri
+                      </Text>
+                    </Pressable>
+                  </View>
+
                   <Pressable
+                    // onPress={handleModal}
                     style={[
                       styles.footerModal,
                       {
@@ -373,22 +405,19 @@ const AddPoolPage = () => {
                         borderTopWidth: StyleSheet.hairlineWidth,
                       },
                     ]}
-                    className="py-4 w-full items-center"
-                    onPress={() => captureImage('photo')}>
-                    <Text style={styles.footerModalTextStyle}>Buka Kamera</Text>
-                  </Pressable>
-                  <Pressable
-                    style={styles.footerModal}
-                    className="py-4 w-full items-center">
+                    className="py-3 w-full items-center">
                     <Text
-                      style={styles.footerModalTextStyle}
-                      onPress={() => chooseFile('photo')}>
-                      Buka Galeri
+                      style={[
+                        styles.footerModalTextStyle,
+                        styles.footerModalSubmit,
+                      ]}>
+                      Submit
                     </Text>
                   </Pressable>
+
                   <Pressable
                     onPress={handleModal}
-                    className="pt-4 w-full items-center">
+                    className="pt-3 w-full items-center">
                     <Text
                       style={[
                         styles.footerModalTextStyle,
@@ -474,6 +503,10 @@ const styles = StyleSheet.create({
     borderBottomColor: CONSTANT.themeColors.complementary,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  separator: {
+    borderRightColor: CONSTANT.themeColors.complementary,
+    borderRightWidth: 1,
+  },
   footerModalTextStyle: {
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.heading2,
@@ -481,6 +514,9 @@ const styles = StyleSheet.create({
   },
   footerModalCancel: {
     color: CONSTANT.themeColors.warningRed,
+  },
+  footerModalSubmit: {
+    color: CONSTANT.themeColors.success,
   },
   submitButton: {
     fontFamily: CONSTANT.customFonts.heading2,

@@ -48,7 +48,7 @@ const ModalBody = ({ children }: { children?: React.ReactNode }) => (
 );
 
 const ModalFooter = ({ children }: { children?: React.ReactNode }) => (
-  <View className="justify-center items-center">{children}</View>
+  <View className="justify-center items-center pt-4">{children}</View>
 );
 
 const styles = StyleSheet.create({
