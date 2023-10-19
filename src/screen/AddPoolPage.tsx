@@ -21,6 +21,8 @@ import { useNavigation } from '@react-navigation/native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // import axios from 'axios';
 import { PhotoIcon } from 'react-native-heroicons/solid';
+import storage from '@react-native-firebase/storage';
+import * as Progress from 'react-native-progress';
 
 import { CONSTANT } from '../themes';
 
@@ -59,11 +61,13 @@ const AddPoolPage = () => {
   //* state for filepath image uploade
   const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [imageUri, setImageUri] = useState<string | undefined>();
-  const [imageWidth, setImageWidth] = useState<number>();
-  const [imageHeight, setImageHeight] = useState<number>();
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [progress, setProgress] = useState<number>(0);
+  const [imageUri, setImageUri] = useState<string>();
+  const [firebaseImageURL, setFirebaseImageURL] = useState<string | undefined>(
+    undefined,
+  );
+
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
   //* state for submit button
   // const [inputData, setInputData] = useState({
@@ -157,8 +161,6 @@ const AddPoolPage = () => {
         }
 
         setImageUri(response.assets?.[0].uri);
-        setImageHeight(response.assets?.[0].height);
-        setImageWidth(response.assets?.[0].width);
         setFilePath(response.assets);
       });
     }
@@ -188,16 +190,63 @@ const AddPoolPage = () => {
       }
 
       setImageUri(response.assets?.[0].uri);
-      setImageHeight(response.assets?.[0].height);
-      setImageWidth(response.assets?.[0].width);
       setFilePath(response.assets);
     });
+  };
+
+  const uploadImage = async () => {
+    try {
+      if (Object.keys(filePath).length === 0) {
+        return Alert.alert('Please Select any File');
+      }
+
+      setUploading(true);
+      setTransferred(0);
+
+      const fileName = filePath[0].uri.substring(
+        filePath[0].uri.lastIndexOf('/') + 1,
+      );
+
+      const uploadUri =
+        Platform.OS === 'ios'
+          ? filePath[0].uri.replace('file://', '')
+          : filePath[0].uri;
+
+      const task = storage().ref(`/addPond/img/${fileName}`).putFile(uploadUri);
+
+      await task.on('state_changed', taskSnapshot => {
+        setTransferred(
+          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            10000,
+        );
+      });
+
+      await task.then(() => {
+        Alert.alert('Image Uploaded');
+        setTransferred(0);
+
+        storage()
+          .ref(`/addPond/img/${fileName}`)
+          .getDownloadURL()
+          .then(downloadedURL => {
+            console.log(`DownloadedURL: ${downloadedURL}`);
+            setFirebaseImageURL(String(downloadedURL));
+          });
+      });
+
+      setFilePath({});
+    } catch (error) {
+      console.log('Error from catch', error);
+      Alert.alert(`Error: ${error}`);
+    }
+
+    setUploading(false);
   };
 
   useEffect(() => {
     getAllDevices();
     filterIdDeviceId();
-  }, [deviceId]);
+  }, [deviceId, getAllDevices, filterIdDeviceId]);
 
   return (
     <KeyboardAvoidingView
@@ -315,9 +364,9 @@ const AddPoolPage = () => {
             <Pressable className="mt-6" onPress={handleModal}>
               <View
                 style={styles.photoUploadContainer}
-                className="border-2 border-dashed p-10">
+                className="border-2 border-dashed">
                 {filePath === null ? (
-                  <>
+                  <View className="m-10">
                     <View className="items-center opacity-50">
                       <PhotoIcon
                         size={hp('5%')}
@@ -334,16 +383,26 @@ const AddPoolPage = () => {
                         Mak. Ukuran File: 5MB
                       </Text>
                     </View>
-                  </>
+                  </View>
                 ) : (
-                  <View>
-                    <Text
-                      style={[
-                        styles.uploadImageText,
-                        { color: CONSTANT.themeColors.disable },
-                      ]}>
-                      {filePath[0].fileName}
-                    </Text>
+                  <View className="items-center m-2">
+                    {firebaseImageURL ? (
+                      <Image
+                        source={{
+                          uri: firebaseImageURL,
+                        }}
+                        height={150}
+                        width={270}
+                      />
+                    ) : (
+                      <Text
+                        style={[
+                          styles.uploadImageText,
+                          { color: CONSTANT.themeColors.disable },
+                        ]}>
+                        Image not available
+                      </Text>
+                    )}
                   </View>
                 )}
               </View>
@@ -368,8 +427,8 @@ const AddPoolPage = () => {
                         source={{
                           uri: imageUri,
                         }}
-                        height={(imageHeight ?? 0) / hp('2%')}
-                        width={(imageWidth ?? 0) / wp('4%')}
+                        height={100}
+                        width={200}
                       />
                     </View>
                   )}
@@ -396,24 +455,30 @@ const AddPoolPage = () => {
                     </Pressable>
                   </View>
 
-                  <Pressable
-                    // onPress={handleModal}
-                    style={[
-                      styles.footerModal,
-                      {
-                        borderTopColor: CONSTANT.themeColors.complementary,
-                        borderTopWidth: StyleSheet.hairlineWidth,
-                      },
-                    ]}
-                    className="py-3 w-full items-center">
-                    <Text
+                  {uploading ? (
+                    <View>
+                      <Progress.Bar progress={transferred} width={300} />
+                    </View>
+                  ) : (
+                    <Pressable
+                      onPress={() => uploadImage()}
                       style={[
-                        styles.footerModalTextStyle,
-                        styles.footerModalSubmit,
-                      ]}>
-                      Submit
-                    </Text>
-                  </Pressable>
+                        styles.footerModal,
+                        {
+                          borderTopColor: CONSTANT.themeColors.complementary,
+                          borderTopWidth: StyleSheet.hairlineWidth,
+                        },
+                      ]}
+                      className="py-3 w-full items-center">
+                      <Text
+                        style={[
+                          styles.footerModalTextStyle,
+                          styles.footerModalSubmit,
+                        ]}>
+                        Submit
+                      </Text>
+                    </Pressable>
+                  )}
 
                   <Pressable
                     onPress={handleModal}
