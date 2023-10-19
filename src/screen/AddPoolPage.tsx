@@ -9,7 +9,8 @@ import {
   Pressable,
   PermissionsAndroid,
   Alert,
-  ActivityIndicator,
+  Image,
+  // ActivityIndicator,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -18,7 +19,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import axios from 'axios';
+// import axios from 'axios';
 import { PhotoIcon } from 'react-native-heroicons/solid';
 
 import { CONSTANT } from '../themes';
@@ -32,16 +33,25 @@ import InputFieldComponent from '../components/input/InputFieldComponent';
 import DropdownComponent from '../components/dropdown/DropdownComponent';
 import { ModalComponent } from '../components/popupDialog/ModalComponent';
 import ButtonComponent from '../components/button/ButtonComponent';
+// import useAuthStore from '../store/auth/AuthStore';
 
 const AddPoolPage = () => {
-  const { getAllDevices, dropdownData } = useDeviceStore();
+  const {
+    getAllDevices,
+    filterIdDeviceId,
+    dropdownData,
+    scanResult,
+    deviceId,
+    filteredDeviceId,
+    dropdownIdDevicesValue,
+  } = useDeviceStore();
 
   //* Dropdown State
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
   const [isFocusPondStatus, setIsFocusPondStatus] = useState<boolean>(false);
-  const [dropdownIdDevicesValue, setDropdownIdDevicesValue] = useState<
-    string | undefined
-  >();
+  // const [dropdownIdDevicesValue, setDropdownIdDevicesValue] = useState<
+  //   string | undefined
+  // >();
   const [dropdownPondStatusValue, setDropdownPondStatusValue] = useState<
     string | undefined
   >();
@@ -49,16 +59,19 @@ const AddPoolPage = () => {
   //* state for filepath image uploade
   const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [imageUri, setImageUri] = useState<string | undefined>();
+  const [imageWidth, setImageWidth] = useState<number>();
+  const [imageHeight, setImageHeight] = useState<number>();
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [progress, setProgress] = useState<number>(0);
 
   //* state for submit button
-  const [inputData, setInputData] = useState({
-    name: '',
-    address: '',
-    city: '',
-    deviceId: '',
-  });
+  // const [inputData, setInputData] = useState({
+  //   name: '',
+  //   address: '',
+  //   city: '',
+  //   deviceId: '',
+  // });
 
   const navigation = useNavigation();
 
@@ -143,6 +156,9 @@ const AddPoolPage = () => {
           return;
         }
 
+        setImageUri(response.assets?.[0].uri);
+        setImageHeight(response.assets?.[0].height);
+        setImageWidth(response.assets?.[0].width);
         setFilePath(response.assets);
       });
     }
@@ -171,68 +187,17 @@ const AddPoolPage = () => {
         return;
       }
 
+      setImageUri(response.assets?.[0].uri);
+      setImageHeight(response.assets?.[0].height);
+      setImageWidth(response.assets?.[0].width);
       setFilePath(response.assets);
     });
   };
 
-  const handleChangeForm = (key: string, value: string) => {
-    setInputData(prevData => ({
-      ...prevData,
-      [key]: value,
-    }));
-  };
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const formData = new FormData();
-
-      formData.append('name', inputData.name);
-      formData.append('address', inputData.address);
-      formData.append('city', inputData.city);
-      formData.append('file', {
-        uri: filePath![0].uri,
-        type: filePath![0].type,
-        name: filePath![0].fileName,
-      });
-
-      const response = await axios.post(
-        'http://www.devel-filkomub.site/ponds',
-        formData,
-        {
-          headers: {
-            Authorization:
-              'Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e',
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress: progressEvent => {
-            const axiosProgress =
-              50 +
-              ((progressEvent.total ?? 0) / (progressEvent.total ?? 1)) * 50;
-
-            setProgress(axiosProgress);
-          },
-        },
-      );
-      // setIsSuccess(true);
-
-      console.log('Response from server:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (progress === 100) {
-      setIsLoading(false);
-    }
-  }, [progress]);
-
   useEffect(() => {
     getAllDevices();
-  }, []);
+    filterIdDeviceId();
+  }, [deviceId]);
 
   return (
     <KeyboardAvoidingView
@@ -260,42 +225,65 @@ const AddPoolPage = () => {
             <InputFieldComponent
               inputTitle="Nama Kolam"
               placeholder="Nama Kolam"
-              value={inputData.name}
-              onChangeText={text => handleChangeForm('name', text)}
+              // value={inputData.name}
+              // onChangeText={text => handleChangeForm('name', text)}
             />
             <InputFieldComponent
               inputTitle="Alamat Kolam"
               placeholder="Alamat Kolam"
-              value={inputData.address}
-              onChangeText={text => handleChangeForm('address', text)}
+              // value={inputData.address}
+              // onChangeText={text => handleChangeForm('address', text)}
             />
             <InputFieldComponent
               inputTitle="Kota"
               placeholder="Kota"
-              value={inputData.city}
-              onChangeText={text => handleChangeForm('city', text)}
+              // value={inputData.city}
+              // onChangeText={text => handleChangeForm('city', text)}
             />
 
             <View className="flex mt-4">
               <View className="flex-row items-center">
                 <DropdownComponent
-                  dropdownPlaceholder="Id Perangkat"
+                  // dropdownPlaceholder="Id Perangkat"
+                  dropdownPlaceholder={
+                    deviceId === filteredDeviceId[0]?.value
+                      ? deviceId
+                      : 'Id Perangkat'
+                  }
                   valueField="label"
                   labelField="value"
                   value={dropdownIdDevicesValue}
-                  dropdownData={dropdownData}
+                  // dropdownData={dropdownData}
+                  dropdownData={
+                    deviceId === filteredDeviceId[0]?.value
+                      ? filteredDeviceId
+                      : dropdownData
+                  }
                   dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
                   isFocus={isFocusIdDevices}
-                  onFocus={() => setIsFocusIdDevices(true)}
+                  onFocus={() => {
+                    setIsFocusIdDevices(true);
+                  }}
                   onBlur={() => setIsFocusIdDevices(false)}
                   onChange={(item: any) => {
-                    setDropdownIdDevicesValue(item.label);
+                    deviceId === filteredDeviceId[0]?.value
+                      ? useDeviceStore.setState({
+                          dropdownIdDevicesValue: deviceId,
+                        })
+                      : useDeviceStore.setState({
+                          dropdownIdDevicesValue: item.label,
+                        });
+
                     setIsFocusIdDevices(false);
                   }}
                 />
+
                 <Pressable
                   className="mx-2"
-                  onPress={() => console.log('QR Pressed')}>
+                  onPress={() => {
+                    navigation.navigate('QRCode');
+                    useDeviceStore.setState({ scan: true });
+                  }}>
                   <IconQROutline
                     height={hp('3.5%')}
                     width={wp('7%')}
@@ -303,6 +291,7 @@ const AddPoolPage = () => {
                   />
                 </Pressable>
               </View>
+              {scanResult && <Text>{deviceId}</Text>}
 
               <View className="mt-4">
                 <DropdownComponent
@@ -375,18 +364,40 @@ const AddPoolPage = () => {
                     </Text>
                   ) : (
                     <View>
-                      <Text
-                        style={[
-                          styles.uploadImageText,
-                          { color: CONSTANT.themeColors.disable },
-                        ]}>
-                        {filePath[0].fileName}
-                      </Text>
+                      <Image
+                        source={{
+                          uri: imageUri,
+                        }}
+                        height={(imageHeight ?? 0) / hp('2%')}
+                        width={(imageWidth ?? 0) / wp('4%')}
+                      />
                     </View>
                   )}
                 </ModalComponent.Body>
+
                 <ModalComponent.Footer>
+                  <View className="flex-row space-x-5 py-3">
+                    <Pressable
+                      className="items-center"
+                      onPress={() => captureImage('photo')}>
+                      <Text style={styles.footerModalTextStyle}>
+                        Buka Kamera
+                      </Text>
+                    </Pressable>
+                    <View style={styles.separator} />
+                    <Pressable
+                      // style={styles.footerModal}
+                      className="items-center">
+                      <Text
+                        style={styles.footerModalTextStyle}
+                        onPress={() => chooseFile('photo')}>
+                        Buka Galeri
+                      </Text>
+                    </Pressable>
+                  </View>
+
                   <Pressable
+                    // onPress={handleModal}
                     style={[
                       styles.footerModal,
                       {
@@ -394,22 +405,19 @@ const AddPoolPage = () => {
                         borderTopWidth: StyleSheet.hairlineWidth,
                       },
                     ]}
-                    className="py-4 w-full items-center"
-                    onPress={() => captureImage('photo')}>
-                    <Text style={styles.footerModalTextStyle}>Buka Kamera</Text>
-                  </Pressable>
-                  <Pressable
-                    style={styles.footerModal}
-                    className="py-4 w-full items-center">
+                    className="py-3 w-full items-center">
                     <Text
-                      style={styles.footerModalTextStyle}
-                      onPress={() => chooseFile('photo')}>
-                      Buka Galeri
+                      style={[
+                        styles.footerModalTextStyle,
+                        styles.footerModalSubmit,
+                      ]}>
+                      Submit
                     </Text>
                   </Pressable>
+
                   <Pressable
                     onPress={handleModal}
-                    className="pt-4 w-full items-center">
+                    className="pt-3 w-full items-center">
                     <Text
                       style={[
                         styles.footerModalTextStyle,
@@ -429,13 +437,16 @@ const AddPoolPage = () => {
               buttonText="Simpan"
               style={styles.submitButton}
               className="rounded-md h-fit py-1"
-              onPress={() => handleSubmit()}
+              onPress={() => {
+                // handleSubmit();
+                console.log('Pressed');
+              }}
             />
           </View>
         </SafeAreaView>
       </ScrollView>
 
-      {/* Activity Indicator  */}
+      {/* Activity Indicator
       {isLoading && (
         <ActivityIndicator
           size={hp('10%')}
@@ -443,7 +454,7 @@ const AddPoolPage = () => {
           color={CONSTANT.themeColors.primary}
           style={styles.indicatorWrapper}
         />
-      )}
+      )} */}
     </KeyboardAvoidingView>
   );
 };
@@ -492,6 +503,10 @@ const styles = StyleSheet.create({
     borderBottomColor: CONSTANT.themeColors.complementary,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  separator: {
+    borderRightColor: CONSTANT.themeColors.complementary,
+    borderRightWidth: 1,
+  },
   footerModalTextStyle: {
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.heading2,
@@ -499,6 +514,9 @@ const styles = StyleSheet.create({
   },
   footerModalCancel: {
     color: CONSTANT.themeColors.warningRed,
+  },
+  footerModalSubmit: {
+    color: CONSTANT.themeColors.success,
   },
   submitButton: {
     fontFamily: CONSTANT.customFonts.heading2,

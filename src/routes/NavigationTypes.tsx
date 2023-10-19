@@ -15,6 +15,7 @@ export type RootStackParamList = {
   ProfileSettingPage: undefined;
   NotificationPage: undefined;
   '404NotFound': undefined;
+  QRCode: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
