@@ -3,49 +3,55 @@ import axios from 'axios';
 import { create } from 'zustand';
 
 import useAuthStore from '../auth/AuthStore';
+// import useDeviceStore from '../device/DeviceStore';
+import useFirebaseStore from '../firebase/FirebaseStore';
+
 // import { produce } from 'immer';
 
-enum PondStatus {
-  bad = 0,
-  good = 1,
-}
+// enum PondStatus {
+//   bad = 0,
+//   good = 1,
+// }
 
-enum isFilled {
-  false = 0,
-  true = 1,
-}
+// enum isFilled {
+//   false = 0,
+//   true = 1,
+// }
 
-enum NotificationStatus {
-  false = 0,
-  true = 1,
-}
+// enum NotificationStatus {
+//   false = 0,
+//   true = 1,
+// }
 
-enum isSaved {
-  false = 0,
-  true = 1,
-}
+// enum isSaved {
+//   false = 0,
+//   true = 1,
+// }
 
 type PondsData = {
   pondId: string;
   pondName: string;
+  pondAddress: string;
   city: string;
+  deviceId: string;
+  isFilled: boolean;
+  imageUrl: string;
 };
 
 type PondDetail = {
   pondId: string;
   pondName: string;
-  adress: string;
+  address: string;
   city: string;
   seedDate: string;
   imageUrl: string;
-  status: PondStatus;
-  isFilled: isFilled;
+  status: boolean;
+  isFilled: boolean;
   deviceId: string;
   device: {
     deviceId: string;
     DeviceName: string;
-    notificationEnabled: NotificationStatus;
-    isSaved: isSaved;
+    isSaved: boolean;
     tempLow: string;
     tempHigh: string;
     phLow: string;
@@ -59,38 +65,54 @@ type PondDetail = {
   };
 };
 
+type InputData = {
+  pondName: string;
+  pondAddress: string;
+  city: string;
+  deviceId: string;
+  isFilled: boolean;
+  imageUrl: string;
+};
+
 type PondStoreState = {
   pondsData: PondsData[];
   totalPonds: number;
   pondDetail: PondDetail;
+  inputData: InputData;
 };
 
 type PondStoreAction = {
   getAllPonds: () => Promise<void>;
   getOnePond: (pondId: string) => Promise<void>;
-  updateThresholdData: (
-    // pondId: string,
-    thresholdData: PondDetail,
-  ) => Promise<void>;
+  addPond: () => Promise<void>;
+  handleChangeForm: (data: Partial<InputData>) => void;
+  updateThresholdData: (thresholdData: PondDetail) => Promise<void>;
 };
 
 const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
   pondsData: [],
+  inputData: {
+    pondName: '',
+    pondAddress: '',
+    city: '',
+    deviceId: '',
+    isFilled: true,
+    imageUrl: '',
+  },
   pondDetail: {
     pondId: '',
     pondName: '',
-    adress: '',
+    address: '',
     city: '',
     seedDate: '',
     imageUrl: '',
-    status: PondStatus.bad,
-    isFilled: isFilled.true,
+    status: true,
+    isFilled: true,
     deviceId: '',
     device: {
       deviceId: '',
       DeviceName: '',
-      notificationEnabled: NotificationStatus.true,
-      isSaved: isSaved.false,
+      isSaved: false,
       tempLow: '',
       tempHigh: '',
       phLow: '',
@@ -119,19 +141,18 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
           name: string;
           address: string;
           city: string;
-          status: PondStatus;
+          status: boolean;
         }) => {
           return {
             pondId: dataItem.id,
             pondName: dataItem.name,
-            address: dataItem.address,
+            pondAddress: dataItem.address,
             city: dataItem.city,
             status: dataItem.status,
           };
         },
       );
 
-      // console.log(response.data);
       set({
         pondsData: pondData,
         totalPonds: response.data.length,
@@ -153,17 +174,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
         pondDetail: {
           pondId: response.data.id,
           pondName: response.data.name,
-          adress: response.data.address,
+          address: response.data.address,
           city: response.data.city,
           seedDate: response.data.seedDate,
           imageUrl: response.data.imageUrl,
           status: response.data.status,
-          isFilled: response.data.isFilled as isFilled,
+          isFilled: response.data.isFilled,
           deviceId: response.data.deviceId,
           device: {
             deviceId: response.data.device.id,
             DeviceName: response.data.device.name,
-            notificationEnabled: response.data.device.notificationEnabled,
             isSaved: response.data.device.isSaved,
             tempLow: response.data.device.tempLow,
             tempHigh: response.data.device.tempHigh,
@@ -178,7 +198,59 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
           },
         },
       });
-      // console.log(usePondStore.getState().pondDetail);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  handleChangeForm: data => {
+    set(state => ({
+      inputData: {
+        ...state.inputData,
+        ...data,
+      },
+    }));
+  },
+
+  addPond: async () => {
+    try {
+      const formData = new FormData();
+
+      formData.append('name', get().inputData.pondName);
+      formData.append('address', get().inputData.pondAddress);
+      formData.append('city', get().inputData.city);
+      formData.append('deviceId', get().inputData.deviceId);
+      formData.append('imageUrl', useFirebaseStore.getState().firebaseImageURL);
+      formData.append('isFilled', get().inputData.isFilled);
+
+      const requestJSON = {
+        name: get().inputData.pondName,
+        address: get().inputData.pondAddress,
+        city: get().inputData.city,
+        deviceId: get().inputData.deviceId,
+        imageUrl: useFirebaseStore.getState().firebaseImageURL,
+        isFilled: get().inputData.isFilled,
+      };
+
+      console.log(requestJSON);
+
+      const response = await axios.post(
+        `${BASE_URL}/ponds`,
+
+        requestJSON,
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            'Content-Type': 'application/json',
+          },
+
+          validateStatus: () => {
+            return false;
+          },
+        },
+      );
+
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -188,22 +260,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     try {
       console.log(data.device);
 
-      // const response =
       await axios.patch(
         `${BASE_URL}/ponds/${get().pondDetail.pondId}/device`,
-        // 'https://webhook.site/a333c63c-7560-426b-b89e-87aad7d5734a',
         data.device,
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
           },
-          // validateStatus: () => {
-          //   return false;
-          // },
         },
       );
 
-      // set({ pondDetail: response.data });
       set({
         pondDetail: {
           ...get().pondDetail,

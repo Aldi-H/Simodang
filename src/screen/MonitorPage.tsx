@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,7 +11,11 @@ import {
   // widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import { CONSTANT } from '../themes';
@@ -21,7 +25,16 @@ import usePondStore from '../store/pond/PondStore';
 
 const MonitorPage = () => {
   const { totalPonds, pondsData, getAllPonds } = usePondStore();
+
+  const [refreshing, setRefreshing] = useState(false);
+
   const navigation = useNavigation();
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    getAllPonds();
+    setRefreshing(false);
+  }, [getAllPonds]);
 
   const handlePondPress = (pondId: string) => {
     navigation.navigate('PoolDetail', { pondId });
@@ -36,7 +49,10 @@ const MonitorPage = () => {
       nestedScrollEnabled={true}
       showsVerticalScrollIndicator={false}
       style={styles.homePage}
-      className="flex-1 relative">
+      className="flex-1 relative"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <StatusBar />
 
       {/* Header Section */}
