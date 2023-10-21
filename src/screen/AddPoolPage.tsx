@@ -7,10 +7,7 @@ import {
   Platform,
   SafeAreaView,
   Pressable,
-  PermissionsAndroid,
-  Alert,
   Image,
-  // ActivityIndicator,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -18,35 +15,45 @@ import {
 } from 'react-native-responsive-screen';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-// import axios from 'axios';
-import { PhotoIcon } from 'react-native-heroicons/solid';
-import storage from '@react-native-firebase/storage';
 import * as Progress from 'react-native-progress';
 
 import { CONSTANT } from '../themes';
 
+import usePondStore from '../store/pond/PondStore';
 import useDeviceStore from '../store/device/DeviceStore';
+import useFirebaseStore from '../store/firebase/FirebaseStore';
 import { PondsStatusDropdown } from '../utils/dropdownData/DropdownData';
 
+import { PhotoIcon } from 'react-native-heroicons/solid';
 import BackIcon from '../assets/icons/BackIcon.svg';
 import IconQROutline from '../assets/icons/IconQROutline.svg';
 import InputFieldComponent from '../components/input/InputFieldComponent';
 import DropdownComponent from '../components/dropdown/DropdownComponent';
 import { ModalComponent } from '../components/popupDialog/ModalComponent';
 import ButtonComponent from '../components/button/ButtonComponent';
-// import useAuthStore from '../store/auth/AuthStore';
 
 const AddPoolPage = () => {
+  const {
+    filePath,
+    imageUri,
+    firebaseImageURL,
+    uploading,
+    transfered,
+    captureImage,
+    chooseFile,
+    uploadImage,
+  } = useFirebaseStore();
+
   const {
     getAllDevices,
     filterIdDeviceId,
     dropdownData,
-    scanResult,
     deviceId,
     filteredDeviceId,
     dropdownIdDevicesValue,
   } = useDeviceStore();
+
+  const { addPond, inputData, handleChangeForm } = usePondStore();
 
   //* Dropdown State
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
@@ -58,189 +65,12 @@ const AddPoolPage = () => {
     string | undefined
   >();
 
-  //* state for filepath image uploade
-  const [filePath, setFilePath] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [imageUri, setImageUri] = useState<string>();
-  const [firebaseImageURL, setFirebaseImageURL] = useState<string | undefined>(
-    undefined,
-  );
-
-  const [uploading, setUploading] = useState(false);
-  const [transferred, setTransferred] = useState(0);
-
-  //* state for submit button
-  // const [inputData, setInputData] = useState({
-  //   name: '',
-  //   address: '',
-  //   city: '',
-  //   deviceId: '',
-  // });
 
   const navigation = useNavigation();
 
-  //* Camera permission
-  const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Camera Permission',
-            message:
-              'Aplikasi membutuhkan izin akses kamera untuk mengambil gambar',
-            buttonPositive: 'OK',
-            buttonNegative: 'CANCEL',
-          },
-        );
-
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (error) {
-        console.warn(error);
-        return false;
-      }
-    } else {
-      return true;
-    }
-  };
-
-  //* external write permission
-  const requestExternalWritePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'External Storage Write Permission',
-            message: 'App needs write permission for storing files.',
-            buttonPositive: 'OK',
-            buttonNegative: 'Cancel',
-          },
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err: any) {
-        console.warn(err);
-        Alert.alert('Write permission err', err.toString());
-      }
-      return false;
-    } else {
-      return true;
-    }
-  };
-
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
-  };
-
-  const captureImage = async (type: 'photo') => {
-    const options = {
-      mediaType: type,
-      saveToPhotos: true,
-    };
-
-    const isCameraPermitted = await requestCameraPermission();
-    const isStoragePermitted = await requestExternalWritePermission();
-
-    if (isCameraPermitted && isStoragePermitted) {
-      launchCamera(options, response => {
-        console.log('Response = ', response);
-
-        if (response.didCancel) {
-          Alert.alert('User cancelled camera picker');
-          return;
-        } else if (response.errorCode === 'camera_unavailable') {
-          Alert.alert('Camera not available on device');
-          return;
-        } else if (response.errorCode === 'permission') {
-          Alert.alert('Permission not satisfied');
-          return;
-        } else if (response.errorCode === 'others') {
-          const errorMessage = response.errorMessage || 'Unknown error';
-          Alert.alert(errorMessage);
-          return;
-        }
-
-        setImageUri(response.assets?.[0].uri);
-        setFilePath(response.assets);
-      });
-    }
-  };
-
-  const chooseFile = (type: 'photo') => {
-    const options = {
-      mediaType: type,
-    };
-
-    launchImageLibrary(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        Alert.alert('User cancelled camera picker');
-        return;
-      } else if (response.errorCode === 'camera_unavailable') {
-        Alert.alert('Camera not available on device');
-        return;
-      } else if (response.errorCode === 'permission') {
-        Alert.alert('Permission not satisfied');
-        return;
-      } else if (response.errorCode === 'others') {
-        const errorMessage = response.errorMessage || 'Unknown error';
-        Alert.alert(errorMessage);
-        return;
-      }
-
-      setImageUri(response.assets?.[0].uri);
-      setFilePath(response.assets);
-    });
-  };
-
-  const uploadImage = async () => {
-    try {
-      if (Object.keys(filePath).length === 0) {
-        return Alert.alert('Please Select any File');
-      }
-
-      setUploading(true);
-      setTransferred(0);
-
-      const fileName = filePath[0].uri.substring(
-        filePath[0].uri.lastIndexOf('/') + 1,
-      );
-
-      const uploadUri =
-        Platform.OS === 'ios'
-          ? filePath[0].uri.replace('file://', '')
-          : filePath[0].uri;
-
-      const task = storage().ref(`/addPond/img/${fileName}`).putFile(uploadUri);
-
-      await task.on('state_changed', taskSnapshot => {
-        setTransferred(
-          Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-            10000,
-        );
-      });
-
-      await task.then(() => {
-        Alert.alert('Image Uploaded');
-        setTransferred(0);
-
-        storage()
-          .ref(`/addPond/img/${fileName}`)
-          .getDownloadURL()
-          .then(downloadedURL => {
-            console.log(`DownloadedURL: ${downloadedURL}`);
-            setFirebaseImageURL(String(downloadedURL));
-          });
-      });
-
-      setFilePath({});
-    } catch (error) {
-      console.log('Error from catch', error);
-      Alert.alert(`Error: ${error}`);
-    }
-
-    setUploading(false);
   };
 
   useEffect(() => {
@@ -274,20 +104,28 @@ const AddPoolPage = () => {
             <InputFieldComponent
               inputTitle="Nama Kolam"
               placeholder="Nama Kolam"
-              // value={inputData.name}
-              // onChangeText={text => handleChangeForm('name', text)}
+              // value={formik.values.name}
+              // onChangeText={(text: string) => formik.handleChange('name')(text)}
+              value={inputData.pondName}
+              onChangeText={text => handleChangeForm({ pondName: text })}
             />
             <InputFieldComponent
               inputTitle="Alamat Kolam"
               placeholder="Alamat Kolam"
-              // value={inputData.address}
-              // onChangeText={text => handleChangeForm('address', text)}
+              // value={formik.values.address}
+              // onChangeText={(text: string) =>
+              //   formik.handleChange('address')(text)
+              // }
+              value={inputData.pondAddress}
+              onChangeText={text => handleChangeForm({ pondAddress: text })}
             />
             <InputFieldComponent
               inputTitle="Kota"
               placeholder="Kota"
-              // value={inputData.city}
-              // onChangeText={text => handleChangeForm('city', text)}
+              // value={formik.values.city}
+              // onChangeText={(text: string) => formik.handleChange('city')(text)}
+              value={inputData.city}
+              onChangeText={text => handleChangeForm({ city: text })}
             />
 
             <View className="flex mt-4">
@@ -302,6 +140,7 @@ const AddPoolPage = () => {
                   valueField="label"
                   labelField="value"
                   value={dropdownIdDevicesValue}
+                  // value={formik.values.deviceId}
                   // dropdownData={dropdownData}
                   dropdownData={
                     deviceId === filteredDeviceId[0]?.value
@@ -315,15 +154,23 @@ const AddPoolPage = () => {
                   }}
                   onBlur={() => setIsFocusIdDevices(false)}
                   onChange={(item: any) => {
-                    deviceId === filteredDeviceId[0]?.value
-                      ? useDeviceStore.setState({
-                          dropdownIdDevicesValue: deviceId,
-                        })
-                      : useDeviceStore.setState({
-                          dropdownIdDevicesValue: item.label,
-                        });
+                    if (deviceId === filteredDeviceId[0]?.value) {
+                      useDeviceStore.setState({
+                        dropdownIdDevicesValue: deviceId,
+                      });
 
-                    setIsFocusIdDevices(false);
+                      handleChangeForm({
+                        deviceId: useDeviceStore.getState().deviceId,
+                      });
+                      setIsFocusIdDevices(false);
+                    } else {
+                      useDeviceStore.setState({
+                        dropdownIdDevicesValue: item.value,
+                      });
+
+                      handleChangeForm({ deviceId: item.value });
+                      setIsFocusIdDevices(false);
+                    }
                   }}
                 />
 
@@ -340,7 +187,6 @@ const AddPoolPage = () => {
                   />
                 </Pressable>
               </View>
-              {scanResult && <Text>{deviceId}</Text>}
 
               <View className="mt-4">
                 <DropdownComponent
@@ -355,6 +201,8 @@ const AddPoolPage = () => {
                   onBlur={() => setIsFocusPondStatus(false)}
                   onChange={(item: any) => {
                     setDropdownPondStatusValue(item.value);
+                    handleChangeForm({ isFilled: item.status });
+                    console.log(inputData.isFilled);
                     setIsFocusPondStatus(false);
                   }}
                 />
@@ -395,13 +243,26 @@ const AddPoolPage = () => {
                         width={270}
                       />
                     ) : (
-                      <Text
-                        style={[
-                          styles.uploadImageText,
-                          { color: CONSTANT.themeColors.disable },
-                        ]}>
-                        Image not available
-                      </Text>
+                      <View className="m-10">
+                        <View className="items-center opacity-50">
+                          <PhotoIcon
+                            size={hp('5%')}
+                            fill={CONSTANT.themeColors.disable}
+                          />
+                        </View>
+                        <View>
+                          <Text
+                            style={styles.uploadImageText}
+                            className="text-center opacity-80">
+                            Unggah Gambar
+                          </Text>
+                          <Text
+                            style={styles.maxFileSize}
+                            className="text-center">
+                            Mak. Ukuran File: 5MB
+                          </Text>
+                        </View>
+                      </View>
                     )}
                   </View>
                 )}
@@ -457,11 +318,13 @@ const AddPoolPage = () => {
 
                   {uploading ? (
                     <View>
-                      <Progress.Bar progress={transferred} width={300} />
+                      <Progress.Bar progress={transfered} width={300} />
                     </View>
                   ) : (
                     <Pressable
-                      onPress={() => uploadImage()}
+                      onPress={() => {
+                        uploadImage();
+                      }}
                       style={[
                         styles.footerModal,
                         {
@@ -503,8 +366,29 @@ const AddPoolPage = () => {
               style={styles.submitButton}
               className="rounded-md h-fit py-1"
               onPress={() => {
-                // handleSubmit();
-                console.log('Pressed');
+                addPond();
+
+                usePondStore.setState({
+                  inputData: {
+                    pondName: '',
+                    pondAddress: '',
+                    city: '',
+                    deviceId: '',
+                    imageUrl: '',
+                    isFilled: true,
+                  },
+                });
+
+                useFirebaseStore.setState({
+                  firebaseImageURL: '',
+                });
+
+                useDeviceStore.setState({
+                  filteredDeviceId: [],
+                  deviceId: '',
+                });
+
+                console.log(inputData);
               }}
             />
           </View>
