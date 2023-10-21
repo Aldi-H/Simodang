@@ -150,7 +150,7 @@ const PoolDetailPage = () => {
                   style={styles.poolLocation}
                   numberOfLines={2}
                   className="text-ellipsis">
-                  {pondDetail.adress}
+                  {pondDetail.address}
                 </Text>
               </View>
             </View>
