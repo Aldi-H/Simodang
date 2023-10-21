@@ -61,10 +61,12 @@ const PondsStatusDropdown = [
   {
     label: 'Kosong',
     value: '1',
+    status: false,
   },
   {
     label: 'Terisi',
     value: '2',
+    status: true,
   },
 ];
 
