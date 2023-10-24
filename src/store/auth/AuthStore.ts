@@ -53,13 +53,18 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
         },
       );
 
+      console.log('UserName: ', googleUser.user?.displayName?.split(' ', 1));
+
       // Store token in local storage
-      await Keychain.setGenericPassword('token', response.data.token);
+      await Keychain.setGenericPassword(
+        googleUser.user?.displayName?.split(' ')[0] || '',
+        response.data.token,
+      );
 
       set({
         _isSignIn: true,
         userDetail: {
-          userName: googleUser.user?.displayName || null,
+          userName: googleUser.user?.displayName?.split(' ')[0] || '',
           token: response.data.token,
         },
       });
@@ -72,6 +77,7 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
     try {
       // Remove token from server and local storage
       const { userName } = useAuthStore.getState().userDetail;
+
       // console.log(token);
       const signOutResponse = await axios.post(
         `${BASE_URL}/auth/logout`,
@@ -87,7 +93,6 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
 
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      // const keychainResponse =
       await Keychain.resetGenericPassword();
 
       set({
@@ -107,8 +112,6 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
       scopes: [SCOPES_USERINFO_EMAIL, SCOPES_USERINFO_PROFILE],
       webClientId: WEBCLIENT_ID,
     });
-
-    // set({ isConfigured: true });
   },
 
   configureKeychain: async () => {
