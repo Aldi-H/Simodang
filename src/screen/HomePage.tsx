@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Text,
   View,
@@ -13,7 +13,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import {
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRightIcon } from 'react-native-heroicons/solid';
 import messaging from '@react-native-firebase/messaging';
@@ -24,9 +28,13 @@ import InformationCardComponent from '../components/cards/InformationCardCompone
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIconSolid.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
+import useAuthStore from '../store/auth/AuthStore';
 
 const HomePage = () => {
+  const { userDetail } = useAuthStore();
   const { pondsData, getAllPonds } = usePondStore();
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const navigation = useNavigation();
 
@@ -39,6 +47,12 @@ const HomePage = () => {
   const handleNotificationPress = () => {
     navigation.navigate('NotificationPage');
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    getAllPonds();
+    setRefreshing(false);
+  }, [getAllPonds]);
 
   useEffect(() => {
     const pondIds = usePondStore.getState().pondsData.map(item => item.pondId);
@@ -60,7 +74,10 @@ const HomePage = () => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.homePage}
-      className="flex-1 relative">
+      className="flex-1 relative"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <StatusBar />
 
       {/* Header Section */}
@@ -68,7 +85,7 @@ const HomePage = () => {
         <View className="justify-self-center mx-4 px-3">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
-              <Text style={styles.heading}>Hai, Name!</Text>
+              <Text style={styles.heading}>Hai, {userDetail.userName}!</Text>
               <Text
                 style={styles.caption}
                 numberOfLines={1}

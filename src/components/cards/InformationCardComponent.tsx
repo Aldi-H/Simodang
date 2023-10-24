@@ -5,13 +5,16 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
+import usePondStore from '../../store/pond/PondStore';
+
 import { CONSTANT } from '../../themes';
 import WaterIcon from '../../assets/icons/WaterIcon.svg';
 import ShrimpSeedIcon from '../../assets/icons/ShrimpSeedIcon.svg';
-import PHIconSolid from '../../assets//icons/pHIconSolid.svg';
 import AlerIcon from '../../assets/icons/AlertIcon.svg';
 
 const InformationCardComponent = () => {
+  const { totalPonds, totalSeedCount, totalPondStatus } = usePondStore();
+
   const icons = [
     {
       icon: (
@@ -21,7 +24,7 @@ const InformationCardComponent = () => {
           width={wp('7%')}
         />
       ),
-      quantity: '10',
+      quantity: totalPonds,
       name: 'Kolam',
     },
     {
@@ -32,19 +35,8 @@ const InformationCardComponent = () => {
           width={wp('6.5%')}
         />
       ),
-      quantity: '500',
+      quantity: totalSeedCount,
       name: 'Benih Udang',
-    },
-    {
-      icon: (
-        <PHIconSolid
-          fill={CONSTANT.themeColors.font}
-          height={hp('6.5%')}
-          width={wp('6.5%')}
-        />
-      ),
-      quantity: '7.5',
-      name: 'pH',
     },
     {
       icon: (
@@ -54,7 +46,7 @@ const InformationCardComponent = () => {
           width={wp('7%')}
         />
       ),
-      quantity: '1',
+      quantity: totalPondStatus,
       name: 'Peringatan',
     },
   ];
