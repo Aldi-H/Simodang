@@ -77,6 +77,8 @@ type InputData = {
 type PondStoreState = {
   pondsData: PondsData[];
   totalPonds: number;
+  totalSeedCount: number;
+  totalPondStatus: number;
   pondDetail: PondDetail;
   inputData: InputData;
 };
@@ -126,6 +128,8 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     },
   },
   totalPonds: 0,
+  totalSeedCount: 0,
+  totalPondStatus: 0,
 
   getAllPonds: async () => {
     try {
@@ -142,6 +146,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
           address: string;
           city: string;
           status: boolean;
+          seedCount: number;
         }) => {
           return {
             pondId: dataItem.id,
@@ -149,13 +154,25 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
             pondAddress: dataItem.address,
             city: dataItem.city,
             status: dataItem.status,
+            seedCount: dataItem.seedCount,
           };
         },
       );
 
+      let counter = 0;
+      for (let index = 0; index < pondData.length; index++) {
+        if (pondData[index].status === false) {
+          counter++;
+        }
+      }
+
       set({
         pondsData: pondData,
         totalPonds: response.data.length,
+        totalSeedCount: pondData.reduce((acc: number, pond: any) => {
+          return acc + pond.seedCount;
+        }, 0),
+        totalPondStatus: counter,
       });
     } catch (error) {
       console.log(error);
