@@ -16,10 +16,12 @@ import InputCheckBoxComponent from '../../components/checkbox/InputCheckBoxCompo
 import ButtonComponent from '../../components/button/ButtonComponent';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 import useAuthStore from '../../store/auth/AuthStore';
+// import useAuth from '../../store/auth/Auth';
 
 const RegisterPage = () => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const { configureGoogleSignin, configureKeychain, SignIn } = useAuthStore();
+
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -110,6 +112,14 @@ const RegisterPage = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* <TouchableOpacity onPress={SignOut}>
+          <Text style={styles.redirectToLogin} className="justify-center">
+            Logout
+          </Text>
+        </TouchableOpacity> */}
+
+        {/* {loading && <ActivityIndicator />} */}
       </View>
     </View>
   );
