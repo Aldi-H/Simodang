@@ -8,10 +8,14 @@ import {
   WEBCLIENT_ID,
 } from '@env';
 import axios from 'axios';
-import * as Keychain from 'react-native-keychain';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type UserDetail = {
-  userName: string | null;
+  userName?: string | null;
+  email?: string | null;
+  phoneNum?: string | null;
+  address?: string | null;
+  photo?: string | undefined;
   token: string | null;
 };
 
@@ -24,12 +28,16 @@ interface AuthStoreAction {
   SignIn: () => Promise<void>;
   SignOut: () => Promise<void>;
   configureGoogleSignin: () => void;
-  configureKeychain: () => Promise<void>;
+  getLocalStorageItem: () => Promise<void>;
 }
 
 const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
   userDetail: {
     userName: null,
+    email: null,
+    phoneNum: null,
+    photo: undefined,
+    address: null,
     token: null,
   },
   _isSignIn: false,
@@ -42,6 +50,8 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const googleUser = await auth().signInWithCredential(googleCredential);
 
+      // console.log('GoogleUser: ', googleUser.user);
+
       // Send token to endpoint
       const response = await axios.post(
         `${BASE_URL}/auth/${googleUser.user?.uid}`,
@@ -49,22 +59,20 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
           email: googleUser.user?.email,
           name: googleUser.user?.displayName,
           photo: googleUser.user?.photoURL,
+          phoneNum: googleUser.user?.phoneNumber,
           uid: googleUser.user?.uid,
         },
       );
 
-      console.log('UserName: ', googleUser.user?.displayName?.split(' ', 1));
-
-      // Store token in local storage
-      await Keychain.setGenericPassword(
-        googleUser.user?.displayName?.split(' ')[0] || '',
-        response.data.token,
-      );
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
 
       set({
         _isSignIn: true,
         userDetail: {
-          userName: googleUser.user?.displayName?.split(' ')[0] || '',
+          userName: response.data.name,
+          email: googleUser.user.email,
+          phoneNum: googleUser.user.phoneNumber,
+          photo: googleUser.user.photoURL || '',
           token: response.data.token,
         },
       });
@@ -79,26 +87,25 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
       const { userName } = useAuthStore.getState().userDetail;
 
       // console.log(token);
-      const signOutResponse = await axios.post(
-        `${BASE_URL}/auth/logout`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
-          },
+      await axios.post(`${BASE_URL}/auth/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
         },
-      );
-
-      console.log(signOutResponse.data);
+      });
 
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      await Keychain.resetGenericPassword();
+      // await Keychain.resetGenericPassword();
+      await AsyncStorage.removeItem('user');
 
       set({
         _isSignIn: false,
         userDetail: {
-          userName: userName || null,
+          userName: userName,
+          email: null,
+          phoneNum: null,
+          address: null,
+          photo: undefined,
           token: null,
         },
       });
@@ -114,19 +121,33 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
     });
   },
 
-  configureKeychain: async () => {
+  getLocalStorageItem: async () => {
     try {
-      const credential = await Keychain.getGenericPassword();
+      // const credential = await Keychain.getGenericPassword();
+      const credential = await AsyncStorage.getItem('user');
+      console.log(credential);
 
       if (credential) {
-        const { username, password } = credential;
+        const { name, token, photo, email, phoneNum, address } = JSON.parse(
+          credential,
+        ) as {
+          name: string;
+          email: string;
+          phoneNum: string;
+          address: string;
+          photo: string;
+          token: string;
+        };
         console.log(credential);
-
         set({
           _isSignIn: true,
           userDetail: {
-            userName: username,
-            token: password,
+            userName: name,
+            email: email,
+            phoneNum: phoneNum,
+            address: address,
+            photo: photo,
+            token: token,
           },
         });
       } else {
