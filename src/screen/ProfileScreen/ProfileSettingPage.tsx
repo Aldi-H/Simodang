@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -21,9 +21,29 @@ import { CONSTANT } from '../../themes';
 import BackIcon from '../../assets/icons/BackIcon.svg';
 import InputFieldComponent from '../../components/input/InputFieldComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
+import useProfileStore from '../../store/profile/ProfileStore';
 
 const ProfileSettingPage = () => {
+  const { userDetail, updateUser } = useProfileStore();
+
+  const [newUserData, setNewUserData] = useState({
+    newUserName: userDetail.userName,
+    newPhoneNum: userDetail.phoneNum,
+    newAddress: userDetail.address,
+  });
+
   const navigation = useNavigation();
+
+  const handleUpdateUser = async () => {
+    const updateUserData = {
+      ...userDetail,
+      userName: newUserData.newUserName,
+      phoneNum: newUserData.newPhoneNum,
+      address: newUserData.newAddress,
+    };
+
+    await updateUser(updateUserData);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -54,7 +74,7 @@ const ProfileSettingPage = () => {
               <Image
                 className="rounded-full"
                 style={styles.userProfile}
-                source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+                source={{ uri: userDetail.photo }}
               />
             </View>
 
@@ -63,22 +83,41 @@ const ProfileSettingPage = () => {
               <InputFieldComponent
                 inputTitle="Nama"
                 placeholder="Nama"
-                defaultValue="Katou Megumi"
+                defaultValue={userDetail.userName ?? ''}
+                onChangeText={value =>
+                  setNewUserData(prevState => ({
+                    ...prevState,
+                    newUserName: value,
+                  }))
+                }
               />
               <InputFieldComponent
                 inputTitle="Email"
                 placeholder="someone@en-japan.com"
-                defaultValue="katoumegumi@en-japan.com"
+                editable={false}
+                defaultValue={userDetail.email ?? ''}
               />
               <InputFieldComponent
                 inputTitle="No. Hp"
-                placeholder="080-1234-5678"
-                defaultValue="080-1234-5678"
+                placeholder="-"
+                defaultValue={userDetail.phoneNum ?? ''}
+                onChangeText={value =>
+                  setNewUserData(prevState => ({
+                    ...prevState,
+                    newPhoneNum: value,
+                  }))
+                }
               />
               <InputFieldComponent
                 inputTitle="Alamat"
-                placeholder="Tokyo"
-                defaultValue="Tokyo"
+                placeholder="-"
+                defaultValue={userDetail.address ?? ''}
+                onChangeText={value =>
+                  setNewUserData(prevState => ({
+                    ...prevState,
+                    newAddress: value,
+                  }))
+                }
               />
             </View>
 
@@ -88,7 +127,10 @@ const ProfileSettingPage = () => {
                 buttonText="Simpan"
                 style={styles.saveButton}
                 className="rounded-md h-fit py-1"
-                onPress={() => console.log('Logout Button Pressed')}
+                onPress={() => {
+                  handleUpdateUser();
+                  console.log('Simpan Button Pressed');
+                }}
               />
             </View>
           </View>

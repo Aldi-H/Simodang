@@ -28,10 +28,10 @@ import InformationCardComponent from '../components/cards/InformationCardCompone
 import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIconSolid.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
-import useAuthStore from '../store/auth/AuthStore';
+import useProfileStore from '../store/profile/ProfileStore';
 
 const HomePage = () => {
-  const { userDetail } = useAuthStore();
+  const { getUser, userDetail } = useProfileStore();
   const { pondsData, getAllPonds } = usePondStore();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -68,7 +68,8 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllPonds();
-  }, [getAllPonds]);
+    getUser();
+  }, [getAllPonds, getUser]);
 
   return (
     <ScrollView
@@ -85,7 +86,9 @@ const HomePage = () => {
         <View className="justify-self-center mx-4 px-3">
           <View className="flex-row mt-7 mx-0 gap-x-4 ">
             <View className="flex-col">
-              <Text style={styles.heading}>Hai, {userDetail.userName}!</Text>
+              <Text style={styles.heading}>
+                Hai, {userDetail.userName?.split(' ')[0]}!
+              </Text>
               <Text
                 style={styles.caption}
                 numberOfLines={1}
