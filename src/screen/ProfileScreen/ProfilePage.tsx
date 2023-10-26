@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -25,13 +25,20 @@ import HelpIconOutline from '../../assets/icons/HelpIconOutline.svg';
 import ButtonIconComponent from '../../components/button/ButtonIconComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 import useAuthStore from '../../store/auth/AuthStore';
+import useProfileStore from '../../store/profile/ProfileStore';
 
 const ProfilePage = () => {
   const { SignOut } = useAuthStore();
+  const { userDetail } = useProfileStore();
+
   const navigation = useNavigation();
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  useEffect(() => {
+    userDetail;
+  }, [userDetail]);
 
   const profileButtonData = [
     {
@@ -100,15 +107,15 @@ const ProfilePage = () => {
           <Image
             className="rounded-full"
             style={styles.userProfile}
-            source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+            source={{ uri: userDetail.photo }}
           />
           <View className="mt-5 items-center space-y-1">
-            <Text style={styles.username}>Username</Text>
+            <Text style={styles.username}>{userDetail.userName}</Text>
             <Text
               numberOfLines={2}
               style={styles.address}
               className="text-ellipsis">
-              Address
+              {userDetail.address}
             </Text>
           </View>
         </View>

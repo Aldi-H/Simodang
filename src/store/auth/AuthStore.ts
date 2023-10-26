@@ -24,12 +24,12 @@ type AuthStoreState = {
   _isSignIn: boolean;
 };
 
-interface AuthStoreAction {
+type AuthStoreAction = {
   SignIn: () => Promise<void>;
   SignOut: () => Promise<void>;
   configureGoogleSignin: () => void;
   getLocalStorageItem: () => Promise<void>;
-}
+};
 
 const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
   userDetail: {
@@ -138,7 +138,7 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
           photo: string;
           token: string;
         };
-        console.log(credential);
+
         set({
           _isSignIn: true,
           userDetail: {

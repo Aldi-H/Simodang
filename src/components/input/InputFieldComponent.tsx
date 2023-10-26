@@ -8,9 +8,10 @@ import { CONSTANT } from '../../themes';
 
 type InputFieldProps = {
   inputTitle: string;
-  defaultValue?: string;
+  defaultValue?: string | undefined;
   placeholder?: string;
   value?: string | undefined;
+  editable?: boolean;
   onChangeText?: (text: string) => void;
 };
 
@@ -19,6 +20,7 @@ const InputFieldComponent = ({
   defaultValue,
   placeholder,
   value,
+  editable,
   onChangeText,
 }: InputFieldProps) => {
   return (
@@ -33,6 +35,7 @@ const InputFieldComponent = ({
           placeholder={placeholder}
           defaultValue={defaultValue}
           value={value}
+          editable={editable}
           onChangeText={onChangeText}
         />
       </View>
