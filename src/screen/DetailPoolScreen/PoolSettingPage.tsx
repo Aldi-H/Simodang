@@ -10,7 +10,7 @@ import ThresholdFieldComponent from '../../components/Field/ThresholdFieldCompon
 import ButtonComponent from '../../components/button/ButtonComponent';
 
 const PoolSettingPage = () => {
-  const { pondDetail, updateThresholdData } = usePondStore();
+  const { pondDetail, updateDeviceData } = usePondStore();
 
   const [newLowValue, setNewLowValue] = useState({
     newTempLow: pondDetail.device.tempLow,
@@ -32,20 +32,20 @@ const PoolSettingPage = () => {
       ...pondDetail,
       device: {
         ...pondDetail.device,
-        tempLow: String(newLowValue.newTempLow),
-        tempHigh: String(newHighValue.newTempHigh),
-        phLow: String(newLowValue.newPHLow),
-        phHigh: String(newHighValue.newPHHigh),
-        tdoLow: String(newLowValue.newTDOLow),
-        tdoHigh: String(newHighValue.newTDOHigh),
-        tdsLow: String(newLowValue.newTDSLow),
-        tdsHigh: String(newHighValue.newTDSHigh),
-        turbiditiesLow: String(newLowValue.newTurbiditiesLow),
-        turbiditiesHigh: String(newHighValue.newTurbiditiesHigh),
+        tempLow: Number(newLowValue.newTempLow),
+        tempHigh: Number(newHighValue.newTempHigh),
+        phLow: Number(newLowValue.newPHLow),
+        phHigh: Number(newHighValue.newPHHigh),
+        tdoLow: Number(newLowValue.newTDOLow),
+        tdoHigh: Number(newHighValue.newTDOHigh),
+        tdsLow: Number(newLowValue.newTDSLow),
+        tdsHigh: Number(newHighValue.newTDSHigh),
+        turbiditiesLow: Number(newLowValue.newTurbiditiesLow),
+        turbiditiesHigh: Number(newHighValue.newTurbiditiesHigh),
       },
     };
 
-    await updateThresholdData(updatedData);
+    await updateDeviceData(updatedData);
   };
 
   return (
@@ -64,13 +64,13 @@ const PoolSettingPage = () => {
             onChangeLowValue={value =>
               setNewLowValue(prevState => ({
                 ...prevState,
-                newTempLow: String(value),
+                newTempLow: Number(value),
               }))
             }
             onChangeHighValue={value =>
               setNewHighValue(prevState => ({
                 ...prevState,
-                newTempHigh: String(value),
+                newTempHigh: Number(value),
               }))
             }
             type="float"
@@ -87,13 +87,13 @@ const PoolSettingPage = () => {
             onChangeLowValue={value =>
               setNewLowValue(prevState => ({
                 ...prevState,
-                newPHLow: String(value),
+                newPHLow: Number(value),
               }))
             }
             onChangeHighValue={value =>
               setNewHighValue(prevState => ({
                 ...prevState,
-                newPHHigh: String(value),
+                newPHHigh: Number(value),
               }))
             }
             type="float"
@@ -106,13 +106,13 @@ const PoolSettingPage = () => {
             onChangeLowValue={value =>
               setNewLowValue(prevState => ({
                 ...prevState,
-                newTDOLow: String(value),
+                newTDOLow: Number(value),
               }))
             }
             onChangeHighValue={value =>
               setNewHighValue(prevState => ({
                 ...prevState,
-                newTDOHigh: String(value),
+                newTDOHigh: Number(value),
               }))
             }
             type="float"
@@ -129,13 +129,13 @@ const PoolSettingPage = () => {
             onChangeLowValue={value =>
               setNewLowValue(prevState => ({
                 ...prevState,
-                newTDSLow: String(value),
+                newTDSLow: Number(value),
               }))
             }
             onChangeHighValue={value =>
               setNewHighValue(prevState => ({
                 ...prevState,
-                newTDSHigh: String(value),
+                newTDSHigh: Number(value),
               }))
             }
             type="int"
@@ -152,13 +152,13 @@ const PoolSettingPage = () => {
             onChangeLowValue={value =>
               setNewLowValue(prevState => ({
                 ...prevState,
-                newTurbiditiesLow: String(value),
+                newTurbiditiesLow: Number(value),
               }))
             }
             onChangeHighValue={value =>
               setNewHighValue(prevState => ({
                 ...prevState,
-                newTurbiditiesHigh: String(value),
+                newTurbiditiesHigh: Number(value),
               }))
             }
             type="float"
