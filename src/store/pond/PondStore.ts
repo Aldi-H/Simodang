@@ -52,16 +52,16 @@ type PondDetail = {
     deviceId: string;
     DeviceName: string;
     isSaved: boolean;
-    tempLow: string;
-    tempHigh: string;
-    phLow: string;
-    phHigh: string;
-    tdoLow: string;
-    tdoHigh: string;
-    tdsLow: string;
-    tdsHigh: string;
-    turbiditiesLow: string;
-    turbiditiesHigh: string;
+    tempLow: number;
+    tempHigh: number;
+    phLow: number;
+    phHigh: number;
+    tdoLow: number;
+    tdoHigh: number;
+    tdsLow: number;
+    tdsHigh: number;
+    turbiditiesLow: number;
+    turbiditiesHigh: number;
   };
 };
 
@@ -88,7 +88,7 @@ type PondStoreAction = {
   getOnePond: (pondId: string) => Promise<void>;
   addPond: () => Promise<void>;
   handleChangeForm: (data: Partial<InputData>) => void;
-  updateThresholdData: (thresholdData: PondDetail) => Promise<void>;
+  updateDeviceData: (thresholdData: PondDetail) => Promise<void>;
 };
 
 const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
@@ -115,16 +115,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
       deviceId: '',
       DeviceName: '',
       isSaved: false,
-      tempLow: '',
-      tempHigh: '',
-      phLow: '',
-      phHigh: '',
-      tdoLow: '',
-      tdoHigh: '',
-      tdsLow: '',
-      tdsHigh: '',
-      turbiditiesLow: '',
-      turbiditiesHigh: '',
+      tempLow: 0,
+      tempHigh: 0,
+      phLow: 0,
+      phHigh: 0,
+      tdoLow: 0,
+      tdoHigh: 0,
+      tdsLow: 0,
+      tdsHigh: 0,
+      turbiditiesLow: 0,
+      turbiditiesHigh: 0,
     },
   },
   totalPonds: 0,
@@ -273,7 +273,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     }
   },
 
-  updateThresholdData: async (data: Partial<PondDetail>) => {
+  updateDeviceData: async (data: Partial<PondDetail>) => {
     try {
       console.log(data.device);
 

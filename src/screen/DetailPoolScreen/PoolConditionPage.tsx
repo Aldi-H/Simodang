@@ -14,15 +14,34 @@ type PoolConditionProps = {
 };
 
 const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
-  const { pondDetail } = usePondStore();
+  const { pondDetail, updateDeviceData } = usePondStore();
+
   const [temperature, setTemperature] = useState<number>(0);
   const [pH, setPH] = useState<number>(0);
   const [tdo, setTDO] = useState<number>(0);
   const [tds, setTDS] = useState<number>(0);
   const [turbidity, setTurbidity] = useState<number>(0);
 
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isEnabled, setIsEnabled] = useState<boolean>(
+    pondDetail.device.isSaved,
+  );
+
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const toggleSwitch = async () => {
+    const updateData = {
+      ...pondDetail,
+      device: {
+        ...pondDetail.device,
+        isSaved: !isEnabled,
+      },
+    };
+
+    setIsEnabled(previousState => !previousState);
+    console.log(updateData);
+
+    await updateDeviceData(updateData);
+  };
 
   useEffect(() => {
     messaging().onMessage(async remoteMessage => {
