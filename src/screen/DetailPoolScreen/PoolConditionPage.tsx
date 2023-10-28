@@ -22,7 +22,7 @@ const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
   const [tds, setTDS] = useState<number>(0);
   const [turbidity, setTurbidity] = useState<number>(0);
 
-  const [isEnabled, setIsEnabled] = useState<boolean>(
+  const [isEnabled, setIsEnabled] = useState<boolean | null>(
     pondDetail.device.isSaved,
   );
 
@@ -72,7 +72,7 @@ const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
       <View className="mb-2">
         <DisplayTextComponent
           DisplayTitle="Kode Alat"
-          DisplayValue={pondDetail.device.DeviceName}
+          DisplayValue={pondDetail.device.deviceId}
           TextStyle="ml-3"
         />
         <DisplayTextComponent
@@ -102,7 +102,7 @@ const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
           }
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
-          value={isEnabled}
+          value={isEnabled ?? false}
         />
       </View>
 

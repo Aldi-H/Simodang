@@ -34,6 +34,8 @@ import EditIcon from '../../assets/icons/EditIcon.svg';
 import PoolConditionPage from './PoolConditionPage';
 import PoolHistoryPage from './PoolHistoryPage';
 import PoolSettingPage from './PoolSettingPage';
+import PoolUpdatePage from './PoolUpdatePage';
+
 import { RootStackParamList } from '../../routes/NavigationTypes';
 
 type PondScreenRouteProp = RouteProp<RootStackParamList, 'PoolDetail'>;
@@ -48,6 +50,8 @@ const PoolDetailPage = () => {
   const navigation = useNavigation();
 
   const { pondId } = route.params;
+
+  console.log('pond Id: ', pondId);
 
   useEffect(() => {
     messaging()
@@ -218,6 +222,7 @@ const PoolDetailPage = () => {
               {activeNav === 1 && <PoolConditionPage pondId={pondId} />}
               {activeNav === 2 && <PoolHistoryPage />}
               {activeNav === 3 && <PoolSettingPage />}
+              {activeNav === 4 && <PoolUpdatePage />}
             </View>
           </View>
         </View>
