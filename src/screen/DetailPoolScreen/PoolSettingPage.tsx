@@ -51,7 +51,7 @@ const PoolSettingPage = () => {
   return (
     <View className="my-1">
       {/* Threshold Setting Section */}
-      <View className="mt-4">
+      <View>
         <View>
           <Text style={styles.poolSettingTitle}>Atur Threshold Parameter</Text>
         </View>

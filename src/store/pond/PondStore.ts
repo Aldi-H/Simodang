@@ -47,9 +47,9 @@ type PondDetail = {
   imageUrl: string;
   status: boolean;
   isFilled: boolean;
-  deviceId: string;
+  deviceId: string | null;
   device: {
-    deviceId: string;
+    deviceId: string | null;
     DeviceName: string;
     isSaved: boolean;
     tempLow: number;
@@ -110,9 +110,9 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     imageUrl: '',
     status: true,
     isFilled: true,
-    deviceId: '',
+    deviceId: null,
     device: {
-      deviceId: '',
+      deviceId: null,
       DeviceName: '',
       isSaved: false,
       tempLow: 0,
@@ -187,34 +187,51 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
         },
       });
 
-      set({
-        pondDetail: {
-          pondId: response.data.id,
-          pondName: response.data.name,
-          address: response.data.address,
-          city: response.data.city,
-          seedDate: response.data.seedDate,
-          imageUrl: response.data.imageUrl,
-          status: response.data.status,
-          isFilled: response.data.isFilled,
-          deviceId: response.data.deviceId,
-          device: {
-            deviceId: response.data.device.id,
-            DeviceName: response.data.device.name,
-            isSaved: response.data.device.isSaved,
-            tempLow: response.data.device.tempLow,
-            tempHigh: response.data.device.tempHigh,
-            phLow: response.data.device.phLow,
-            phHigh: response.data.device.phHigh,
-            tdoLow: response.data.device.tdoLow,
-            tdoHigh: response.data.device.tdoHigh,
-            tdsLow: response.data.device.tdsLow,
-            tdsHigh: response.data.device.tdsHigh,
-            turbiditiesLow: response.data.device.turbiditiesLow,
-            turbiditiesHigh: response.data.device.turbiditiesHigh,
-          },
-        },
-      });
+      response.data.deviceId === null
+        ? set({
+            pondDetail: {
+              pondId: response.data.id,
+              pondName: response.data.name,
+              address: response.data.address,
+              city: response.data.city,
+              seedDate: response.data.seedDate,
+              imageUrl: response.data.imageUrl,
+              status: response.data.status,
+              isFilled: response.data.isFilled,
+              deviceId: '',
+              device: {
+                ...get().pondDetail.device,
+              },
+            },
+          })
+        : set({
+            pondDetail: {
+              pondId: response.data.id,
+              pondName: response.data.name,
+              address: response.data.address,
+              city: response.data.city,
+              seedDate: response.data.seedDate,
+              imageUrl: response.data.imageUrl,
+              status: response.data.status,
+              isFilled: response.data.isFilled,
+              deviceId: response.data.deviceId || '',
+              device: {
+                deviceId: response.data.device.id || '',
+                DeviceName: response.data.device.name,
+                isSaved: response.data.device.isSaved,
+                tempLow: response.data.device.tempLow,
+                tempHigh: response.data.device.tempHigh,
+                phLow: response.data.device.phLow,
+                phHigh: response.data.device.phHigh,
+                tdoLow: response.data.device.tdoLow,
+                tdoHigh: response.data.device.tdoHigh,
+                tdsLow: response.data.device.tdsLow,
+                tdsHigh: response.data.device.tdsHigh,
+                turbiditiesLow: response.data.device.turbiditiesLow,
+                turbiditiesHigh: response.data.device.turbiditiesHigh,
+              },
+            },
+          });
     } catch (error) {
       console.log(error);
     }
