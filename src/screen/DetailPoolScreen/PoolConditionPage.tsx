@@ -70,11 +70,19 @@ const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
       </View>
 
       <View className="mb-2">
-        <DisplayTextComponent
-          DisplayTitle="Kode Alat"
-          DisplayValue={pondDetail.device.deviceId}
-          TextStyle="ml-3"
-        />
+        {pondDetail.deviceId ? (
+          <DisplayTextComponent
+            DisplayTitle="Kode Alat"
+            DisplayValue={pondDetail.deviceId}
+            TextStyle="ml-3"
+          />
+        ) : (
+          <DisplayTextComponent
+            DisplayTitle="Kode Alat"
+            DisplayValue=""
+            TextStyle="ml-3"
+          />
+        )}
         <DisplayTextComponent
           DisplayTitle="Tanggal Masuk Benih"
           DisplayValue={moment(pondDetail.seedDate)
