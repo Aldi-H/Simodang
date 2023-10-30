@@ -12,6 +12,7 @@ import { ChartDropdown } from '../../utils/dropdownData/DropdownData';
 
 type DropdownProps = {
   isFocus: boolean;
+  disable?: boolean;
   value: string | undefined;
   dropdownStyle: ViewStyle;
   labelField: 'value' | 'label';
@@ -29,6 +30,7 @@ const DropdownComponent = ({
   value,
   onFocus,
   onBlur,
+  disable,
   onChange,
   labelField,
   valueField,
@@ -55,6 +57,7 @@ const DropdownComponent = ({
         data={dropdownData}
         labelField={labelField}
         valueField={valueField}
+        disable={disable}
         placeholder={
           !isFocus ? dropdownPlaceholder || initialPlaceholder : '...'
         }
