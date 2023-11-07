@@ -147,7 +147,11 @@ const PoolDetailPage = () => {
                   className="text-ellipsis">
                   {pondDetail.pondName}
                 </Text>
-                <View style={styles.separator} className="rounded-full" />
+                {pondDetail.status === true ? (
+                  <View style={styles.separatorGood} className="rounded-full" />
+                ) : (
+                  <View style={styles.separatorBad} className="rounded-full" />
+                )}
               </View>
               <View>
                 <Text
@@ -247,8 +251,13 @@ const styles = StyleSheet.create({
     fontSize: CONSTANT.fontSizes.heading1,
     color: CONSTANT.themeColors.font,
   },
-  separator: {
+  separatorGood: {
     backgroundColor: CONSTANT.themeColors.success,
+    width: wp('3%'),
+    height: hp('1.5%'),
+  },
+  separatorBad: {
+    backgroundColor: CONSTANT.themeColors.warningRed,
     width: wp('3%'),
     height: hp('1.5%'),
   },

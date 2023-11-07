@@ -1,14 +1,14 @@
 import React from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import useDeviceStore from '../store/device/DeviceStore';
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import usePondStore from '../store/pond/PondStore';
 
 const QRScanPage = () => {
   const { scan } = useDeviceStore();
   const { handleChangeForm } = usePondStore();
 
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const onSuccess = (event: string) => {
     useDeviceStore.setState({ scan: false });
@@ -18,6 +18,8 @@ const QRScanPage = () => {
     handleChangeForm({
       deviceId: useDeviceStore.getState().deviceId,
     });
+
+    navigation.goBack();
 
     // navigation.navigate('AddPool');
   };
