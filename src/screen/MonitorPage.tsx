@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 import {
-  // widthPercentageToDP as wp,
+  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {
@@ -85,7 +85,31 @@ const MonitorPage = () => {
                 <PoolCardComponent
                   poolNameProps={item.pondName}
                   poolLocationProps={item.city}
+                  imageUri={item.imageUrl}
                   onPress={() => handlePondPress(item.pondId)}
+                  poolStatusIndicator={
+                    item.status === true ? (
+                      <View
+                        style={styles.indicatorContainer}
+                        className="flex flex-row justify-center gap-x-1 items-center rounded-full">
+                        <View
+                          style={styles.indicatorGoodDot}
+                          className="rounded-full"
+                        />
+                        <Text style={styles.cardIndicator}>Baik</Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={styles.indicatorContainer}
+                        className="flex flex-row justify-center gap-x-1 items-center rounded-full">
+                        <View
+                          style={styles.indicatorBadDot}
+                          className="rounded-full"
+                        />
+                        <Text style={styles.cardIndicator}>Buruk</Text>
+                      </View>
+                    )
+                  }
                 />
               )}
               numColumns={2}
@@ -124,6 +148,30 @@ const styles = StyleSheet.create({
   changePool: {
     fontFamily: CONSTANT.customFonts.caption,
     fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  image: {
+    width: wp('34.5%'),
+    height: hp('13.5%'),
+  },
+  indicatorContainer: {
+    backgroundColor: CONSTANT.themeColors.complementary,
+    height: hp('3%'),
+    width: wp('16%'),
+  },
+  indicatorGoodDot: {
+    backgroundColor: CONSTANT.themeColors.success,
+    width: wp('3%'),
+    height: hp('1.5%'),
+  },
+  indicatorBadDot: {
+    backgroundColor: CONSTANT.themeColors.warningRed,
+    width: wp('3%'),
+    height: hp('1.5%'),
+  },
+  cardIndicator: {
+    fontFamily: CONSTANT.customFonts.caption,
+    fontSize: CONSTANT.fontSizes.caption,
     color: CONSTANT.themeColors.font,
   },
 });

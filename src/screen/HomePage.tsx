@@ -141,6 +141,30 @@ const HomePage = () => {
                 <PoolCardComponent
                   poolNameProps={item.pondName}
                   poolLocationProps={item.city}
+                  imageUri={item.imageUrl}
+                  poolStatusIndicator={
+                    item.status === true ? (
+                      <View
+                        style={styles.indicatorContainer}
+                        className="flex flex-row justify-center gap-x-1 items-center rounded-full">
+                        <View
+                          style={styles.indicatorGoodDot}
+                          className="rounded-full"
+                        />
+                        <Text style={styles.cardIndicator}>Baik</Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={styles.indicatorContainer}
+                        className="flex flex-row justify-center gap-x-1 items-center rounded-full">
+                        <View
+                          style={styles.indicatorBadDot}
+                          className="rounded-full"
+                        />
+                        <Text style={styles.cardIndicator}>Buruk</Text>
+                      </View>
+                    )
+                  }
                   onPress={() => handlePondPress(item.pondId)}
                 />
               );
@@ -187,6 +211,26 @@ const styles = StyleSheet.create({
   myPool: {
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.heading2,
+    color: CONSTANT.themeColors.font,
+  },
+  indicatorContainer: {
+    backgroundColor: CONSTANT.themeColors.complementary,
+    height: hp('3%'),
+    width: wp('16%'),
+  },
+  indicatorGoodDot: {
+    backgroundColor: CONSTANT.themeColors.success,
+    width: wp('3%'),
+    height: hp('1.5%'),
+  },
+  indicatorBadDot: {
+    backgroundColor: CONSTANT.themeColors.warningRed,
+    width: wp('3%'),
+    height: hp('1.5%'),
+  },
+  cardIndicator: {
+    fontFamily: CONSTANT.customFonts.caption,
+    fontSize: CONSTANT.fontSizes.caption,
     color: CONSTANT.themeColors.font,
   },
   showAll: {

@@ -33,14 +33,10 @@ type PondsData = {
   pondName: string;
   pondAddress: string;
   city: string;
+  status: boolean;
   deviceId: string;
   isFilled: boolean;
   imageUrl: string;
-
-  //! delete this if it didnt works
-  seedDate: string;
-  seedCount: number;
-  status: boolean;
 };
 
 type UpdatePondData = {
@@ -177,6 +173,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
           city: string;
           status: boolean;
           seedCount: number;
+          imageUrl: string;
         }) => {
           return {
             pondId: dataItem.id,
@@ -185,6 +182,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
             city: dataItem.city,
             status: dataItem.status,
             seedCount: dataItem.seedCount,
+            imageUrl: dataItem.imageUrl,
           };
         },
       );

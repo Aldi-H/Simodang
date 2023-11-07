@@ -232,10 +232,9 @@ const PoolUpdatePage = () => {
           {pondDetail.deviceId ? (
             <DropdownComponent
               dropdownPlaceholder={
-                deviceId === filteredDeviceId[0]?.value ||
-                newPondData.newPondIdDevice === null
-                  ? 'Id Perangkat'
-                  : pondDetail.deviceId
+                deviceId === filteredDeviceId[0]?.value
+                  ? pondDetail.deviceId
+                  : 'Id Perangkat'
               }
               valueField="label"
               labelField="value"
