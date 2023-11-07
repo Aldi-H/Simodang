@@ -36,6 +36,22 @@ type PondsData = {
   deviceId: string;
   isFilled: boolean;
   imageUrl: string;
+
+  //! delete this if it didnt works
+  seedDate: string;
+  seedCount: number;
+  status: boolean;
+};
+
+type UpdatePondData = {
+  name: string;
+  address: string;
+  city: string;
+  deviceId: string | null;
+  imageUrl: string | null;
+  isFilled: boolean;
+  seedDate: string;
+  seedCount: number;
 };
 
 type PondDetail = {
@@ -44,6 +60,7 @@ type PondDetail = {
   address: string;
   city: string;
   seedDate: string;
+  seedCount: number;
   imageUrl: string;
   status: boolean;
   isFilled: boolean;
@@ -80,12 +97,14 @@ type PondStoreState = {
   totalSeedCount: number;
   totalPondStatus: number;
   pondDetail: PondDetail;
+  updatePondData: UpdatePondData;
   inputData: InputData;
 };
 
 type PondStoreAction = {
   getAllPonds: () => Promise<void>;
   getOnePond: (pondId: string) => Promise<void>;
+  updateOnePond: (data: UpdatePondData) => Promise<void>;
   addPond: () => Promise<void>;
   handleChangeForm: (data: Partial<InputData>) => void;
   updateDeviceData: (thresholdData: PondDetail) => Promise<void>;
@@ -107,6 +126,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     address: '',
     city: '',
     seedDate: '',
+    seedCount: 0,
     imageUrl: '',
     status: true,
     isFilled: true,
@@ -126,6 +146,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
       turbiditiesLow: 0,
       turbiditiesHigh: 0,
     },
+  },
+  updatePondData: {
+    name: '',
+    address: '',
+    city: '',
+    deviceId: '',
+    imageUrl: null,
+    isFilled: true,
+    seedDate: '',
+    seedCount: 0,
   },
   totalPonds: 0,
   totalSeedCount: 0,
@@ -195,6 +225,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
               address: response.data.address,
               city: response.data.city,
               seedDate: response.data.seedDate,
+              seedCount: response.data.seedCount,
               imageUrl: response.data.imageUrl,
               status: response.data.status,
               isFilled: response.data.isFilled,
@@ -202,6 +233,16 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
               device: {
                 ...get().pondDetail.device,
               },
+            },
+            updatePondData: {
+              name: response.data.name,
+              address: response.data.address,
+              city: response.data.city,
+              deviceId: '',
+              imageUrl: response.data.imageUrl,
+              isFilled: response.data.isFilled,
+              seedDate: response.data.seedDate,
+              seedCount: response.data.seedCount,
             },
           })
         : set({
@@ -211,6 +252,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
               address: response.data.address,
               city: response.data.city,
               seedDate: response.data.seedDate,
+              seedCount: response.data.seedCount,
               imageUrl: response.data.imageUrl,
               status: response.data.status,
               isFilled: response.data.isFilled,
@@ -219,17 +261,28 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
                 deviceId: response.data.device.id || '',
                 DeviceName: response.data.device.name,
                 isSaved: response.data.device.isSaved,
-                tempLow: response.data.device.tempLow,
-                tempHigh: response.data.device.tempHigh,
-                phLow: response.data.device.phLow,
-                phHigh: response.data.device.phHigh,
-                tdoLow: response.data.device.tdoLow,
-                tdoHigh: response.data.device.tdoHigh,
-                tdsLow: response.data.device.tdsLow,
-                tdsHigh: response.data.device.tdsHigh,
-                turbiditiesLow: response.data.device.turbiditiesLow,
-                turbiditiesHigh: response.data.device.turbiditiesHigh,
+                tempLow: Number(response.data.device.tempLow),
+                tempHigh: Number(response.data.device.tempHigh),
+                phLow: Number(response.data.device.phLow),
+                phHigh: Number(response.data.device.phHigh),
+                tdoLow: Number(response.data.device.tdoLow),
+                tdoHigh: Number(response.data.device.tdoHigh),
+                tdsLow: Number(response.data.device.tdsLow),
+                tdsHigh: Number(response.data.device.tdsHigh),
+                turbiditiesLow: Number(response.data.device.turbiditiesLow),
+                turbiditiesHigh: Number(response.data.device.turbiditiesHigh),
               },
+            },
+
+            updatePondData: {
+              name: response.data.name,
+              address: response.data.address,
+              city: response.data.city,
+              deviceId: response.data.deviceId || '',
+              imageUrl: response.data.imageUrl,
+              isFilled: response.data.isFilled,
+              seedDate: response.data.seedDate,
+              seedCount: response.data.seedCount,
             },
           });
     } catch (error) {
@@ -285,6 +338,30 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
       );
 
       console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  updateOnePond: async (data: Partial<UpdatePondData>) => {
+    try {
+      console.log('current pond id: ', get().pondDetail.pondId);
+      console.log(data);
+
+      const response = await axios.patch(
+        `${BASE_URL}/ponds/${get().pondDetail.pondId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          },
+        },
+      );
+
+      console.log('Updated Pond Data: ', response.data);
+      set({
+        updatePondData: { ...get().updatePondData, ...data },
+      });
     } catch (error) {
       console.log(error);
     }
