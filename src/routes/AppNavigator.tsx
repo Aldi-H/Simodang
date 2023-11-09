@@ -73,7 +73,15 @@ const MainNavigator = () => {
         contentStyle: { backgroundColor: CONSTANT.themeColors.base },
       }}>
       <Stack.Screen name="Home" component={HomeNavigator} />
-      <Stack.Screen name="WebViewPage" component={WebViewPage} />
+      <Stack.Screen
+        name="ArticleDetail"
+        component={WebViewPage}
+        // options={({ route }) => {
+        //   return {
+        //     title: (route.params as { title?: string }).title ?? '',
+        //   };
+        // }}
+      />
       <Stack.Screen name="Notification" component={NotificationPage} />
       <Stack.Screen
         name="PoolDetail"
@@ -81,7 +89,7 @@ const MainNavigator = () => {
         options={({ route }) => {
           return {
             title: (route.params as { pondName?: string }).pondName ?? '',
-          } as { title: string };
+          };
         }}
       />
       <Stack.Screen name="AddPool" component={AddPoolPage} />
