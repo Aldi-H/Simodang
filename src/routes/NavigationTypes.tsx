@@ -8,8 +8,7 @@ export type RootStackParamList = {
   Profile: undefined;
   AddPool: undefined;
   PoolDetail: { pondId: string };
-  // WebView: { webViewId: string };
-  WebViewPage: undefined;
+  ArticleDetail: { articleId: string };
   LoginPage: undefined;
   RegisterPage: undefined;
   ProfileSettingPage: undefined;
@@ -26,13 +25,3 @@ declare global {
     interface RootParamList extends RootStackParamList {}
   }
 }
-
-// export type MonitorScreen = NativeStackScreenProps<
-//   RootStackParamList,
-//   'Monitor'
-// >;
-
-// export type ProfileScreen = NativeStackScreenProps<
-//   RootStackParamList,
-//   'Profile'
-// >;

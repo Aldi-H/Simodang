@@ -1,51 +1,73 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import {
-  // widthPercentageToDP as wp,
+  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import WebViewImage1 from '../../assets/images/WebViewImage1.svg';
 import { CONSTANT } from '../../themes';
-import { useNavigation } from '@react-navigation/native';
 
-const WebViewCardComponent = () => {
-  const navigation = useNavigation();
+type WebViewCardProps = {
+  title: string;
+  imageUri: string;
+  createdAt: string;
+  onPress?: () => void;
+};
 
+const WebViewCardComponent = ({
+  title,
+  imageUri,
+  createdAt,
+  onPress,
+}: WebViewCardProps) => {
   return (
-    <TouchableOpacity
+    <View
       style={styles.WebViewCardContainer}
-      className="flex rounded-md shadow-md shadow-gray-600"
-      onPress={() => {
-        console.log('WebView Card Pressed');
-        navigation.navigate('WebViewPage');
-      }}>
-      <View className="absolute self-center inset-0 object-cover z-0 my-16">
-        <WebViewImage1 height={hp('13%')} />
-      </View>
-      <View className="relative z-10 mt-4 mx-6 items-center">
-        {/* Change This Text later */}
-        <Text style={styles.WebViewContentTitle} className="text-center ">
-          Ketahui Parameter Kondisi Kolam Udang yang Baik dalam Mengelola Kolam
-          Udang
-        </Text>
-      </View>
-    </TouchableOpacity>
+      className="rounded-md shadow-md drop-shadow-sm shadow-gray-600 mx-2">
+      <TouchableOpacity
+        className="flex flex-row mr-32 ml-4 my-3  "
+        onPress={onPress}>
+        <View>
+          {/* <WebViewImage1 height={hp('13%')} /> */}
+          <Image
+            source={{ uri: imageUri }}
+            style={{
+              height: hp('10%'),
+              width: wp('20%'),
+            }}
+          />
+        </View>
+        <View className="flex flex-col justify-between space-y-2 ml-4 mr-1">
+          <View>
+            <Text
+              style={styles.WebViewContentTitle}
+              numberOfLines={4}
+              className="text-ellipsis">
+              {title}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.articleDate}>{createdAt}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   WebViewCardContainer: {
     backgroundColor: CONSTANT.themeColors.base,
-    height: hp('22%'),
-  },
-  imageContainer: {
-    height: hp('1%'),
   },
   WebViewContentTitle: {
     fontFamily: CONSTANT.customFonts.heading2,
     fontSize: CONSTANT.fontSizes.body,
+    color: CONSTANT.themeColors.font,
+  },
+  articleDate: {
+    fontFamily: CONSTANT.customFonts.caption,
+    fontSize: CONSTANT.fontSizes.caption,
     color: CONSTANT.themeColors.font,
   },
 });

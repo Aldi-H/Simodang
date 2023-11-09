@@ -29,8 +29,11 @@ import PoolCardComponent from '../components/cards/PoolCardComponent';
 import NotifIconSvg from '../assets/icons/NotifIconSolid.svg';
 import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 import useProfileStore from '../store/profile/ProfileStore';
+import useArticleStore from '../store/article/ArticleStore';
+import moment from 'moment';
 
 const HomePage = () => {
+  const { getAllArticles, getAllArticlesData } = useArticleStore();
   const { getUser, userDetail } = useProfileStore();
   const { pondsData, getAllPonds } = usePondStore();
 
@@ -38,10 +41,14 @@ const HomePage = () => {
 
   const navigation = useNavigation();
 
-  // console.log(usePondStore.getState().pondsData.map(item => item.pondId));
-
   const handlePondPress = (pondId: string) => {
     navigation.navigate('PoolDetail', { pondId });
+  };
+
+  const handleArticlePress = (articleId: string) => {
+    console.log(articleId);
+
+    navigation.navigate('ArticleDetail', { articleId });
   };
 
   const handleNotificationPress = () => {
@@ -68,8 +75,9 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllPonds();
+    getAllArticles();
     getUser();
-  }, [getAllPonds, getUser]);
+  }, [getAllPonds, getUser, getAllArticles]);
 
   return (
     <ScrollView
@@ -177,9 +185,30 @@ const HomePage = () => {
           <View>
             <Text style={styles.informationForYou}>Informasi untuk Anda</Text>
           </View>
-          <View className="mt-2">
-            <WebViewCardComponent />
+          <View className="mt-2 gap-y-3">
+            <FlatList
+              data={getAllArticlesData}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
+              renderItem={({ item }) => {
+                return (
+                  <View className="my-1">
+                    <WebViewCardComponent
+                      title={item.title}
+                      imageUri={item.imageUrl}
+                      createdAt={moment(item.createdAt).format('DD MMM YYYY')}
+                      onPress={() => {
+                        handleArticlePress(item.id);
+                      }}
+                    />
+                  </View>
+                );
+              }}
+            />
           </View>
+          {/* <View className="mt-2">
+            <WebViewCardComponent />
+          </View> */}
         </View>
       </SafeAreaView>
     </ScrollView>
