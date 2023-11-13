@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { StyleSheet, View, Text, Switch } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../../store/pond/PondStore';
@@ -14,34 +14,13 @@ type PoolConditionProps = {
 };
 
 const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
-  const { pondDetail, updateDeviceData } = usePondStore();
+  const { pondDetail } = usePondStore();
 
   const [temperature, setTemperature] = useState<number>(0);
   const [pH, setPH] = useState<number>(0);
   const [tdo, setTDO] = useState<number>(0);
   const [tds, setTDS] = useState<number>(0);
   const [turbidity, setTurbidity] = useState<number>(0);
-
-  const [isEnabled, setIsEnabled] = useState<boolean | null>(
-    pondDetail.device.isSaved,
-  );
-
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-  const toggleSwitch = async () => {
-    const updateData = {
-      ...pondDetail,
-      device: {
-        ...pondDetail.device,
-        isSaved: !isEnabled,
-      },
-    };
-
-    setIsEnabled(previousState => !previousState);
-    console.log(updateData);
-
-    await updateDeviceData(updateData);
-  };
 
   useEffect(() => {
     messaging().onMessage(async remoteMessage => {
@@ -100,18 +79,6 @@ const PoolConditionPage = ({ pondId }: PoolConditionProps) => {
       {/* Pool Measurement Section */}
       <View className="flex flex-row mt-2 justify-between items-center">
         <Text style={styles.poolConditionTitle}>Pengukuran Saat Ini</Text>
-        <Switch
-          trackColor={{
-            false: CONSTANT.themeColors.disable,
-            true: CONSTANT.themeColors.complementary,
-          }}
-          thumbColor={
-            isEnabled ? CONSTANT.themeColors.primary : CONSTANT.themeColors.base
-          }
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isEnabled ?? false}
-        />
       </View>
 
       <View className="mb-4">
