@@ -65,6 +65,8 @@ type PondDetail = {
     deviceId: string | null;
     DeviceName: string;
     isSaved: boolean;
+    autoFeedEnabled: boolean;
+    autoWaterEnabled: boolean;
     tempLow: number;
     tempHigh: number;
     phLow: number;
@@ -131,6 +133,8 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
       deviceId: null,
       DeviceName: '',
       isSaved: false,
+      autoWaterEnabled: false,
+      autoFeedEnabled: false,
       tempLow: 0,
       tempHigh: 0,
       phLow: 0,
@@ -259,6 +263,8 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
                 deviceId: response.data.device.id || '',
                 DeviceName: response.data.device.name,
                 isSaved: response.data.device.isSaved,
+                autoFeedEnabled: response.data.device.autoFeedEnabled,
+                autoWaterEnabled: response.data.device.autoWaterEnabled,
                 tempLow: Number(response.data.device.tempLow),
                 tempHigh: Number(response.data.device.tempHigh),
                 phLow: Number(response.data.device.phLow),

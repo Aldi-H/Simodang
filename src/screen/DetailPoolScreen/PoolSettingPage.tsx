@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import usePondStore from '../../store/pond/PondStore';
@@ -8,9 +8,22 @@ import { CONSTANT } from '../../themes';
 
 import ThresholdFieldComponent from '../../components/Field/ThresholdFieldComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
+import ControlledCard from '../../components/cards/ControlledCard';
 
 const PoolSettingPage = () => {
   const { pondDetail, updateDeviceData } = usePondStore();
+
+  const [savedData, setSavedData] = useState<boolean | null>(
+    usePondStore.getState().pondDetail.device.isSaved,
+  );
+
+  const [autoWaterEnable, setAutoWaterEnable] = useState<boolean | null>(
+    usePondStore.getState().pondDetail.device.autoWaterEnabled,
+  );
+
+  const [autoFeedEnable, setAutoFeedEnable] = useState<boolean | null>(
+    usePondStore.getState().pondDetail.device.autoFeedEnabled,
+  );
 
   const [newLowValue, setNewLowValue] = useState({
     newTempLow: pondDetail.device.tempLow,
@@ -48,11 +61,94 @@ const PoolSettingPage = () => {
     await updateDeviceData(updatedData);
   };
 
+  const switchSavedData = async () => {
+    const updateData = {
+      ...pondDetail,
+      device: {
+        ...pondDetail.device,
+        isSaved: !savedData,
+      },
+    };
+
+    setSavedData(previousState => !previousState);
+
+    console.log(updateData);
+
+    await updateDeviceData(updateData);
+  };
+
+  const switchAutoFeed = async () => {
+    const updateData = {
+      ...pondDetail,
+      device: {
+        ...pondDetail.device,
+        autoFeedEnabled: !autoFeedEnable,
+      },
+    };
+
+    setAutoFeedEnable(previousState => !previousState);
+
+    console.log(updateData);
+
+    await updateDeviceData(updateData);
+  };
+
+  const switchAutoWater = async () => {
+    const updateData = {
+      ...pondDetail,
+      device: {
+        ...pondDetail.device,
+        autoWaterEnabled: !autoWaterEnable,
+      },
+    };
+
+    setAutoWaterEnable(previousState => !previousState);
+
+    console.log(updateData);
+
+    await updateDeviceData(updateData);
+  };
+
   return (
     <View className="my-1">
       {/* Threshold Setting Section */}
       <View>
-        <View>
+        <ScrollView horizontal={true} showsVerticalScrollIndicator={false}>
+          <View className="flex flex-row mb-2">
+            <ControlledCard
+              title="Simpan Data"
+              thumbColor={
+                savedData
+                  ? CONSTANT.themeColors.primary
+                  : CONSTANT.themeColors.base
+              }
+              onValueChange={switchSavedData}
+              value={savedData ?? false}
+            />
+            <ControlledCard
+              title="Aktifkan Auto Feeder"
+              thumbColor={
+                autoFeedEnable
+                  ? CONSTANT.themeColors.primary
+                  : CONSTANT.themeColors.base
+              }
+              onValueChange={switchAutoFeed}
+              value={autoFeedEnable ?? false}
+            />
+            <ControlledCard
+              title="Aktifkan Auto Water"
+              thumbColor={
+                autoWaterEnable
+                  ? CONSTANT.themeColors.primary
+                  : CONSTANT.themeColors.base
+              }
+              onValueChange={switchAutoWater}
+              value={autoWaterEnable ?? false}
+            />
+          </View>
+        </ScrollView>
+
+        <View className="mt-2">
           <Text style={styles.poolSettingTitle}>Atur Threshold Parameter</Text>
         </View>
 
