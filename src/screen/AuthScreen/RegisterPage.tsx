@@ -19,7 +19,7 @@ import useAuthStore from '../../store/auth/AuthStore';
 // import useAuth from '../../store/auth/Auth';
 
 const RegisterPage = () => {
-  const { configureGoogleSignin, getLocalStorageItem, SignIn } = useAuthStore();
+  const { configureGoogleSignin, getCurrentUser, SignIn } = useAuthStore();
 
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const navigation = useNavigation();
@@ -29,7 +29,7 @@ const RegisterPage = () => {
   }, [configureGoogleSignin]);
 
   useEffect(() => {
-    getLocalStorageItem();
+    getCurrentUser();
   }, []);
 
   return (

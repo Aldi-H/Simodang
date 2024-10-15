@@ -2,6 +2,7 @@ import { BASE_URL } from '@env';
 import axios from 'axios';
 import { create } from 'zustand';
 import useAuthStore from '../auth/AuthStore';
+import auth from '@react-native-firebase/auth';
 
 type NotificationData = {
   notifId: string;
@@ -37,9 +38,10 @@ const useNotificationStore = create<
 
   getAllNotification: async () => {
     try {
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.get(`${BASE_URL}/notifications`, {
         headers: {
-          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -74,12 +76,13 @@ const useNotificationStore = create<
 
   updateNotificationStatus: async (notifId: string) => {
     try {
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.patch(
         `${BASE_URL}/notifications/${notifId}`,
         notifId,
         {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -112,9 +115,10 @@ const useNotificationStore = create<
 
   deleteAllNotification: async () => {
     try {
+      const token = await auth().currentUser?.getIdToken();
       await axios.delete(`${BASE_URL}/notifications`, {
         headers: {
-          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
     } catch (error) {
