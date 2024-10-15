@@ -1,6 +1,7 @@
 import { BASE_URL } from '@env';
 import axios from 'axios';
 import { create } from 'zustand';
+import auth from '@react-native-firebase/auth';
 
 import useAuthStore from '../auth/AuthStore';
 
@@ -57,9 +58,10 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
 
     getAllDevices: async () => {
       try {
+        const token = await auth().currentUser?.getIdToken();
         const response = await axios.get(`${BASE_URL}/devices`, {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 

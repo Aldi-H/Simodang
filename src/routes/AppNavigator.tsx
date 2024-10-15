@@ -24,7 +24,6 @@ import PoolHistoryPage from '../screen/DetailPoolScreen/PoolHistoryPage';
 import PoolSettingPage from '../screen/DetailPoolScreen/PoolSettingPage';
 import PoolDetailPage from '../screen/DetailPoolScreen/PoolDetailPage';
 import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
-import NotFoundPage from '../screen/NotFoundPage';
 import AddPoolPage from '../screen/AddPoolPage';
 import useAuthStore from '../store/auth/AuthStore';
 import QRScanPage from '../screen/QRScanPage';
@@ -98,7 +97,6 @@ const MainNavigator = () => {
       <Stack.Screen name="PoolSettingPage" component={PoolSettingPage} />
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
       <Stack.Screen name="NotificationPage" component={NotificationPage} />
-      <Stack.Screen name="404NotFound" component={NotFoundPage} />
       <Stack.Screen name="QRCode" component={QRScanPage} />
     </Stack.Navigator>
   );

@@ -8,39 +8,22 @@ import {
   WEBCLIENT_ID,
 } from '@env';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-type UserDetail = {
-  userName?: string | null;
-  email?: string | null;
-  phoneNum?: string | null;
-  address?: string | null;
-  photo?: string | undefined;
-  token: string | null;
-};
 
 type AuthStoreState = {
-  userDetail: UserDetail;
   _isSignIn: boolean;
+  token: string | null;
 };
 
 type AuthStoreAction = {
   SignIn: () => Promise<void>;
   SignOut: () => Promise<void>;
   configureGoogleSignin: () => void;
-  getLocalStorageItem: () => Promise<void>;
+  getCurrentUser: () => void;
 };
 
 const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
-  userDetail: {
-    userName: null,
-    email: null,
-    phoneNum: null,
-    photo: undefined,
-    address: null,
-    token: null,
-  },
   _isSignIn: false,
+  token: null,
 
   SignIn: async () => {
     try {
@@ -50,64 +33,44 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const googleUser = await auth().signInWithCredential(googleCredential);
 
+      const token = await googleUser.user?.getIdToken();
+      set({ token: token });
+
       // console.log('GoogleUser: ', googleUser.user);
 
       // Send token to endpoint
+      console.log('Token: ', token);
       const response = await axios.post(
-        `${BASE_URL}/auth/${googleUser.user?.uid}`,
+        `${BASE_URL}/auth`,
+        {},
         {
-          email: googleUser.user?.email,
-          name: googleUser.user?.displayName,
-          photo: googleUser.user?.photoURL,
-          phoneNum: googleUser.user?.phoneNumber,
-          uid: googleUser.user?.uid,
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+          },
         },
       );
 
-      await AsyncStorage.setItem('user', JSON.stringify(response.data));
-
       set({
         _isSignIn: true,
-        userDetail: {
-          userName: response.data.name,
-          email: googleUser.user.email,
-          phoneNum: googleUser.user.phoneNumber,
-          photo: googleUser.user.photoURL || '',
-          token: response.data.token,
-        },
       });
     } catch (error: any) {
-      console.log(error.code);
+      console.log(error);
     }
   },
 
   SignOut: async () => {
     try {
       // Remove token from server and local storage
-      const { userName } = useAuthStore.getState().userDetail;
 
       // console.log(token);
-      await axios.post(`${BASE_URL}/auth/logout`, null, {
-        headers: {
-          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
-        },
-      });
 
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       // await Keychain.resetGenericPassword();
-      await AsyncStorage.removeItem('user');
 
       set({
         _isSignIn: false,
-        userDetail: {
-          userName: userName,
-          email: null,
-          phoneNum: null,
-          address: null,
-          photo: undefined,
-          token: null,
-        },
+        token: null,
       });
     } catch (error: any) {
       console.log(error.code);
@@ -121,40 +84,16 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
     });
   },
 
-  getLocalStorageItem: async () => {
-    try {
-      // const credential = await Keychain.getGenericPassword();
-      const credential = await AsyncStorage.getItem('user');
-      console.log(credential);
-
-      if (credential) {
-        const { name, token, photo, email, phoneNum, address } = JSON.parse(
-          credential,
-        ) as {
-          name: string;
-          email: string;
-          phoneNum: string;
-          address: string;
-          photo: string;
-          token: string;
-        };
-
-        set({
-          _isSignIn: true,
-          userDetail: {
-            userName: name,
-            email: email,
-            phoneNum: phoneNum,
-            address: address,
-            photo: photo,
-            token: token,
-          },
-        });
-      } else {
-        console.log('No Credential stored');
-      }
-    } catch (error) {
-      console.log(error);
+  getCurrentUser: () => {
+    const user = auth().currentUser;
+    if (user) {
+      set({
+        _isSignIn: true,
+      });
+    } else {
+      set({
+        _isSignIn: false,
+      });
     }
   },
 }));

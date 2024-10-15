@@ -60,7 +60,7 @@ const useArticleStore = create<ArticleStoreState & ArticleStoreAction>(set => ({
       );
       set({ getAllArticlesData: getAllArticles });
     } catch (error) {
-      console.log(error);
+      console.log('ArticleStore Error: ', error);
     }
   },
 

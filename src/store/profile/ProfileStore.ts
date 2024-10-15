@@ -2,6 +2,7 @@ import { BASE_URL } from '@env';
 import axios from 'axios';
 import { create } from 'zustand';
 import useAuthStore from '../auth/AuthStore';
+import auth from '@react-native-firebase/auth';
 
 type UserDetail = {
   userName: string;
@@ -27,15 +28,19 @@ const useProfileStore = create<ProfileStoreState & ProfileStoreAction>()(
       email: '',
       phoneNum: '',
       address: '',
-      photo: useAuthStore.getState().userDetail.photo,
+      photo: 'https://placehold.co/600x600/png',
     },
 
     getUser: async () => {
       try {
+        const token = await auth().currentUser?.getIdToken();
         const response = await axios.get(`${BASE_URL}/users/profile`, {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
+          validateStatus: status => {
+            return true;
+          }
         });
 
         console.log('Profile Data: ', response.data);
@@ -46,19 +51,20 @@ const useProfileStore = create<ProfileStoreState & ProfileStoreAction>()(
             email: response.data.email,
             phoneNum: response.data.phoneNum,
             address: response.data.address,
-            photo: response.data.photo || '',
+            photo: response.data.photo || 'https://placehold.co/600x600/png',
           },
         });
       } catch (error) {
-        console.log(error);
+        console.log('Profile Error: ', error);
       }
     },
 
     updateUser: async (data: Partial<UserDetail>) => {
       try {
+        const token = await auth().currentUser?.getIdToken();
         const response = await axios.patch(`${BASE_URL}/users/update`, data, {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 

@@ -1,6 +1,7 @@
 import { BASE_URL } from '@env';
 import axios from 'axios';
 import { create } from 'zustand';
+import auth from '@react-native-firebase/auth';
 
 import useAuthStore from '../auth/AuthStore';
 // import useDeviceStore from '../device/DeviceStore';
@@ -163,9 +164,10 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
 
   getAllPonds: async () => {
     try {
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.get(`${BASE_URL}/ponds`, {
         headers: {
-          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -213,9 +215,10 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
 
   getOnePond: async (pondId: string) => {
     try {
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.get(`${BASE_URL}/ponds/${pondId}`, {
         headers: {
-          Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -325,13 +328,14 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
 
       console.log(requestJSON);
 
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.post(
         `${BASE_URL}/ponds`,
 
         requestJSON,
         {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
 
@@ -352,12 +356,13 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
       console.log('current pond id: ', get().pondDetail.pondId);
       console.log(data);
 
+      const token = await auth().currentUser?.getIdToken();
       const response = await axios.patch(
         `${BASE_URL}/ponds/${get().pondDetail.pondId}`,
         data,
         {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -375,12 +380,13 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
     try {
       console.log(data.device);
 
+      const token = await auth().currentUser?.getIdToken();
       await axios.patch(
         `${BASE_URL}/ponds/${get().pondDetail.pondId}/device`,
         data.device,
         {
           headers: {
-            Authorization: `Bearer ${useAuthStore.getState().userDetail.token}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );

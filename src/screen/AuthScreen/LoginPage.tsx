@@ -19,7 +19,7 @@ import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 
 const LoginPage = () => {
-  const { configureGoogleSignin, getLocalStorageItem, SignIn } = useAuthStore();
+  const { configureGoogleSignin, getCurrentUser, SignIn } = useAuthStore();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const LoginPage = () => {
   }, [configureGoogleSignin]);
 
   useEffect(() => {
-    getLocalStorageItem();
+    getCurrentUser();
   }, []);
 
   return (
