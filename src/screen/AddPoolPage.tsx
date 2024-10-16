@@ -31,6 +31,7 @@ import InputFieldComponent from '../components/input/InputFieldComponent';
 import DropdownComponent from '../components/dropdown/DropdownComponent';
 import { ModalComponent } from '../components/popupDialog/ModalComponent';
 import ButtonComponent from '../components/button/ButtonComponent';
+import useProfileStore from '../store/profile/ProfileStore';
 
 const AddPoolPage = () => {
   const {
@@ -53,7 +54,10 @@ const AddPoolPage = () => {
     dropdownIdDevicesValue,
   } = useDeviceStore();
 
-  const { addPond, inputData, handleChangeForm } = usePondStore();
+  const { addPond, inputData, handleChangeForm, pondsData } = usePondStore();
+  const { userDetail } = useProfileStore();
+
+  const canAddPond = pondsData.length < userDetail.pondLimit;
 
   //* Dropdown State
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
@@ -100,7 +104,19 @@ const AddPoolPage = () => {
           </View>
 
           {/* Input Field Section */}
-          <View className="mt-10">
+          <View
+            style={{
+              display: canAddPond ? 'none' : 'flex',
+            }}
+            className='py-5'>
+            <Text className='text-center text-black text-lg font-bold'>Tidak dapat menambah kolam karena melebihi limit</Text>
+            <Text className='text-center text-black text-lg font-bold'>Silahkan upgrade ke Simodang Premium</Text>
+          </View>
+          <View
+          style={{
+            display: canAddPond ? 'flex' : 'none',
+          }}
+          className="mt-10">
             <InputFieldComponent
               inputTitle="Nama Kolam"
               placeholder="Nama Kolam"
@@ -363,7 +379,10 @@ const AddPoolPage = () => {
           <View className="mt-12 mb-6">
             <ButtonComponent
               buttonText="Simpan"
-              style={styles.submitButton}
+              style={{
+                ...styles.submitButton,
+                display: canAddPond ? 'flex' : 'none',
+              }}
               className="rounded-md h-fit py-1"
               onPress={() => {
                 addPond();

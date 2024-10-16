@@ -10,6 +10,8 @@ type UserDetail = {
   phoneNum: string;
   address: string;
   photo: string | undefined;
+  pricingName: string;
+  pondLimit: number;
 };
 
 type ProfileStoreState = {
@@ -29,6 +31,8 @@ const useProfileStore = create<ProfileStoreState & ProfileStoreAction>()(
       phoneNum: '',
       address: '',
       photo: 'https://placehold.co/600x600/png',
+      pricingName: '',
+      pondLimit: 0,
     },
 
     getUser: async () => {
@@ -52,6 +56,8 @@ const useProfileStore = create<ProfileStoreState & ProfileStoreAction>()(
             phoneNum: response.data.phoneNum,
             address: response.data.address,
             photo: response.data.photo || 'https://placehold.co/600x600/png',
+            pricingName: response.data.pricingName,
+            pondLimit: response.data.pondLimit,
           },
         });
       } catch (error) {

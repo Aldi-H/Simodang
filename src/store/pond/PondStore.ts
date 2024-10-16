@@ -38,6 +38,7 @@ type PondsData = {
   deviceId: string;
   isFilled: boolean;
   imageUrl: string;
+  isEnabled: boolean;
 };
 
 type UpdatePondData = {
@@ -165,6 +166,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
   getAllPonds: async () => {
     try {
       const token = await auth().currentUser?.getIdToken();
+      console.log('Token: ', token);
       const response = await axios.get(`${BASE_URL}/ponds`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -180,6 +182,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
           status: boolean;
           seedCount: number;
           imageUrl: string;
+          isEnabled: boolean;
         }) => {
           return {
             pondId: dataItem.id,
@@ -189,6 +192,7 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
             status: dataItem.status,
             seedCount: dataItem.seedCount,
             imageUrl: dataItem.imageUrl,
+            isEnabled: dataItem.isEnabled,
           };
         },
       );

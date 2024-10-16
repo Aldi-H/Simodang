@@ -119,6 +119,12 @@ const ProfilePage = () => {
               className="text-ellipsis">
               {userDetail.address}
             </Text>
+            <Text
+              numberOfLines={2}
+              style={styles.address}
+              className="text-ellipsis">
+              {userDetail.pricingName}
+            </Text>
           </View>
         </View>
 
