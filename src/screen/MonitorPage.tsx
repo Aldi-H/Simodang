@@ -87,6 +87,7 @@ const MonitorPage = () => {
                   poolLocationProps={item.city}
                   imageUri={item.imageUrl}
                   onPress={() => handlePondPress(item.pondId)}
+                  isEnabled={item.isEnabled}
                   poolStatusIndicator={
                     item.status === true ? (
                       <View
