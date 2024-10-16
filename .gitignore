@@ -68,3 +68,6 @@ yarn-error.log
 
 # Credential
 /.env
+
+# Local VS Code settings
+/.vscode/settings.json

@@ -27,6 +27,8 @@ import ProfileSettingPage from '../screen/ProfileScreen/ProfileSettingPage';
 import AddPoolPage from '../screen/AddPoolPage';
 import useAuthStore from '../store/auth/AuthStore';
 import QRScanPage from '../screen/QRScanPage';
+import PricingPlanScreen from '../screen/SubscriptionScreen/PricingPlanScreen';
+import { RouteNames } from '../ui/utils/routes/RouteNames';
 
 interface MenuProps {
   route: { name: keyof RootStackParamList };
@@ -98,6 +100,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
       <Stack.Screen name="NotificationPage" component={NotificationPage} />
       <Stack.Screen name="QRCode" component={QRScanPage} />
+      <Stack.Screen name={RouteNames.pricingPlan} component={PricingPlanScreen} />
     </Stack.Navigator>
   );
 };

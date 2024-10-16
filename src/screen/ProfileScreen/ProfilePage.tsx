@@ -26,6 +26,8 @@ import ButtonIconComponent from '../../components/button/ButtonIconComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 import useAuthStore from '../../store/auth/AuthStore';
 import useProfileStore from '../../store/profile/ProfileStore';
+import { RouteNames } from '../../ui/utils/routes/RouteNames';
+import { ShoppingCartIcon } from 'react-native-heroicons/solid';
 
 const ProfilePage = () => {
   const { SignOut } = useAuthStore();
@@ -60,12 +62,12 @@ const ProfilePage = () => {
     },
     {
       id: 2,
-      buttonTitle: 'Riwayat Aktivitas',
+      buttonTitle: 'Premium',
       leftIcon: (
         <View
           className="my-1 mx-2 items-center justify-center"
           style={{ height: hp('5%'), width: wp('6%') }}>
-          <HistoryIconOutline fill={CONSTANT.themeColors.font} />
+          <ShoppingCartIcon fill={CONSTANT.themeColors.font} />
         </View>
       ),
       rightIcon: (
@@ -73,7 +75,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
-      screenName: '404NotFound',
+      screenName: RouteNames.pricingPlan,
     },
     {
       id: 3,
