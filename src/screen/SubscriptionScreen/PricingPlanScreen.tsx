@@ -7,9 +7,14 @@ import { currencyFormat } from '../../utils/locale/currency';
 import { CONSTANT } from '../../themes';
 import { CheckBadgeIcon, CheckCircleIcon, CheckIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
+import useProfileStore from '../../store/profile/ProfileStore';
 
 export default () => {
   const { pricingPlans, getPricingPlans, setActivePricingPlan } = PricingPlanStore();
+  const { userDetail } = useProfileStore();
+
+  const pondLimit = userDetail?.pondLimit ?? 0;
+  const isFreeUser = pondLimit === 0;
 
   const navigation = useNavigation();
 
@@ -44,10 +49,10 @@ export default () => {
               .map((pricingPlan, i, array) => (
                 <Pressable
                   key={pricingPlan.id}
-                  onPress={() => {
+                  onPress={isFreeUser ? () => {
                     setActivePricingPlan(pricingPlan);
                     navigation.navigate("PaymentConfirmation")
-                  }}>
+                  } : null}>
                   <View
                     key={pricingPlan.id}
                     className="flex flex-column rounded-lg p-4 bg-white shadow-md border border-gray-200 w-80 mb-6">
@@ -77,7 +82,7 @@ export default () => {
                         className='text-black text-base font-normal text-left ml-2'
                       >{pricingPlan.pondLimit} Kolam</Text>
                     </View>
-                    <View
+                    {isFreeUser ?? <View
                       style={{
                         backgroundColor: CONSTANT.themeColors.primary,
                       }}
@@ -86,7 +91,7 @@ export default () => {
                         className="text-lg font-bold text-black text-center text-white">
                         Pilih Paket
                       </Text>
-                    </View>
+                    </View>}
                   </View>
                 </Pressable>
               ))}
