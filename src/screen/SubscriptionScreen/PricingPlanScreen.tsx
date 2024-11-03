@@ -5,11 +5,13 @@ import PricingPlanStore from '../../store/subscription/PricingPlanStore';
 import { useEffect } from 'react';
 import { currencyFormat } from '../../utils/locale/currency';
 import { CONSTANT } from '../../themes';
-import Svg from 'react-native-svg';
 import { CheckBadgeIcon, CheckCircleIcon, CheckIcon } from 'react-native-heroicons/solid';
+import { useNavigation } from '@react-navigation/native';
 
 export default () => {
-  const { pricingPlans, getPricingPlans } = PricingPlanStore();
+  const { pricingPlans, getPricingPlans, setActivePricingPlan } = PricingPlanStore();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     getPricingPlans();
@@ -43,7 +45,8 @@ export default () => {
                 <Pressable
                   key={pricingPlan.id}
                   onPress={() => {
-                    console.log('Pressed ' + pricingPlan.name);
+                    setActivePricingPlan(pricingPlan);
+                    navigation.navigate("PaymentConfirmation")
                   }}>
                   <View
                     key={pricingPlan.id}
@@ -75,19 +78,12 @@ export default () => {
                       >{pricingPlan.pondLimit} Kolam</Text>
                     </View>
                     <View
-                      style={i === array.length - 1 ? {
+                      style={{
                         backgroundColor: CONSTANT.themeColors.primary,
-                      } : {
-                        backgroundColor: CONSTANT.themeColors.base,
                       }}
                       className="rounded-lg p-2 bg-white shadow-md border border-gray-200 mt-4">
                       <Text
-                        style={i === array.length - 1 ? {
-                          color: 'white',
-                        } : {
-                          color: 'black',
-                        }}
-                        className="text-lg font-bold text-black text-center">
+                        className="text-lg font-bold text-black text-center text-white">
                         Pilih Paket
                       </Text>
                     </View>
