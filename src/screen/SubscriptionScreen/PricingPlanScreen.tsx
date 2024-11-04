@@ -5,7 +5,7 @@ import PricingPlanStore from '../../store/subscription/PricingPlanStore';
 import { useEffect } from 'react';
 import { currencyFormat } from '../../utils/locale/currency';
 import { CONSTANT } from '../../themes';
-import { CheckBadgeIcon, CheckCircleIcon, CheckIcon } from 'react-native-heroicons/solid';
+import { CheckBadgeIcon, CheckCircleIcon, CheckIcon, StarIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
 import useProfileStore from '../../store/profile/ProfileStore';
 
@@ -82,6 +82,15 @@ export default () => {
                         className='text-black text-base font-normal text-left ml-2'
                       >{pricingPlan.pondLimit} Kolam</Text>
                     </View>
+                    {i === array.length - 1 && <View className='my-2 flex flex-row'>
+                      <StarIcon
+                        className="w-6 h-6"
+                        color='gold'
+                      ></StarIcon>
+                      <Text
+                        className='text-black text-base font-normal text-left ml-2'
+                      >Paling Disarankan</Text>
+                    </View>}
                     {isFreeUser && <View
                       style={{
                         backgroundColor: CONSTANT.themeColors.primary,

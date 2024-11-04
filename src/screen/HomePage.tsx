@@ -19,7 +19,7 @@ import {
   RefreshControl,
 } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronRightIcon } from 'react-native-heroicons/solid';
+import { CheckIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 import messaging from '@react-native-firebase/messaging';
 
 import usePondStore from '../store/pond/PondStore';
@@ -123,6 +123,27 @@ const HomePage = () => {
       </View>
 
       <SafeAreaView className="mx-4 px-3 mb-4">
+        {/* Call to Action Card to Buy Subscription Section */}
+        <View className="mt-4">
+          <Pressable
+            onPress={() => {
+              navigation.navigate('PricingPlan');
+            }}>
+            <View
+              className="rounded-xl shadow-md border border-gray-200 p-4"
+              style={{
+                backgroundColor: CONSTANT.themeColors.primary,
+              }}>
+              <Text className="text-lg font-bold text-white text-left mb-2">
+                Belum Berlangganan?
+              </Text>
+              <Text className="text-white text-left mb-2">
+                Serahkan pengelolaan kolam anda kepada kami. Ketuk di sini untuk
+                berlangganan
+              </Text>
+            </View>
+          </Pressable>
+        </View>
         {/* Pool List Section */}
         <View className="mt-7">
           <View className="flex flex-row justify-between items-center">

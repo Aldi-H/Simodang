@@ -15,6 +15,7 @@ export type RootStackParamList = {
   NotificationPage: undefined;
   '404NotFound': undefined;
   QRCode: undefined;
+  PricingPlan: undefined;
   PaymentConfirmation: undefined;
   PaymentWebView: { paymentLink: string };
   TransactionScreen: undefined;
