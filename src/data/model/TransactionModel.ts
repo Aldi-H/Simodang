@@ -5,6 +5,8 @@ import { SubscriptionModel } from "./SubscriptionModel";
 
 export class TransactionModel {
   static fromJson(json: any): Transaction {
+    console.log(json);
+
     const transaction: Transaction = {
       id: json.id,
       status: json.status,
@@ -14,7 +16,7 @@ export class TransactionModel {
       userId: json.userId,
       paymentLink: json.paymentLink,
       subscriptionId: json.subscriptionId,
-      subscription: SubscriptionModel.fromJson(json.subscription)
+      subscription: json.subscription && SubscriptionModel.fromJson(json.subscription)
     }
 
     return transaction;

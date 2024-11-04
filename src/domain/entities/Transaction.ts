@@ -9,5 +9,5 @@ export type Transaction = {
   userId: string;
   paymentLink: string;
   subscriptionId: string;
-  subscription: Subscription;
+  subscription?: Subscription;
 }

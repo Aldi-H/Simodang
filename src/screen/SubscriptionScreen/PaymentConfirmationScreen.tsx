@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  Alert,
 } from 'react-native';
 import { CONSTANT } from '../../themes';
 import PricingPlanStore from '../../store/subscription/PricingPlanStore';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
 import { currencyFormat } from '../../utils/locale/currency';
 import { CheckIcon, ExclamationCircleIcon } from 'react-native-heroicons/solid';
 import BackIcon from '../../assets/icons/BackIcon.svg';
@@ -19,13 +20,15 @@ import TransactionStore from '../../store/subscription/TransactionStore';
 export default function PaymentConfirmationScreen({}) {
   const { activePricingPlan } = PricingPlanStore();
   const { buySubscription, getTransactions } = TransactionStore();
+  
+  const navigation = useNavigation();
 
   const handleConfirmation = async () => {
     await buySubscription(activePricingPlan?.id ?? '');
     await getTransactions();
+    navigation.dispatch(StackActions.popToTop());
   }
 
-  const navigation = useNavigation();
 
   return (
     <ScrollView>

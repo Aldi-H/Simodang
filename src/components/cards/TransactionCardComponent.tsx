@@ -48,11 +48,11 @@ const TransactionCardComponent = ({
 
 const statusText = (status: number) => {
   if (status === 0) {
-    return 'Pending';
+    return 'Failed';
   } else if (status === 1) {
     return 'Success';
   } else {
-    return 'Failed';
+    return 'Pending';
   }
 }
 

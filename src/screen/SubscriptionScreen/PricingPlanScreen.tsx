@@ -82,7 +82,7 @@ export default () => {
                         className='text-black text-base font-normal text-left ml-2'
                       >{pricingPlan.pondLimit} Kolam</Text>
                     </View>
-                    {isFreeUser ?? <View
+                    {isFreeUser && <View
                       style={{
                         backgroundColor: CONSTANT.themeColors.primary,
                       }}

@@ -29,14 +29,14 @@ export default () => {
           return (
             <View className="my-1">
               <TransactionCardComponent
-                title={item.subscription.pricingPlan.name}
+                title={item?.subscription?.pricingPlan.name ?? ''}
                 status={item.status}
                 createdAt={moment(item.createdAt).format('DD MMM YYYY')}
-                expiredAt={moment(item.subscription.expiredAt).format('DD MMM YYYY')}
+                expiredAt={moment(item?.subscription?.expiredAt ?? Date.now.toString()).format('DD MMM YYYY')}
                 onPress={() => {
-                  // if (item.status === 1) {
-                  //   return;
-                  // }
+                  if (item.status === 1) {
+                    return;
+                  }
                   navigation.navigate('PaymentWebView', {
                     paymentLink: item.paymentLink ,
                   });
