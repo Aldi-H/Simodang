@@ -57,7 +57,9 @@ const AddPoolPage = () => {
   const { addPond, inputData, handleChangeForm, pondsData } = usePondStore();
   const { userDetail } = useProfileStore();
 
-  const canAddPond = pondsData.length < userDetail.pondLimit;
+  const currentPondLength = pondsData?.length ?? 0;
+  const pondLimit = userDetail?.pondLimit ?? 0;
+  const canAddPond = currentPondLength < pondLimit;
 
   //* Dropdown State
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
@@ -108,15 +110,48 @@ const AddPoolPage = () => {
             style={{
               display: canAddPond ? 'none' : 'flex',
             }}
-            className='py-5'>
-            <Text className='text-center text-black text-lg font-bold'>Tidak dapat menambah kolam karena melebihi limit</Text>
-            <Text className='text-center text-black text-lg font-bold'>Silahkan upgrade ke Simodang Premium</Text>
+            className="py-5">
+            <View className="rounded-xl shadow-md border border-gray-200 p-4 mb-4">
+              <View className=" flex flex-row justify-between">
+                <Text className="text-lg font-bold text-black text-left mb-2">
+                  Limit Kolam
+                </Text>
+                <Text className="text-lg text-white text-black mb-2">
+                  {`${currentPondLength} / ${pondLimit}`}
+                </Text>
+              </View>
+              <Text className="text-black text-left mb-2">
+                Anda telah mencapai batas kolam yang dapat ditambahkan.
+              </Text>
+            </View>
+            {pondLimit === 0 && (
+              <View className="mt-4">
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate('PricingPlan');
+                  }}>
+                  <View
+                    className="rounded-xl shadow-md border border-gray-200 p-4"
+                    style={{
+                      backgroundColor: CONSTANT.themeColors.primary,
+                    }}>
+                    <Text className="text-lg font-bold text-white text-left mb-2">
+                      Belum Berlangganan?
+                    </Text>
+                    <Text className="text-white text-left mb-2">
+                      Serahkan pengelolaan kolam anda kepada kami. Ketuk di sini
+                      untuk berlangganan
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            )}
           </View>
           <View
-          style={{
-            display: canAddPond ? 'flex' : 'none',
-          }}
-          className="mt-10">
+            style={{
+              display: canAddPond ? 'flex' : 'none',
+            }}
+            className="mt-10">
             <InputFieldComponent
               inputTitle="Nama Kolam"
               placeholder="Nama Kolam"

@@ -26,7 +26,6 @@ import ButtonIconComponent from '../../components/button/ButtonIconComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 import useAuthStore from '../../store/auth/AuthStore';
 import useProfileStore from '../../store/profile/ProfileStore';
-import { RouteNames } from '../../ui/utils/routes/RouteNames';
 import { BanknotesIcon, ShoppingCartIcon } from 'react-native-heroicons/solid';
 
 const ProfilePage = () => {
@@ -75,7 +74,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
-      screenName: RouteNames.pricingPlan,
+      screenName: "PricingPlan",
     },
     {
       id: 3,

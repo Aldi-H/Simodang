@@ -28,7 +28,6 @@ import AddPoolPage from '../screen/AddPoolPage';
 import useAuthStore from '../store/auth/AuthStore';
 import QRScanPage from '../screen/QRScanPage';
 import PricingPlanScreen from '../screen/SubscriptionScreen/PricingPlanScreen';
-import { RouteNames } from '../ui/utils/routes/RouteNames';
 import PaymentConfirmationScreen from '../screen/SubscriptionScreen/PaymentConfirmationScreen';
 import PaymentWebView from '../screen/SubscriptionScreen/PaymentWebView';
 import TransactionScreen from '../screen/SubscriptionScreen/TransactionScreen';
@@ -103,7 +102,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
       <Stack.Screen name="NotificationPage" component={NotificationPage} />
       <Stack.Screen name="QRCode" component={QRScanPage} />
-      <Stack.Screen name={RouteNames.pricingPlan} component={PricingPlanScreen} />
+      <Stack.Screen name={"PricingPlan"} component={PricingPlanScreen} />
       <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmationScreen} />
       <Stack.Screen name="PaymentWebView" component={PaymentWebView} />
       <Stack.Screen name="TransactionScreen" component={TransactionScreen} />
