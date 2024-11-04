@@ -27,7 +27,7 @@ import ButtonComponent from '../../components/button/ButtonComponent';
 import useAuthStore from '../../store/auth/AuthStore';
 import useProfileStore from '../../store/profile/ProfileStore';
 import { RouteNames } from '../../ui/utils/routes/RouteNames';
-import { ShoppingCartIcon } from 'react-native-heroicons/solid';
+import { BanknotesIcon, ShoppingCartIcon } from 'react-native-heroicons/solid';
 
 const ProfilePage = () => {
   const { SignOut } = useAuthStore();
@@ -79,12 +79,12 @@ const ProfilePage = () => {
     },
     {
       id: 3,
-      buttonTitle: 'Bantuan',
+      buttonTitle: 'Riwayat Pembelian',
       leftIcon: (
         <View
           className="my-1 mx-2 items-center justify-center"
           style={{ height: hp('5%'), width: wp('6%') }}>
-          <HelpIconOutline fill={CONSTANT.themeColors.font} />
+          <BanknotesIcon fill={CONSTANT.themeColors.font} />
         </View>
       ),
       rightIcon: (
@@ -92,7 +92,7 @@ const ProfilePage = () => {
           <IconNext fill={CONSTANT.themeColors.font} />
         </View>
       ),
-      screenName: '404NotFound',
+      screenName: 'TransactionScreen',
     },
   ];
 

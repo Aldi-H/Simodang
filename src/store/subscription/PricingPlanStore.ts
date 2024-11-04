@@ -4,10 +4,12 @@ import { PricingPlanRepositoryImpl } from "../../data/networking/repositories/Pr
 
 type PricingPlanAction = {
   getPricingPlans: () => Promise<void>;
+  setActivePricingPlan: (pricingPlan: PricingPlan) => void;
 }
 
 export default create<PricingPlanViewModel & PricingPlanAction>((set) => ({
   pricingPlans: [],
+  activePricingPlan: null,
 
   getPricingPlans: async () => {
     const PricingPlanRepository = new PricingPlanRepositoryImpl();
@@ -15,8 +17,13 @@ export default create<PricingPlanViewModel & PricingPlanAction>((set) => ({
 
     set({ pricingPlans });
   },
+
+  setActivePricingPlan: (pricingPlan: PricingPlan) => {
+    set({ activePricingPlan: pricingPlan });
+  }
 }));
 
 type PricingPlanViewModel = {
   pricingPlans: PricingPlan[];
+  activePricingPlan: PricingPlan | null;
 }

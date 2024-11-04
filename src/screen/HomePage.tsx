@@ -150,6 +150,7 @@ const HomePage = () => {
                   poolNameProps={item.pondName}
                   poolLocationProps={item.city}
                   imageUri={item.imageUrl}
+                  isEnabled={item.isEnabled}
                   poolStatusIndicator={
                     item.status === true ? (
                       <View

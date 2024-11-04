@@ -5,11 +5,18 @@ import PricingPlanStore from '../../store/subscription/PricingPlanStore';
 import { useEffect } from 'react';
 import { currencyFormat } from '../../utils/locale/currency';
 import { CONSTANT } from '../../themes';
-import Svg from 'react-native-svg';
 import { CheckBadgeIcon, CheckCircleIcon, CheckIcon } from 'react-native-heroicons/solid';
+import { useNavigation } from '@react-navigation/native';
+import useProfileStore from '../../store/profile/ProfileStore';
 
 export default () => {
-  const { pricingPlans, getPricingPlans } = PricingPlanStore();
+  const { pricingPlans, getPricingPlans, setActivePricingPlan } = PricingPlanStore();
+  const { userDetail } = useProfileStore();
+
+  const pondLimit = userDetail?.pondLimit ?? 0;
+  const isFreeUser = pondLimit === 0;
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     getPricingPlans();
@@ -42,9 +49,10 @@ export default () => {
               .map((pricingPlan, i, array) => (
                 <Pressable
                   key={pricingPlan.id}
-                  onPress={() => {
-                    console.log('Pressed ' + pricingPlan.name);
-                  }}>
+                  onPress={isFreeUser ? () => {
+                    setActivePricingPlan(pricingPlan);
+                    navigation.navigate("PaymentConfirmation")
+                  } : null}>
                   <View
                     key={pricingPlan.id}
                     className="flex flex-column rounded-lg p-4 bg-white shadow-md border border-gray-200 w-80 mb-6">
@@ -74,23 +82,16 @@ export default () => {
                         className='text-black text-base font-normal text-left ml-2'
                       >{pricingPlan.pondLimit} Kolam</Text>
                     </View>
-                    <View
-                      style={i === array.length - 1 ? {
+                    {isFreeUser && <View
+                      style={{
                         backgroundColor: CONSTANT.themeColors.primary,
-                      } : {
-                        backgroundColor: CONSTANT.themeColors.base,
                       }}
                       className="rounded-lg p-2 bg-white shadow-md border border-gray-200 mt-4">
                       <Text
-                        style={i === array.length - 1 ? {
-                          color: 'white',
-                        } : {
-                          color: 'black',
-                        }}
-                        className="text-lg font-bold text-black text-center">
+                        className="text-lg font-bold text-black text-center text-white">
                         Pilih Paket
                       </Text>
-                    </View>
+                    </View>}
                   </View>
                 </Pressable>
               ))}
