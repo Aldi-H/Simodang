@@ -80,17 +80,17 @@ const PoolDetailPage = () => {
   const NavList = [
     {
       id: 1,
-      name: 'Kondisi',
+      name: 'Info',
       Icon: PhIconOutline,
     },
     {
       id: 2,
-      name: 'Riwayat',
+      name: 'Grafik',
       Icon: HistoryIconOutline,
     },
     {
       id: 3,
-      name: 'Pengaturan',
+      name: 'Batas',
       Icon: GearIconOutline,
     },
     {
