@@ -332,7 +332,7 @@ const PoolUpdatePage = () => {
             <Pressable
               className="mx-4"
               onPress={() => {
-                Alert.alert('Perangkat Berhasil di Hapus');
+                Alert.alert("Perangkat berhasil dihapus", "Silahkan tekan tombol simpan untuk menyimpan perubahan");
                 setNewPondData(prevState => ({
                   ...prevState,
                   newPondIdDevice: null,
