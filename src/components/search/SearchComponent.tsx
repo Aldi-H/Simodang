@@ -9,7 +9,14 @@ import { MagnifyingGlassIcon } from 'react-native-heroicons/solid';
 import { CONSTANT } from '../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const SearchComponent = () => {
+// search component props
+interface SearchComponentProps {
+  onChange: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SearchComponent = ({
+  onChange,
+}: SearchComponentProps) => {
   return (
     <View
       style={styles.searchContainer}
@@ -18,7 +25,7 @@ const SearchComponent = () => {
         <MagnifyingGlassIcon strokeWidth={2} fill="black" size={hp('3.5%')} />
       </TouchableOpacity>
       <View className="mx-2">
-        <TextInput style={styles.searchPlaceholder} placeholder="Cari Disini" />
+        <TextInput style={styles.searchPlaceholder} placeholder="Cari Disini" onChangeText={onChange} />
       </View>
     </View>
   );
