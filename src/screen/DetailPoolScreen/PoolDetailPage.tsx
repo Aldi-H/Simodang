@@ -128,10 +128,17 @@ const PoolDetailPage = () => {
               onPress={() => {
                 navigation.goBack();
               }}>
-              <BackIcon
-                height={hp('4%')}
-                fill={CONSTANT.themeColors.complementary}
-              />
+              <View
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent black
+                  borderRadius: 50, // makes the background circular
+                  padding: 10, // adjusts padding around the icon
+                }}>
+                <BackIcon
+                  height={hp('4%')}
+                  fill={CONSTANT.themeColors.complementary}
+                />
+              </View>
             </TouchableOpacity>
           </View>
         </View>
