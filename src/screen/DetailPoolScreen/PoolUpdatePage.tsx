@@ -39,11 +39,11 @@ const PoolUpdatePage = () => {
 
   const {
     getAllDevices,
-    filterIdDeviceId,
     dropdownData,
     deviceId,
     filteredDeviceId,
     dropdownIdDevicesValue,
+    resetQrCode,
   } = useDeviceStore();
 
   const {
@@ -119,7 +119,7 @@ const PoolUpdatePage = () => {
       city: newPondData.newPondCity,
       seedCount: newPondData.newPondSeedCount,
       seedDate: newPondData.newPondSeedDate,
-      deviceId: newPondData.newPondIdDevice,
+      deviceId: newPondData.newPondIdDevice === '' ? null : newPondData.newPondIdDevice,
       isFilled: newPondData.newPondIsFilled,
       imageUrl:
         String(useFirebaseStore.getState().firebaseImageURL) === ''
@@ -128,14 +128,16 @@ const PoolUpdatePage = () => {
     };
 
     console.log('new pond data: ', updateNewPondData);
+    console.log('dropdownIdDevicesValue: ', dropdownIdDevicesValue);
 
     await updateOnePond(updateNewPondData);
   };
 
   useEffect(() => {
     getAllDevices();
-    filterIdDeviceId();
-  }, [deviceId, getAllDevices, filterIdDeviceId]);
+    // filterIdDeviceId();
+    resetQrCode();
+  }, []);
 
   return (
     <View className="my-1">
@@ -232,9 +234,7 @@ const PoolUpdatePage = () => {
           {pondDetail.deviceId ? (
             <DropdownComponent
               dropdownPlaceholder={
-                deviceId === filteredDeviceId[0]?.value
-                  ? pondDetail.deviceId
-                  : 'Id Perangkat'
+                pondDetail.deviceId ? pondDetail.deviceId : 'Id Perangkat'
               }
               valueField="label"
               labelField="value"
@@ -251,42 +251,19 @@ const PoolUpdatePage = () => {
                 setIsFocusIdDevices(true);
               }}
               onBlur={() => setIsFocusIdDevices(false)}
-              onChange={(item: any) => {
-                if (deviceId === filteredDeviceId[0]?.value) {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: deviceId,
-                  });
-
-                  handleChangeForm({
-                    deviceId: useDeviceStore.getState().deviceId,
-                  });
-                  setIsFocusIdDevices(false);
-                } else {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: item.value,
-                  });
-
-                  handleChangeForm({ deviceId: item.value });
-                  setIsFocusIdDevices(false);
-                }
-              }}
+              onChange={() => {}}
             />
           ) : (
             <DropdownComponent
               dropdownPlaceholder={
-                deviceId === filteredDeviceId[0]?.value &&
-                newPondData.newPondIdDevice === null
-                  ? deviceId
-                  : 'Id Perangkat'
+                'ID Perangkat'
               }
               valueField="label"
               labelField="value"
               value={dropdownIdDevicesValue}
               disable={pondDetail.deviceId ? true : false}
               dropdownData={
-                deviceId === filteredDeviceId[0]?.value
-                  ? dropdownData
-                  : filteredDeviceId
+                deviceId !== '' ? filteredDeviceId : dropdownData
               }
               dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
               isFocus={isFocusIdDevices}
@@ -295,35 +272,14 @@ const PoolUpdatePage = () => {
               }}
               onBlur={() => setIsFocusIdDevices(false)}
               onChange={(item: any) => {
-                if (deviceId === filteredDeviceId[0]?.value) {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: deviceId,
-                  });
-
-                  handleChangeForm({
-                    deviceId: useDeviceStore.getState().deviceId,
-                  });
-
-                  setNewPondData(prevState => ({
-                    ...prevState,
-                    newPondIdDevice: deviceId,
-                  }));
-
-                  setIsFocusIdDevices(false);
-                } else {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: item.value,
-                  });
-
-                  handleChangeForm({ deviceId: item.value });
-
-                  setNewPondData(prevState => ({
-                    ...prevState,
-                    newPondIdDevice: item.value,
-                  }));
-
-                  setIsFocusIdDevices(false);
-                }
+                // useDeviceStore.setState({
+                //   dropdownIdDevicesValue: item.value,
+                // });
+                
+                setNewPondData(prevState => ({
+                  ...prevState,
+                  newPondIdDevice: item.value,
+                }));
               }}
             />
           )}
@@ -349,7 +305,6 @@ const PoolUpdatePage = () => {
               className="mx-4"
               onPress={() => {
                 navigation.navigate('QRCode');
-                useDeviceStore.setState({ scan: true });
               }}>
               <IconQROutline
                 height={hp('3.5%')}

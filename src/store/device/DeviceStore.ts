@@ -34,6 +34,8 @@ type DeviceStoreState = {
 type DeviceStoreAction = {
   getAllDevices: () => Promise<void>;
   filterIdDeviceId: () => void;
+  setQrCode: (value: string) => void;
+  resetQrCode: () => void;
 };
 
 const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
@@ -84,8 +86,18 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
       const filtered = get().dropdownData.filter(item =>
         item.value.toUpperCase().includes(get().deviceId.toUpperCase()),
       );
+      console.log('filtered', filtered);
+      console.log('deviceId', get().deviceId);
 
       set({ filteredDeviceId: filtered });
+    },
+
+    setQrCode: value => {
+      set({ deviceId: value });
+    },
+
+    resetQrCode: () => {
+      set({ deviceId: '' });
     },
   }),
 );
