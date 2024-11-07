@@ -77,7 +77,7 @@ const MainNavigator = () => {
       }}>
       <Stack.Screen name="Home" component={HomeNavigator} />
       <Stack.Screen
-        name="ArticleDetail"
+        name="WebViewScreen"
         component={WebViewPage}
         // options={({ route }) => {
         //   return {

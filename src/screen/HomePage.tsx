@@ -45,10 +45,8 @@ const HomePage = () => {
     navigation.navigate('PoolDetail', { pondId });
   };
 
-  const handleArticlePress = (articleId: string) => {
-    console.log(articleId);
-
-    navigation.navigate('ArticleDetail', { articleId });
+  const handleArticlePress = (url: string) => {
+    navigation.navigate('WebViewScreen', { url });
   };
 
   const handleNotificationPress = () => {
@@ -69,7 +67,7 @@ const HomePage = () => {
     });
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
-      console.log(`Remote Message ${remoteMessage}`);
+      console.log(`Remote Message ${JSON.stringify(remoteMessage)}`);
     });
   }, []);
 
@@ -220,7 +218,7 @@ const HomePage = () => {
                       imageUri={item.imageUrl}
                       createdAt={moment(item.createdAt).format('DD MMM YYYY')}
                       onPress={() => {
-                        handleArticlePress(item.id);
+                        handleArticlePress(item.url);
                       }}
                     />
                   </View>
