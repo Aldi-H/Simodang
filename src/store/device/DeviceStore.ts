@@ -61,13 +61,15 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
     getAllDevices: async () => {
       try {
         const token = await auth().currentUser?.getIdToken();
-        const response = await axios.get(`${BASE_URL}/devices`, {
+        const response = await axios.get(`${BASE_URL}/devices/v2`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const deviceData = response.data.map(
+        console.log('response', JSON.stringify(response.data));
+
+        const deviceData = response.data.filter((e: any) => e.pond === null).map(
           (valueItem: { id: string; name: string }) => {
             return {
               value: valueItem.id,
