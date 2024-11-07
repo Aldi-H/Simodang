@@ -31,6 +31,7 @@ import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 import useProfileStore from '../store/profile/ProfileStore';
 import useArticleStore from '../store/article/ArticleStore';
 import moment from 'moment';
+import Toast from 'react-native-toast-message';
 
 const HomePage = () => {
   const { getAllArticles, getAllArticlesData } = useArticleStore();
@@ -68,6 +69,22 @@ const HomePage = () => {
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
       console.log(`Remote Message ${JSON.stringify(remoteMessage)}`);
+    });
+
+    messaging().onMessage(async (remoteMessage: any) => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage.from));
+      const source = remoteMessage?.from ?? '';
+      console.log('source', source);
+      console.log('source', source.includes('-realtime'));
+      if (source.includes('-realtime')) {
+        return;
+      }
+      Toast.show({
+        type: 'error',
+        text1: remoteMessage?.notification?.title ?? 'Peringatan',
+        text2: remoteMessage?.notification?.body ?? 'Kolam anda dalam kondisi buruk',
+        visibilityTime: 4000,
+      });
     });
   }, []);
 
