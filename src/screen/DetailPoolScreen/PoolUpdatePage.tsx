@@ -44,6 +44,8 @@ const PoolUpdatePage = () => {
     filteredDeviceId,
     dropdownIdDevicesValue,
     resetQrCode,
+    availableDevices,
+    devicesCount,
   } = useDeviceStore();
 
   const {
@@ -230,6 +232,9 @@ const PoolUpdatePage = () => {
       </View>
 
       <View className="flex mt-4">
+        <View>
+          <Text className="text-black mb-2">Perangkat Tersedia {availableDevices}/{devicesCount}</Text>
+        </View>
         <View className="flex-row items-center">
           {pondDetail.deviceId ? (
             <DropdownComponent

@@ -19,6 +19,8 @@ type DeviceStoreState = {
   dropdownIdDevicesValue: string | undefined;
   scan: boolean;
   scanResult: boolean;
+  devicesCount: number;
+  availableDevices: number;
   // tempLow: number;
   // tempHigh: number;
   // phLow: number;
@@ -47,6 +49,8 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
     filteredDeviceId: [],
     scan: false,
     scanResult: false,
+    devicesCount: 0,
+    availableDevices: 0,
     // tempLow: 26,
     // tempHigh: 30,
     // phLow: 6.5,
@@ -67,8 +71,6 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
           },
         });
 
-        console.log('response', JSON.stringify(response.data));
-
         const deviceData = response.data.filter((e: any) => e.pond === null).map(
           (valueItem: { id: string; name: string }) => {
             return {
@@ -78,7 +80,11 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
           },
         );
 
-        set({ dropdownData: deviceData });
+        set({
+          dropdownData: deviceData,
+          devicesCount: response?.data?.length || 0,
+          availableDevices: response?.data?.filter((e: any) => e.pond === null)?.length || 0,
+        });
       } catch (error) {
         console.log(error);
       }
