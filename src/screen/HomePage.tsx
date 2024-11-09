@@ -94,6 +94,8 @@ const HomePage = () => {
     getUser();
   }, [getAllPonds, getUser, getAllArticles]);
 
+  const pondLimit = userDetail?.pondLimit ?? 0;
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -139,7 +141,7 @@ const HomePage = () => {
 
       <SafeAreaView className="mx-4 px-3 mb-4">
         {/* Call to Action Card to Buy Subscription Section */}
-        <View className="mt-4">
+        {pondLimit === 0 && <View className="mt-4">
           <Pressable
             onPress={() => {
               navigation.navigate('PricingPlan');
@@ -158,7 +160,7 @@ const HomePage = () => {
               </Text>
             </View>
           </Pressable>
-        </View>
+        </View>}
         {/* Pool List Section */}
         <View className="mt-7">
           <View className="flex flex-row justify-between items-center">
