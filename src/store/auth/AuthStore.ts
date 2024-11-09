@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, isErrorWithCode, isNoSavedCredentialFoundResponse, isSuccessResponse, statusCodes } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import {
   BASE_URL,
@@ -29,51 +29,65 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
     try {
       // Google Sign In
       await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      const googleUser = await auth().signInWithCredential(googleCredential);
+      const signInResponse = await GoogleSignin.signIn();
+      if (isSuccessResponse(signInResponse)) {
+        const idToken = signInResponse.data.idToken;
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const googleUser = await auth().signInWithCredential(googleCredential);
 
-      const token = await googleUser.user?.getIdToken();
-      set({ token: token });
-
-      // console.log('GoogleUser: ', googleUser.user);
-
-      // Send token to endpoint
-      console.log('Token: ', token);
-      const response = await axios.post(
-        `${BASE_URL}/auth`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${useAuthStore.getState().token}`,
+        const token = await googleUser.user.getIdToken() ?? '';
+        const response = await axios.post(
+          `${BASE_URL}/auth`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        },
-      );
+        );
+
+        set({
+          _isSignIn: true,
+        });
+
+        return;
+      }
 
       set({
-        _isSignIn: true,
+        _isSignIn: false,
       });
     } catch (error: any) {
-      console.log(error);
+      if (isErrorWithCode(error)) {
+        console.log('Error Code: ', error.code);
+
+        set({
+          _isSignIn: false,
+        });
+        return;
+      }
+      console.log('Error Message: ', error);
+
+      set({
+        _isSignIn: false,
+      });
     }
   },
 
   SignOut: async () => {
     try {
-      // Remove token from server and local storage
-
-      // console.log(token);
-
-      await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      // await Keychain.resetGenericPassword();
+      await auth().signOut();
 
       set({
         _isSignIn: false,
-        token: null,
       });
     } catch (error: any) {
-      console.log(error.code);
+      if (isErrorWithCode(error)) {
+        console.log('Error Code: ', error.code);
+
+        return;
+      }
+      console.log('Error Message: ', error);
     }
   },
 
@@ -87,10 +101,12 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
   getCurrentUser: () => {
     const user = auth().currentUser;
     if (user) {
+      console.log('getCurrentUser obtained');
       set({
         _isSignIn: true,
       });
     } else {
+      console.log('getCurrentUser not obtained');
       set({
         _isSignIn: false,
       });

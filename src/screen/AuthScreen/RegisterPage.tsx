@@ -16,6 +16,7 @@ import InputCheckBoxComponent from '../../components/checkbox/InputCheckBoxCompo
 import ButtonComponent from '../../components/button/ButtonComponent';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 import useAuthStore from '../../store/auth/AuthStore';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 // import useAuth from '../../store/auth/Auth';
 
 const RegisterPage = () => {
@@ -45,72 +46,24 @@ const RegisterPage = () => {
           style={styles.container}
           className="h-fit w-fit justify-center items-center rounded-md drop-shadow-md shadow-2xl shadow-gray-500">
           <View className="m-5">
-            <Text style={styles.registerText}>Buat Akun</Text>
+            <Text style={styles.registerText}>Selamat Datang</Text>
           </View>
 
           <View className="mt-2 px-5 pb-6 items-center">
-            {/* Input Field */}
-            <View>
-              <InputFieldWithIconComponent
-                secureTextEntry={false}
-                leftIcon={<EmailIcon height={hp('4%')} width={wp('6%')} />}
-                placeholder="Email"
-              />
-              <InputFieldWithIconComponent
-                secureTextEntry={true}
-                leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
-                placeholder="Password"
-              />
-              <InputFieldWithIconComponent
-                secureTextEntry={true}
-                leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
-                placeholder="Konfirmasi Password"
-              />
-            </View>
-
-            <View className="mt-3">
-              <InputCheckBoxComponent
-                toggleCheckBox={toggleCheckBox}
-                onValueChange={newValue => setToggleCheckBox(newValue)}
-              />
-            </View>
-
-            {/* Separator */}
-            <View
-              style={styles.separatorContainer}
-              className="flex flex-row items-center space-x-2 mt-4">
-              <View style={styles.separator} className="flex-1" />
-              <Text style={styles.separatorText}>atau</Text>
-              <View style={styles.separator} className="flex-1" />
-            </View>
-
-            {/* Other Register Method */}
-            <View className="mt-5">
-              <TouchableOpacity onPress={SignIn}>
-                <GoogleIcon height={hp('4%')} width={wp('7%')} />
-              </TouchableOpacity>
-            </View>
-
-            {/* Button */}
-            <View className="mt-5">
-              <ButtonComponent
-                buttonText="Buat Akun"
-                style={styles.registerButton}
-                className="rounded-full h-fit w-fit px-3 py-1"
-                onPress={() => console.log('Register Pressed')}
-              />
+            <GoogleSigninButton
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={SignIn}
+            />
+            <View className="mt-3 px-5">
+              <Text
+              className='text-black text-center text-md'
+              style={{
+                lineHeight: 25,
+              }}
+            >Dengan menekan tombol di atas anda akan menyetujui Syarat & Ketentuan serta Kebijakan Privasi dari SIMODANG</Text>
             </View>
           </View>
-        </View>
-
-        {/* Redirect to Login Page */}
-        <View className="mt-6 justify-center items-center flex-row space-x-1">
-          <Text style={styles.redirectText}>Sudah memiliki akun?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
-            <Text style={styles.redirectToLogin} className="justify-center">
-              Masuk disini
-            </Text>
-          </TouchableOpacity>
         </View>
 
         {/* <TouchableOpacity onPress={SignOut}>
