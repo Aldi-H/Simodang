@@ -35,6 +35,9 @@ const PoolUpdatePage = () => {
     captureImage,
     chooseFile,
     uploadImage,
+    reset,
+    toggleModal,
+    showModal,
   } = useFirebaseStore();
 
   const {
@@ -54,6 +57,7 @@ const PoolUpdatePage = () => {
     pondDetail,
     updatePondData,
     updateOnePond,
+    getAllPonds,
   } = usePondStore();
 
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
@@ -61,8 +65,6 @@ const PoolUpdatePage = () => {
   const [dropdownPondStatusValue, setDropdownPondStatusValue] = useState<
     string | undefined
   >();
-
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [date, setDate] = useState(pondDetail.seedDate);
   // const [mode, setMode] = useState('date');
@@ -80,10 +82,6 @@ const PoolUpdatePage = () => {
   });
 
   const navigation = useNavigation();
-
-  const handleModal = () => {
-    setIsModalVisible(() => !isModalVisible);
-  };
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -133,12 +131,17 @@ const PoolUpdatePage = () => {
     console.log('dropdownIdDevicesValue: ', dropdownIdDevicesValue);
 
     await updateOnePond(updateNewPondData);
+
+    getAllPonds();
+
+    navigation.goBack();
   };
 
   useEffect(() => {
     getAllDevices();
     // filterIdDeviceId();
     resetQrCode();
+    reset();
   }, []);
 
   return (
@@ -348,7 +351,7 @@ const PoolUpdatePage = () => {
         </View>
       </View>
 
-      <Pressable className="mt-6" onPress={handleModal}>
+      <Pressable className="mt-6" onPress={toggleModal}>
         <View
           style={styles.photoUploadContainer}
           className="border-2 border-dashed">
@@ -407,7 +410,7 @@ const PoolUpdatePage = () => {
       </Pressable>
 
       {/* Modal */}
-      <ModalComponent isVisible={isModalVisible}>
+      <ModalComponent isVisible={showModal}>
         <ModalComponent.Container>
           <ModalComponent.Header title="Unggah Gambar" />
           <ModalComponent.Body>
@@ -483,7 +486,7 @@ const PoolUpdatePage = () => {
             )}
 
             <Pressable
-              onPress={handleModal}
+              onPress={toggleModal}
               className="pt-3 w-full items-center">
               <Text
                 style={[styles.footerModalTextStyle, styles.footerModalCancel]}>
