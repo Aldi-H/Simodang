@@ -1,5 +1,5 @@
 import { BASE_URL } from '@env';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { create } from 'zustand';
 import auth from '@react-native-firebase/auth';
 
@@ -325,12 +325,10 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
         name: get().inputData.pondName,
         address: get().inputData.pondAddress,
         city: get().inputData.city,
-        deviceId: get().inputData.deviceId,
-        imageUrl: useFirebaseStore.getState().firebaseImageURL,
+        deviceId: get().inputData.deviceId === '' ? null : get().inputData.deviceId,
+        imageUrl: useFirebaseStore.getState().firebaseImageURL === '' ? null : useFirebaseStore.getState().firebaseImageURL,
         isFilled: get().inputData.isFilled,
       };
-
-      console.log(requestJSON);
 
       const token = await auth().currentUser?.getIdToken();
       const response = await axios.post(
@@ -351,6 +349,11 @@ const usePondStore = create<PondStoreState & PondStoreAction>()((set, get) => ({
 
       console.log(response);
     } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
+      }
       console.log(error);
     }
   },

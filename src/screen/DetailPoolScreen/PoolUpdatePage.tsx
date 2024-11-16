@@ -35,15 +35,20 @@ const PoolUpdatePage = () => {
     captureImage,
     chooseFile,
     uploadImage,
+    reset,
+    toggleModal,
+    showModal,
   } = useFirebaseStore();
 
   const {
     getAllDevices,
-    filterIdDeviceId,
     dropdownData,
     deviceId,
     filteredDeviceId,
     dropdownIdDevicesValue,
+    resetQrCode,
+    availableDevices,
+    devicesCount,
   } = useDeviceStore();
 
   const {
@@ -52,6 +57,7 @@ const PoolUpdatePage = () => {
     pondDetail,
     updatePondData,
     updateOnePond,
+    getAllPonds,
   } = usePondStore();
 
   const [isFocusIdDevices, setIsFocusIdDevices] = useState<boolean>(false);
@@ -59,8 +65,6 @@ const PoolUpdatePage = () => {
   const [dropdownPondStatusValue, setDropdownPondStatusValue] = useState<
     string | undefined
   >();
-
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [date, setDate] = useState(pondDetail.seedDate);
   // const [mode, setMode] = useState('date');
@@ -78,10 +82,6 @@ const PoolUpdatePage = () => {
   });
 
   const navigation = useNavigation();
-
-  const handleModal = () => {
-    setIsModalVisible(() => !isModalVisible);
-  };
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
@@ -119,7 +119,7 @@ const PoolUpdatePage = () => {
       city: newPondData.newPondCity,
       seedCount: newPondData.newPondSeedCount,
       seedDate: newPondData.newPondSeedDate,
-      deviceId: newPondData.newPondIdDevice,
+      deviceId: newPondData.newPondIdDevice === '' ? null : newPondData.newPondIdDevice,
       isFilled: newPondData.newPondIsFilled,
       imageUrl:
         String(useFirebaseStore.getState().firebaseImageURL) === ''
@@ -128,14 +128,21 @@ const PoolUpdatePage = () => {
     };
 
     console.log('new pond data: ', updateNewPondData);
+    console.log('dropdownIdDevicesValue: ', dropdownIdDevicesValue);
 
     await updateOnePond(updateNewPondData);
+
+    getAllPonds();
+
+    navigation.goBack();
   };
 
   useEffect(() => {
     getAllDevices();
-    filterIdDeviceId();
-  }, [deviceId, getAllDevices, filterIdDeviceId]);
+    // filterIdDeviceId();
+    resetQrCode();
+    reset();
+  }, []);
 
   return (
     <View className="my-1">
@@ -228,13 +235,14 @@ const PoolUpdatePage = () => {
       </View>
 
       <View className="flex mt-4">
+        <View>
+          <Text className="text-black mb-2">Perangkat Tersedia {availableDevices}/{devicesCount}</Text>
+        </View>
         <View className="flex-row items-center">
           {pondDetail.deviceId ? (
             <DropdownComponent
               dropdownPlaceholder={
-                deviceId === filteredDeviceId[0]?.value
-                  ? pondDetail.deviceId
-                  : 'Id Perangkat'
+                pondDetail.deviceId ? pondDetail.deviceId : 'Id Perangkat'
               }
               valueField="label"
               labelField="value"
@@ -251,42 +259,19 @@ const PoolUpdatePage = () => {
                 setIsFocusIdDevices(true);
               }}
               onBlur={() => setIsFocusIdDevices(false)}
-              onChange={(item: any) => {
-                if (deviceId === filteredDeviceId[0]?.value) {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: deviceId,
-                  });
-
-                  handleChangeForm({
-                    deviceId: useDeviceStore.getState().deviceId,
-                  });
-                  setIsFocusIdDevices(false);
-                } else {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: item.value,
-                  });
-
-                  handleChangeForm({ deviceId: item.value });
-                  setIsFocusIdDevices(false);
-                }
-              }}
+              onChange={() => {}}
             />
           ) : (
             <DropdownComponent
               dropdownPlaceholder={
-                deviceId === filteredDeviceId[0]?.value &&
-                newPondData.newPondIdDevice === null
-                  ? deviceId
-                  : 'Id Perangkat'
+                'ID Perangkat'
               }
               valueField="label"
               labelField="value"
               value={dropdownIdDevicesValue}
               disable={pondDetail.deviceId ? true : false}
               dropdownData={
-                deviceId === filteredDeviceId[0]?.value
-                  ? dropdownData
-                  : filteredDeviceId
+                deviceId !== '' ? filteredDeviceId : dropdownData
               }
               dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
               isFocus={isFocusIdDevices}
@@ -295,35 +280,14 @@ const PoolUpdatePage = () => {
               }}
               onBlur={() => setIsFocusIdDevices(false)}
               onChange={(item: any) => {
-                if (deviceId === filteredDeviceId[0]?.value) {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: deviceId,
-                  });
-
-                  handleChangeForm({
-                    deviceId: useDeviceStore.getState().deviceId,
-                  });
-
-                  setNewPondData(prevState => ({
-                    ...prevState,
-                    newPondIdDevice: deviceId,
-                  }));
-
-                  setIsFocusIdDevices(false);
-                } else {
-                  useDeviceStore.setState({
-                    dropdownIdDevicesValue: item.value,
-                  });
-
-                  handleChangeForm({ deviceId: item.value });
-
-                  setNewPondData(prevState => ({
-                    ...prevState,
-                    newPondIdDevice: item.value,
-                  }));
-
-                  setIsFocusIdDevices(false);
-                }
+                // useDeviceStore.setState({
+                //   dropdownIdDevicesValue: item.value,
+                // });
+                
+                setNewPondData(prevState => ({
+                  ...prevState,
+                  newPondIdDevice: item.value,
+                }));
               }}
             />
           )}
@@ -332,7 +296,7 @@ const PoolUpdatePage = () => {
             <Pressable
               className="mx-4"
               onPress={() => {
-                Alert.alert('Perangkat Berhasil di Hapus');
+                Alert.alert("Perangkat berhasil dihapus", "Silahkan tekan tombol simpan untuk menyimpan perubahan");
                 setNewPondData(prevState => ({
                   ...prevState,
                   newPondIdDevice: null,
@@ -349,7 +313,6 @@ const PoolUpdatePage = () => {
               className="mx-4"
               onPress={() => {
                 navigation.navigate('QRCode');
-                useDeviceStore.setState({ scan: true });
               }}>
               <IconQROutline
                 height={hp('3.5%')}
@@ -388,7 +351,7 @@ const PoolUpdatePage = () => {
         </View>
       </View>
 
-      <Pressable className="mt-6" onPress={handleModal}>
+      <Pressable className="mt-6" onPress={toggleModal}>
         <View
           style={styles.photoUploadContainer}
           className="border-2 border-dashed">
@@ -447,7 +410,7 @@ const PoolUpdatePage = () => {
       </Pressable>
 
       {/* Modal */}
-      <ModalComponent isVisible={isModalVisible}>
+      <ModalComponent isVisible={showModal}>
         <ModalComponent.Container>
           <ModalComponent.Header title="Unggah Gambar" />
           <ModalComponent.Body>
@@ -523,7 +486,7 @@ const PoolUpdatePage = () => {
             )}
 
             <Pressable
-              onPress={handleModal}
+              onPress={toggleModal}
               className="pt-3 w-full items-center">
               <Text
                 style={[styles.footerModalTextStyle, styles.footerModalCancel]}>

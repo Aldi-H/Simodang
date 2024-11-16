@@ -31,6 +31,7 @@ import WebViewCardComponent from '../components/cards/WebViewCardComponent';
 import useProfileStore from '../store/profile/ProfileStore';
 import useArticleStore from '../store/article/ArticleStore';
 import moment from 'moment';
+import Toast from 'react-native-toast-message';
 
 const HomePage = () => {
   const { getAllArticles, getAllArticlesData } = useArticleStore();
@@ -45,10 +46,8 @@ const HomePage = () => {
     navigation.navigate('PoolDetail', { pondId });
   };
 
-  const handleArticlePress = (articleId: string) => {
-    console.log(articleId);
-
-    navigation.navigate('ArticleDetail', { articleId });
+  const handleArticlePress = (url: string) => {
+    navigation.navigate('WebViewScreen', { url });
   };
 
   const handleNotificationPress = () => {
@@ -69,7 +68,23 @@ const HomePage = () => {
     });
 
     messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
-      console.log(`Remote Message ${remoteMessage}`);
+      console.log(`Remote Message ${JSON.stringify(remoteMessage)}`);
+    });
+
+    messaging().onMessage(async (remoteMessage: any) => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage.from));
+      const source = remoteMessage?.from ?? '';
+      console.log('source', source);
+      console.log('source', source.includes('-realtime'));
+      if (source.includes('-realtime')) {
+        return;
+      }
+      Toast.show({
+        type: 'error',
+        text1: remoteMessage?.notification?.title ?? 'Peringatan',
+        text2: remoteMessage?.notification?.body ?? 'Kolam anda dalam kondisi buruk',
+        visibilityTime: 4000,
+      });
     });
   }, []);
 
@@ -78,6 +93,8 @@ const HomePage = () => {
     getAllArticles();
     getUser();
   }, [getAllPonds, getUser, getAllArticles]);
+
+  const pondLimit = userDetail?.pondLimit ?? 0;
 
   return (
     <ScrollView
@@ -124,7 +141,7 @@ const HomePage = () => {
 
       <SafeAreaView className="mx-4 px-3 mb-4">
         {/* Call to Action Card to Buy Subscription Section */}
-        <View className="mt-4">
+        {pondLimit === 0 && <View className="mt-4">
           <Pressable
             onPress={() => {
               navigation.navigate('PricingPlan');
@@ -143,7 +160,7 @@ const HomePage = () => {
               </Text>
             </View>
           </Pressable>
-        </View>
+        </View>}
         {/* Pool List Section */}
         <View className="mt-7">
           <View className="flex flex-row justify-between items-center">
@@ -220,7 +237,7 @@ const HomePage = () => {
                       imageUri={item.imageUrl}
                       createdAt={moment(item.createdAt).format('DD MMM YYYY')}
                       onPress={() => {
-                        handleArticlePress(item.id);
+                        handleArticlePress(item.url);
                       }}
                     />
                   </View>

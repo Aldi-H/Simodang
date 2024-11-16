@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -12,17 +12,21 @@ import BackgroundImage from '../../assets/images/BackgroundCircleStyle.svg';
 import InputFieldWithIconComponent from '../../components/input/InputFieldWithIconComponent';
 import EmailIcon from '../../assets/icons/EmailIcon.svg';
 import PasswordIcon from '../../assets/icons/PasswordIcon.svg';
-import InputCheckBoxComponent from '../../components/checkbox/InputCheckBoxComponent';
 import ButtonComponent from '../../components/button/ButtonComponent';
 import GoogleIcon from '../../assets/icons/GoogleIcon.svg';
 import useAuthStore from '../../store/auth/AuthStore';
 // import useAuth from '../../store/auth/Auth';
 
 const RegisterPage = () => {
-  const { configureGoogleSignin, getCurrentUser, SignIn } = useAuthStore();
+  const { configureGoogleSignin, getCurrentUser, SignIn, signInBasic } = useAuthStore();
 
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    console.log('Login Pressed');
+    signInBasic(email, password);
+  }
 
   useEffect(() => {
     configureGoogleSignin();
@@ -45,33 +49,32 @@ const RegisterPage = () => {
           style={styles.container}
           className="h-fit w-fit justify-center items-center rounded-md drop-shadow-md shadow-2xl shadow-gray-500">
           <View className="m-5">
-            <Text style={styles.registerText}>Buat Akun</Text>
+            <Text style={styles.registerText}>Selamat Datang</Text>
           </View>
 
+          {/* <LoginForm /> */}
           <View className="mt-2 px-5 pb-6 items-center">
-            {/* Input Field */}
-            <View>
+          <View>
               <InputFieldWithIconComponent
                 secureTextEntry={false}
                 leftIcon={<EmailIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Email"
+                onChangeText={(text) => setEmail(text)}
               />
               <InputFieldWithIconComponent
                 secureTextEntry={true}
                 leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
                 placeholder="Password"
-              />
-              <InputFieldWithIconComponent
-                secureTextEntry={true}
-                leftIcon={<PasswordIcon height={hp('4%')} width={wp('6%')} />}
-                placeholder="Konfirmasi Password"
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
 
-            <View className="mt-3">
-              <InputCheckBoxComponent
-                toggleCheckBox={toggleCheckBox}
-                onValueChange={newValue => setToggleCheckBox(newValue)}
+            <View className="mt-5">
+              <ButtonComponent
+                buttonText="Masuk"
+                style={styles.registerButton}
+                className="rounded-full h-fit w-fit px-3 py-1"
+                onPress={handleLogin}
               />
             </View>
 
@@ -90,27 +93,20 @@ const RegisterPage = () => {
                 <GoogleIcon height={hp('4%')} width={wp('7%')} />
               </TouchableOpacity>
             </View>
-
-            {/* Button */}
-            <View className="mt-5">
-              <ButtonComponent
-                buttonText="Buat Akun"
-                style={styles.registerButton}
-                className="rounded-full h-fit w-fit px-3 py-1"
-                onPress={() => console.log('Register Pressed')}
-              />
+            <View className="mt-3 px-5">
+              <Text
+              className='text-black text-center text-md'
+              style={{
+                lineHeight: 25,
+              }}
+            >Dengan masuk ke aplikasi ini anda akan menyetujui{' '}
+            <Text
+              className='underline text-blue-600'
+              onPress={() => Linking.openURL('https://lumen-sobatps.devel-filkomub.site/')}
+            >Syarat & Ketentuan serta Kebijakan Privasi</Text>
+            {' '}dari SIMODANG</Text>
             </View>
           </View>
-        </View>
-
-        {/* Redirect to Login Page */}
-        <View className="mt-6 justify-center items-center flex-row space-x-1">
-          <Text style={styles.redirectText}>Sudah memiliki akun?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
-            <Text style={styles.redirectToLogin} className="justify-center">
-              Masuk disini
-            </Text>
-          </TouchableOpacity>
         </View>
 
         {/* <TouchableOpacity onPress={SignOut}>

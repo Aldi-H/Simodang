@@ -77,7 +77,7 @@ const MainNavigator = () => {
       }}>
       <Stack.Screen name="Home" component={HomeNavigator} />
       <Stack.Screen
-        name="ArticleDetail"
+        name="WebViewScreen"
         component={WebViewPage}
         // options={({ route }) => {
         //   return {
@@ -119,13 +119,13 @@ const AuthNavigator = () => {
         contentStyle: { backgroundColor: CONSTANT.themeColors.base },
       }}>
       <Stack.Screen name="RegisterPage" component={RegisterPage} />
-      <Stack.Screen name="LoginPage" component={LoginPage} />
     </Stack.Navigator>
   );
 };
 
 const AppNavigator = () => {
   const { _isSignIn } = useAuthStore();
+  console.log('isSignIn: ', _isSignIn);
 
   return (
     <NavigationContainer>

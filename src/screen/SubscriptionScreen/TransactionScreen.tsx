@@ -34,7 +34,7 @@ export default () => {
                 createdAt={moment(item.createdAt).format('DD MMM YYYY')}
                 expiredAt={moment(item?.subscription?.expiredAt ?? Date.now.toString()).format('DD MMM YYYY')}
                 onPress={() => {
-                  if (item.status === 1) {
+                  if ([0, 1].includes(item.status)) {
                     return;
                   }
                   navigation.navigate('PaymentWebView', {

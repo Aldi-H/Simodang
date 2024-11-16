@@ -9,6 +9,7 @@ type FirebaseStoreState = {
   firebaseImageURL: string | undefined;
   uploading: boolean;
   transfered: number;
+  showModal: boolean;
 };
 
 type FirebaseStoreAction = {
@@ -17,6 +18,8 @@ type FirebaseStoreAction = {
   captureImage: (type: 'photo') => Promise<void>;
   chooseFile: (type: 'photo') => Promise<void>;
   uploadImage: () => Promise<void>;
+  reset: () => void;
+  toggleModal: () => void;
 };
 
 const useFirebaseStore = create<FirebaseStoreState & FirebaseStoreAction>()(
@@ -26,6 +29,7 @@ const useFirebaseStore = create<FirebaseStoreState & FirebaseStoreAction>()(
     firebaseImageURL: '',
     uploading: false,
     transfered: 0,
+    showModal: false,
 
     //* Permission
     requestCameraPermission: async () => {
@@ -176,6 +180,7 @@ const useFirebaseStore = create<FirebaseStoreState & FirebaseStoreAction>()(
           Alert.alert('Image Uploaded');
           set({
             transfered: 0,
+            showModal: false,
           });
 
           storage()
@@ -200,6 +205,23 @@ const useFirebaseStore = create<FirebaseStoreState & FirebaseStoreAction>()(
         uploading: false,
       });
     },
+
+    reset: () => {
+      set({
+        filePath: null,
+        imageUri: '',
+        firebaseImageURL: '',
+        uploading: false,
+        transfered: 0,
+        showModal: false,
+      });
+    },
+
+    toggleModal: () => {
+      set({
+        showModal: !get().showModal,
+      });
+    }
   }),
 );
 

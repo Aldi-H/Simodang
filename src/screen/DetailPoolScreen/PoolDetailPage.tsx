@@ -80,17 +80,17 @@ const PoolDetailPage = () => {
   const NavList = [
     {
       id: 1,
-      name: 'Kondisi',
+      name: 'Info',
       Icon: PhIconOutline,
     },
     {
       id: 2,
-      name: 'Riwayat',
+      name: 'Grafik',
       Icon: HistoryIconOutline,
     },
     {
       id: 3,
-      name: 'Pengaturan',
+      name: 'Batas',
       Icon: GearIconOutline,
     },
     {
@@ -128,10 +128,17 @@ const PoolDetailPage = () => {
               onPress={() => {
                 navigation.goBack();
               }}>
-              <BackIcon
-                height={hp('4%')}
-                fill={CONSTANT.themeColors.complementary}
-              />
+              <View
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent black
+                  borderRadius: 50, // makes the background circular
+                  padding: 10, // adjusts padding around the icon
+                }}>
+                <BackIcon
+                  height={hp('4%')}
+                  fill={CONSTANT.themeColors.complementary}
+                />
+              </View>
             </TouchableOpacity>
           </View>
         </View>

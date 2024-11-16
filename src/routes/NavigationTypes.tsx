@@ -8,7 +8,6 @@ export type RootStackParamList = {
   Profile: undefined;
   AddPool: undefined;
   PoolDetail: { pondId: string };
-  ArticleDetail: { articleId: string };
   LoginPage: undefined;
   RegisterPage: undefined;
   ProfileSettingPage: undefined;
@@ -19,6 +18,7 @@ export type RootStackParamList = {
   PaymentConfirmation: undefined;
   PaymentWebView: { paymentLink: string };
   TransactionScreen: undefined;
+  WebViewScreen: { url: string };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

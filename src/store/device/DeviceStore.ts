@@ -19,6 +19,8 @@ type DeviceStoreState = {
   dropdownIdDevicesValue: string | undefined;
   scan: boolean;
   scanResult: boolean;
+  devicesCount: number;
+  availableDevices: number;
   // tempLow: number;
   // tempHigh: number;
   // phLow: number;
@@ -34,6 +36,8 @@ type DeviceStoreState = {
 type DeviceStoreAction = {
   getAllDevices: () => Promise<void>;
   filterIdDeviceId: () => void;
+  setQrCode: (value: string) => void;
+  resetQrCode: () => void;
 };
 
 const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
@@ -45,6 +49,8 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
     filteredDeviceId: [],
     scan: false,
     scanResult: false,
+    devicesCount: 0,
+    availableDevices: 0,
     // tempLow: 26,
     // tempHigh: 30,
     // phLow: 6.5,
@@ -59,13 +65,13 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
     getAllDevices: async () => {
       try {
         const token = await auth().currentUser?.getIdToken();
-        const response = await axios.get(`${BASE_URL}/devices`, {
+        const response = await axios.get(`${BASE_URL}/devices/v2`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        const deviceData = response.data.map(
+        const deviceData = response.data.filter((e: any) => e.pond === null).map(
           (valueItem: { id: string; name: string }) => {
             return {
               value: valueItem.id,
@@ -74,7 +80,11 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
           },
         );
 
-        set({ dropdownData: deviceData });
+        set({
+          dropdownData: deviceData,
+          devicesCount: response?.data?.length || 0,
+          availableDevices: response?.data?.filter((e: any) => e.pond === null)?.length || 0,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -84,8 +94,18 @@ const useDeviceStore = create<DeviceStoreState & DeviceStoreAction>()(
       const filtered = get().dropdownData.filter(item =>
         item.value.toUpperCase().includes(get().deviceId.toUpperCase()),
       );
+      console.log('filtered', filtered);
+      console.log('deviceId', get().deviceId);
 
       set({ filteredDeviceId: filtered });
+    },
+
+    setQrCode: value => {
+      set({ deviceId: value });
+    },
+
+    resetQrCode: () => {
+      set({ deviceId: '' });
     },
   }),
 );

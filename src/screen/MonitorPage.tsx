@@ -27,6 +27,7 @@ const MonitorPage = () => {
   const { totalPonds, pondsData, getAllPonds } = usePondStore();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const navigation = useNavigation();
 
@@ -39,6 +40,8 @@ const MonitorPage = () => {
   const handlePondPress = (pondId: string) => {
     navigation.navigate('PoolDetail', { pondId });
   };
+
+  const filteredPonds = pondsData.filter((pond) => pond.pondName.toLowerCase().includes(searchText.toLowerCase()));
 
   useEffect(() => {
     getAllPonds();
@@ -60,7 +63,7 @@ const MonitorPage = () => {
         style={styles.headerContainer}
         className="w-full rounded-b-3xl fixed">
         <View className="my-10 mx-4 px-3">
-          <SearchComponent />
+          <SearchComponent onChange={setSearchText} />
         </View>
       </View>
 
@@ -80,7 +83,7 @@ const MonitorPage = () => {
 
           <View className="mt-3">
             <FlatList
-              data={pondsData}
+              data={searchText === '' ? pondsData : filteredPonds}
               renderItem={({ item }) => (
                 <PoolCardComponent
                   poolNameProps={item.pondName}

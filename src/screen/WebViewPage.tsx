@@ -7,25 +7,15 @@ import {
   useRoute,
 } from '@react-navigation/native';
 
-import useArticleStore from '../store/article/ArticleStore';
 import { RootStackParamList } from '../routes/NavigationTypes';
 
-type ArticleScreenRouteProp = RouteProp<RootStackParamList, 'ArticleDetail'>;
+type WebViewScreenProps = RouteProp<RootStackParamList, 'WebViewScreen'>;
 
 const WebViewScreen = () => {
-  const { getOneArticle, articleDetail } = useArticleStore();
-
-  const route = useRoute<ArticleScreenRouteProp>();
-  console.log(route);
-
-  const { articleId } = route.params;
-
-  useEffect(() => {
-    getOneArticle(articleId);
-  }, [getOneArticle]);
+  const url = useRoute<WebViewScreenProps>().params?.url ?? '';
 
   return (
-    <WebView source={{ uri: articleDetail.url }} style={styles.webViewStyle} />
+    <WebView source={{ uri: url }} style={styles.webViewStyle} />
   );
 };
 

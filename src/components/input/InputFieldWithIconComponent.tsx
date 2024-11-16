@@ -12,6 +12,7 @@ type InputFieldProps = {
   rightIcon?: React.ReactNode;
   placeholder: string;
   secureTextEntry: boolean;
+  onChangeText: (text: string) => void;
 };
 
 const InputFieldWithIconComponent = ({
@@ -19,6 +20,7 @@ const InputFieldWithIconComponent = ({
   leftIcon,
   secureTextEntry,
   rightIcon,
+  onChangeText,
 }: InputFieldProps) => {
   return (
     <View
@@ -30,6 +32,7 @@ const InputFieldWithIconComponent = ({
         placeholder={placeholder}
         className="pl-2"
         secureTextEntry={secureTextEntry}
+        onChangeText={onChangeText}
       />
       <View className="pr-4">{rightIcon}</View>
     </View>

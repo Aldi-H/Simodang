@@ -43,6 +43,9 @@ const AddPoolPage = () => {
     captureImage,
     chooseFile,
     uploadImage,
+    reset,
+    toggleModal,
+    showModal,
   } = useFirebaseStore();
 
   const {
@@ -52,9 +55,12 @@ const AddPoolPage = () => {
     deviceId,
     filteredDeviceId,
     dropdownIdDevicesValue,
+    availableDevices,
+    devicesCount,
+    resetQrCode,
   } = useDeviceStore();
 
-  const { addPond, inputData, handleChangeForm, pondsData } = usePondStore();
+  const { addPond, inputData, handleChangeForm, pondsData, getAllPonds } = usePondStore();
   const { userDetail } = useProfileStore();
 
   const currentPondLength = pondsData?.length ?? 0;
@@ -71,18 +77,39 @@ const AddPoolPage = () => {
     string | undefined
   >();
 
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
   const navigation = useNavigation();
 
-  const handleModal = () => {
-    setIsModalVisible(() => !isModalVisible);
+  const handleSubmit = () => {
+    addPond();
+
+    // clear state
+    usePondStore.setState({
+      inputData: {
+        pondName: '',
+        pondAddress: '',
+        city: '',
+        deviceId: '',
+        imageUrl: '',
+        isFilled: true,
+      },
+    });
+
+    useDeviceStore.setState({
+      filteredDeviceId: [],
+      deviceId: '',
+    });
+
+    // refresh pond data
+    getAllPonds();
+
+    navigation.goBack();
   };
 
   useEffect(() => {
     getAllDevices();
-    filterIdDeviceId();
-  }, [deviceId, getAllDevices, filterIdDeviceId]);
+    resetQrCode();
+    reset();
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -180,6 +207,11 @@ const AddPoolPage = () => {
             />
 
             <View className="flex mt-4">
+              <View>
+                <Text className="text-black mb-2">
+                  Perangkat Tersedia {availableDevices}/{devicesCount}
+                </Text>
+              </View>
               <View className="flex-row items-center">
                 <DropdownComponent
                   // dropdownPlaceholder="Id Perangkat"
@@ -194,9 +226,7 @@ const AddPoolPage = () => {
                   // value={formik.values.deviceId}
                   // dropdownData={dropdownData}
                   dropdownData={
-                    deviceId === filteredDeviceId[0]?.value
-                      ? filteredDeviceId
-                      : dropdownData
+                    deviceId !== '' ? filteredDeviceId : dropdownData
                   }
                   dropdownStyle={{ ...styles.dropdown, width: wp('75%') }}
                   isFocus={isFocusIdDevices}
@@ -205,23 +235,7 @@ const AddPoolPage = () => {
                   }}
                   onBlur={() => setIsFocusIdDevices(false)}
                   onChange={(item: any) => {
-                    if (deviceId === filteredDeviceId[0]?.value) {
-                      useDeviceStore.setState({
-                        dropdownIdDevicesValue: deviceId,
-                      });
-
-                      handleChangeForm({
-                        deviceId: useDeviceStore.getState().deviceId,
-                      });
-                      setIsFocusIdDevices(false);
-                    } else {
-                      useDeviceStore.setState({
-                        dropdownIdDevicesValue: item.value,
-                      });
-
-                      handleChangeForm({ deviceId: item.value });
-                      setIsFocusIdDevices(false);
-                    }
+                    handleChangeForm({ deviceId: item.value });
                   }}
                 />
 
@@ -260,7 +274,7 @@ const AddPoolPage = () => {
               </View>
             </View>
 
-            <Pressable className="mt-6" onPress={handleModal}>
+            <Pressable className="mt-6" onPress={toggleModal}>
               <View
                 style={styles.photoUploadContainer}
                 className="border-2 border-dashed">
@@ -321,7 +335,7 @@ const AddPoolPage = () => {
             </Pressable>
 
             {/* Modal */}
-            <ModalComponent isVisible={isModalVisible}>
+            <ModalComponent isVisible={showModal}>
               <ModalComponent.Container>
                 <ModalComponent.Header title="Unggah Gambar" />
                 <ModalComponent.Body>
@@ -395,7 +409,7 @@ const AddPoolPage = () => {
                   )}
 
                   <Pressable
-                    onPress={handleModal}
+                    onPress={toggleModal}
                     className="pt-3 w-full items-center">
                     <Text
                       style={[
@@ -420,28 +434,7 @@ const AddPoolPage = () => {
               }}
               className="rounded-md h-fit py-1"
               onPress={() => {
-                addPond();
-
-                usePondStore.setState({
-                  inputData: {
-                    pondName: '',
-                    pondAddress: '',
-                    city: '',
-                    deviceId: '',
-                    imageUrl: '',
-                    isFilled: true,
-                  },
-                });
-
-                useFirebaseStore.setState({
-                  firebaseImageURL: '',
-                });
-
-                useDeviceStore.setState({
-                  filteredDeviceId: [],
-                  deviceId: '',
-                });
-
+                handleSubmit();
                 console.log(inputData);
               }}
             />
