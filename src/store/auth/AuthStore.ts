@@ -16,6 +16,7 @@ type AuthStoreState = {
 
 type AuthStoreAction = {
   SignIn: () => Promise<void>;
+  signInBasic: (email: string, password: string) => Promise<void>;
   SignOut: () => Promise<void>;
   configureGoogleSignin: () => void;
   getCurrentUser: () => void;
@@ -73,9 +74,48 @@ const useAuthStore = create<AuthStoreState & AuthStoreAction>(set => ({
     }
   },
 
+  signInBasic: async (email: string, password: string) => {
+    try {
+      const basicUser = await auth().signInWithEmailAndPassword(email, password);
+
+      const token = await basicUser.user?.getIdToken() ?? '';
+      
+      const response = await axios.post(
+        `${BASE_URL}/auth`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      set({
+        _isSignIn: true,
+      });
+    } catch (error: any) {
+      if (isErrorWithCode(error)) {
+        console.log('Error Code: ', error.code);
+
+        set({
+          _isSignIn: false,
+        });
+        return;
+      }
+      console.log('Error Message: ', error);
+
+      set({
+        _isSignIn: false,
+      });
+    }
+  },
+
   SignOut: async () => {
     try {
-      await GoogleSignin.signOut();
+      const currentUser = GoogleSignin.getCurrentUser();
+      if (currentUser !== null) {
+        await GoogleSignin.signOut();
+      }
       await auth().signOut();
 
       set({
